@@ -3,6 +3,15 @@
 import type { EventName } from './analytics'
 
 const SESSION_KEY = 'ideafit-session-id'
+const UTM_KEY = 'ideafit-utm'
+
+interface UtmParams {
+  utmSource?: string
+  utmMedium?: string
+  utmCampaign?: string
+  utmContent?: string
+  utmTerm?: string
+}
 
 export function getOrCreateSessionId(): string {
   if (typeof window === 'undefined') return ''
@@ -15,12 +24,47 @@ export function getOrCreateSessionId(): string {
   return sessionId
 }
 
+// Capture UTM params from URL on first visit and persist them
+export function captureUtmParams(): UtmParams {
+  if (typeof window === 'undefined') return {}
+
+  // Check if we already have UTM params stored
+  const stored = localStorage.getItem(UTM_KEY)
+  if (stored) {
+    try {
+      return JSON.parse(stored) as UtmParams
+    } catch {
+      // Invalid JSON, will re-capture
+    }
+  }
+
+  // Capture from URL
+  const params = new URLSearchParams(window.location.search)
+  const utm: UtmParams = {}
+
+  if (params.get('utm_source')) utm.utmSource = params.get('utm_source')!
+  if (params.get('utm_medium')) utm.utmMedium = params.get('utm_medium')!
+  if (params.get('utm_campaign')) utm.utmCampaign = params.get('utm_campaign')!
+  if (params.get('utm_content')) utm.utmContent = params.get('utm_content')!
+  if (params.get('utm_term')) utm.utmTerm = params.get('utm_term')!
+
+  // Store for session persistence
+  if (Object.keys(utm).length > 0) {
+    localStorage.setItem(UTM_KEY, JSON.stringify(utm))
+  }
+
+  return utm
+}
+
 export async function trackEvent(
   event: EventName,
   properties?: Record<string, string | number | boolean | undefined>
 ): Promise<void> {
   const sessionId = getOrCreateSessionId()
   if (!sessionId) return
+
+  // Get UTM params (captures on first call, returns cached thereafter)
+  const utm = captureUtmParams()
 
   try {
     await fetch('/api/events', {
@@ -30,6 +74,7 @@ export async function trackEvent(
         event,
         sessionId,
         properties,
+        ...utm,
       }),
     })
   } catch (error) {

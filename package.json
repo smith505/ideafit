@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "npm run quality:check",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && (prisma migrate deploy || echo 'Migration skipped - no database connection') && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
@@ -19,7 +19,10 @@
     "test:e2e": "tsx scripts/test-e2e.ts",
     "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideafit-production.up.railway.app",
     "build:parity": "tsx scripts/check-build-parity.ts",
-    "build:parity:prod": "BASE_URL=https://ideafit-production.up.railway.app tsx scripts/check-build-parity.ts"
+    "build:parity:prod": "BASE_URL=https://ideafit-production.up.railway.app tsx scripts/check-build-parity.ts",
+    "verify": "tsx scripts/verify-deploy.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:push": "prisma db push"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",

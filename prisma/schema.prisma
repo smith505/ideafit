@@ -78,3 +78,37 @@ model MagicLink {
 
   createdAt DateTime @default(now())
 }
+
+// Analytics Events - persisted across deploys
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  event     String   // event name (view_home, start_quiz, etc.)
+  sessionId String   // anonymous session identifier
+  build     String   // git SHA of the build
+
+  // Tracking metadata
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+  referrer    String?
+  userAgent   String?
+
+  // Event-specific properties (JSON)
+  properties Json?
+
+  // Deduplication: hash of event+sessionId+timestamp(rounded to minute)
+  dedupKey  String   @unique
+
+  createdAt DateTime @default(now())
+
+  // Indexes for common queries
+  @@index([event])
+  @@index([sessionId])
+  @@index([createdAt])
+  @@index([utmSource])
+  @@index([utmMedium])
+  @@index([utmCampaign])
+  @@index([build])
+}

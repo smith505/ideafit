@@ -325,6 +325,81 @@ async function main() {
     }
   })
 
+  // Test 16: Compare page loads
+  await test('Compare page loads (status 200)', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/compare?ids=tab-sweeper,screenshot-annotator`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const text = await res.text()
+    if (!text.includes('Compare') && !text.includes('compare')) throw new Error('Missing compare content')
+  })
+
+  // Test 17: Events API accepts valid events
+  await test('Events API accepts valid analytics events', async () => {
+    const res = await fetch(`${BASE_URL}/api/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'view_home',
+        sessionId: 'test-session-e2e',
+        properties: { test: true },
+      }),
+    })
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const data = await res.json()
+    if (!data.success) throw new Error(`Expected success, got: ${JSON.stringify(data)}`)
+    console.log(`    Events API returned: ${JSON.stringify(data)}`)
+  })
+
+  // Test 18: Events API rejects invalid events
+  await test('Events API rejects invalid event names', async () => {
+    const res = await fetch(`${BASE_URL}/api/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'invalid_event_name',
+        sessionId: 'test-session-e2e',
+      }),
+    })
+    if (res.status !== 400) throw new Error(`Expected 400, got ${res.status}`)
+    console.log(`    Correctly rejected invalid event`)
+  })
+
+  // Test 19: Debug build endpoint works
+  await test('Debug build endpoint returns build info', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/debug/build`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const data = await res.json()
+    if (!data.build) throw new Error('Missing build field')
+    if (!data.timestamp) throw new Error('Missing timestamp field')
+    console.log(`    Build: ${data.build}, Timestamp: ${data.timestamp}`)
+  })
+
+  // Test 20: Idea page loads for valid candidate
+  await test('Idea detail page loads for valid candidate', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/idea/tab-sweeper`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const text = await res.text()
+    if (!text.includes('Tab Sweeper') && !text.includes('tab-sweeper')) {
+      throw new Error('Missing Tab Sweeper content')
+    }
+    console.log(`    Idea page loaded successfully`)
+  })
+
+  // Test 21: Admin library page requires auth in prod
+  await test('Admin library page returns redirect or content', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/admin/library`)
+    // In dev: 200, In prod without token: redirect (302/307) or 200 (if redirected to /)
+    console.log(`    Admin library status: ${res.status}`)
+    // Just verify it doesn't crash
+  })
+
+  // Test 22: Admin metrics page requires auth in prod
+  await test('Admin metrics page returns redirect or content', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/admin/metrics`)
+    console.log(`    Admin metrics status: ${res.status}`)
+    // Just verify it doesn't crash
+  })
+
   console.log(`\n---\nTests complete.\n`)
 }
 

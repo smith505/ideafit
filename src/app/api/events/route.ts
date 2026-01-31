@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBuildHeaders } from '@/lib/build-headers'
-import { recordEvent, AnalyticsEvent, EventName } from '@/lib/analytics'
+import { recordEvent, EventName } from '@/lib/analytics'
 import { z } from 'zod'
 
 export const dynamic = 'force-dynamic'
@@ -22,7 +22,14 @@ const EventSchema = z.object({
     audienceMode: z.string().optional(),
     confidenceBucket: z.string().optional(),
     reportId: z.string().optional(),
+    ids: z.string().optional(),
   }).passthrough().optional(),
+  // UTM params passed from client
+  utmSource: z.string().optional(),
+  utmMedium: z.string().optional(),
+  utmCampaign: z.string().optional(),
+  utmContent: z.string().optional(),
+  utmTerm: z.string().optional(),
 })
 
 export async function POST(request: Request) {
@@ -32,15 +39,30 @@ export async function POST(request: Request) {
     const body = await request.json()
     const validated = EventSchema.parse(body)
 
-    const event: AnalyticsEvent = {
-      event: validated.event,
-      timestamp: new Date().toISOString(),
-      build: headers['x-ideafit-build'],
-      sessionId: validated.sessionId,
-      properties: validated.properties as AnalyticsEvent['properties'],
-    }
+    // Extract referrer and user agent from request headers
+    const referrer = request.headers.get('referer') || undefined
+    const userAgent = request.headers.get('user-agent') || undefined
 
-    recordEvent(event)
+    const result = await recordEvent({
+      event: validated.event,
+      sessionId: validated.sessionId,
+      properties: validated.properties as Record<string, string | number | boolean | undefined>,
+      utmSource: validated.utmSource,
+      utmMedium: validated.utmMedium,
+      utmCampaign: validated.utmCampaign,
+      utmContent: validated.utmContent,
+      utmTerm: validated.utmTerm,
+      referrer,
+      userAgent,
+    })
+
+    if (!result.success) {
+      // Rate limited or database error - still return 200 to not break client
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: result.error === 'rate_limited' ? 429 : 500, headers }
+      )
+    }
 
     return NextResponse.json({ success: true }, { headers })
   } catch (error) {

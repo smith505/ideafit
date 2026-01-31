@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { checkAdminToken } from '@/lib/admin-auth'
 import library from '../../../../data/library.json'
+import { CopyButton } from './copy-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,6 +13,7 @@ interface Candidate {
   audience_mode?: string
   delivery_mode?: string
   support_level?: string
+  distribution_type?: string
   wedge?: string
   competitors?: Array<{ name: string; price: string; gap: string }>
   voc_quotes?: Array<{ quote: string; source: string }>
@@ -47,7 +49,7 @@ function isFullyQualified(c: Candidate): boolean {
 export default async function LibraryAdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ token?: string; filter?: string; search?: string; id?: string }>
+  searchParams: Promise<{ token?: string; filter?: string; search?: string; id?: string; quality?: string; track?: string; support?: string }>
 }) {
   const params = await searchParams
 
@@ -59,8 +61,14 @@ export default async function LibraryAdminPage({
   const candidates = library.candidates as Candidate[]
   const tokenParam = params.token ? `?token=${params.token}` : ''
 
+  // Get unique tracks and support levels for filters
+  const tracks = [...new Set(candidates.map(c => c.track_id).filter(Boolean))] as string[]
+  const supportLevels = [...new Set(candidates.map(c => c.support_level).filter(Boolean))] as string[]
+
   // Filter logic
   let filtered = candidates
+
+  // Audience mode filter
   if (params.filter) {
     const [field, value] = params.filter.split(':')
     filtered = filtered.filter((c) => {
@@ -69,13 +77,32 @@ export default async function LibraryAdminPage({
     })
   }
 
+  // Track filter
+  if (params.track) {
+    filtered = filtered.filter(c => c.track_id === params.track)
+  }
+
+  // Support level filter
+  if (params.support) {
+    filtered = filtered.filter(c => c.support_level === params.support)
+  }
+
+  // Quality filter
+  if (params.quality === 'qualified') {
+    filtered = filtered.filter(isFullyQualified)
+  } else if (params.quality === 'incomplete') {
+    filtered = filtered.filter(c => !isFullyQualified(c))
+  }
+
   // Search logic
   if (params.search) {
     const searchLower = params.search.toLowerCase()
     filtered = filtered.filter(
       (c) =>
         c.id.toLowerCase().includes(searchLower) ||
-        c.name.toLowerCase().includes(searchLower)
+        c.name.toLowerCase().includes(searchLower) ||
+        c.track_id?.toLowerCase().includes(searchLower) ||
+        c.interest_tags?.some(t => t.toLowerCase().includes(searchLower))
     )
   }
 
@@ -90,12 +117,43 @@ export default async function LibraryAdminPage({
   const builderCount = candidates.filter((c) => c.audience_mode === 'builder').length
   const bothCount = candidates.filter((c) => c.audience_mode === 'both').length
 
+  // Build filter URL helper
+  function buildUrl(newParams: Record<string, string | undefined>) {
+    const base = `/admin/library${tokenParam}`
+    const parts = []
+
+    const mergedParams = {
+      filter: params.filter,
+      search: params.search,
+      track: params.track,
+      support: params.support,
+      quality: params.quality,
+      ...newParams
+    }
+
+    for (const [key, value] of Object.entries(mergedParams)) {
+      if (value && key !== 'id') {
+        parts.push(`${key}=${encodeURIComponent(value)}`)
+      }
+    }
+
+    return parts.length > 0 ? `${base}&${parts.join('&')}` : base
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Library Studio</h1>
-          <p className="text-zinc-400">Manage and scale the idea library</p>
+        <header className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Library Studio</h1>
+            <p className="text-zinc-400">Manage and scale the idea library</p>
+          </div>
+          <a
+            href={`/admin/metrics${tokenParam}`}
+            className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700"
+          >
+            View Metrics →
+          </a>
         </header>
 
         {/* Stats */}
@@ -157,23 +215,77 @@ export default async function LibraryAdminPage({
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <form className="flex gap-2" action={`/__admin/library${tokenParam}`} method="get">
+        <div className="space-y-4 mb-6">
+          {/* Search */}
+          <form className="flex gap-2" action={`/admin/library`} method="get">
             {params.token && <input type="hidden" name="token" value={params.token} />}
             <input
               type="text"
               name="search"
-              placeholder="Search by ID or name..."
+              placeholder="Search by ID, name, track, or tag..."
               defaultValue={params.search}
-              className="px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-sm w-64"
+              className="px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-sm flex-1 max-w-md"
             />
             <button type="submit" className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">Search</button>
+            {params.search && (
+              <a href={buildUrl({ search: undefined })} className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">Clear</a>
+            )}
           </form>
-          <div className="flex gap-2">
-            <a href={`/__admin/library${tokenParam}`} className="px-3 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">All</a>
-            <a href={`/__admin/library${tokenParam}&filter=audience_mode:consumer`} className="px-3 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">Consumer</a>
-            <a href={`/__admin/library${tokenParam}&filter=audience_mode:builder`} className="px-3 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">Builder</a>
-            <a href={`/__admin/library${tokenParam}&filter=audience_mode:both`} className="px-3 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700">Both</a>
+
+          {/* Filter buttons */}
+          <div className="flex flex-wrap gap-2">
+            {/* Audience Mode */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-zinc-500 mr-1">Audience:</span>
+              <a href={buildUrl({ filter: undefined })} className={`px-3 py-1.5 rounded text-xs ${!params.filter ? 'bg-violet-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>All</a>
+              <a href={buildUrl({ filter: 'audience_mode:consumer' })} className={`px-3 py-1.5 rounded text-xs ${params.filter === 'audience_mode:consumer' ? 'bg-blue-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>Consumer</a>
+              <a href={buildUrl({ filter: 'audience_mode:builder' })} className={`px-3 py-1.5 rounded text-xs ${params.filter === 'audience_mode:builder' ? 'bg-violet-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>Builder</a>
+              <a href={buildUrl({ filter: 'audience_mode:both' })} className={`px-3 py-1.5 rounded text-xs ${params.filter === 'audience_mode:both' ? 'bg-amber-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>Both</a>
+            </div>
+
+            {/* Quality */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-zinc-500 mr-1">Quality:</span>
+              <a href={buildUrl({ quality: undefined })} className={`px-3 py-1.5 rounded text-xs ${!params.quality ? 'bg-violet-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>All</a>
+              <a href={buildUrl({ quality: 'qualified' })} className={`px-3 py-1.5 rounded text-xs ${params.quality === 'qualified' ? 'bg-emerald-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>Qualified</a>
+              <a href={buildUrl({ quality: 'incomplete' })} className={`px-3 py-1.5 rounded text-xs ${params.quality === 'incomplete' ? 'bg-red-600' : 'bg-zinc-800 hover:bg-zinc-700'}`}>Incomplete</a>
+            </div>
+
+            {/* Track dropdown */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-zinc-500 mr-1">Track:</span>
+              <select
+                className="px-3 py-1.5 bg-zinc-800 rounded text-xs border-none"
+                onChange={(e) => {
+                  const value = e.target.value
+                  window.location.href = buildUrl({ track: value || undefined })
+                }}
+                value={params.track || ''}
+              >
+                <option value="">All Tracks</option>
+                {tracks.map(track => (
+                  <option key={track} value={track}>{track}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Support Level dropdown */}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-zinc-500 mr-1">Support:</span>
+              <select
+                className="px-3 py-1.5 bg-zinc-800 rounded text-xs border-none"
+                onChange={(e) => {
+                  const value = e.target.value
+                  window.location.href = buildUrl({ support: value || undefined })
+                }}
+                value={params.support || ''}
+              >
+                <option value="">All Levels</option>
+                {supportLevels.map(level => (
+                  <option key={level} value={level}>{level}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -189,7 +301,7 @@ export default async function LibraryAdminPage({
               return (
                 <a
                   key={c.id}
-                  href={`/__admin/library${tokenParam}&id=${c.id}`}
+                  href={`/admin/library${tokenParam}&id=${c.id}${params.filter ? `&filter=${params.filter}` : ''}${params.quality ? `&quality=${params.quality}` : ''}${params.track ? `&track=${params.track}` : ''}${params.support ? `&support=${params.support}` : ''}${params.search ? `&search=${params.search}` : ''}`}
                   className={`block bg-zinc-900 border rounded-lg p-4 hover:border-zinc-600 transition-colors ${
                     isSelected ? 'border-violet-500' : 'border-zinc-800'
                   }`}
@@ -200,10 +312,11 @@ export default async function LibraryAdminPage({
                         <span className={`w-2 h-2 rounded-full ${passCount === checks.length ? 'bg-emerald-400' : 'bg-amber-400'}`} />
                         <span className="font-medium truncate">{c.name}</span>
                       </div>
-                      <div className="flex gap-2 text-xs text-zinc-500">
+                      <div className="flex flex-wrap gap-1 text-xs text-zinc-500">
                         <span className="px-2 py-0.5 bg-zinc-800 rounded">{c.audience_mode}</span>
                         <span className="px-2 py-0.5 bg-zinc-800 rounded">{c.track_id}</span>
                         <span className="px-2 py-0.5 bg-zinc-800 rounded">{c.support_level}</span>
+                        {c.distribution_type && <span className="px-2 py-0.5 bg-zinc-800 rounded">{c.distribution_type}</span>}
                       </div>
                     </div>
                     <div className="text-xs text-zinc-500">
@@ -219,8 +332,11 @@ export default async function LibraryAdminPage({
           <div className="lg:col-span-1">
             {selectedCandidate ? (
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 sticky top-4">
-                <h3 className="font-semibold mb-4">{selectedCandidate.name}</h3>
-                <div className="text-xs text-zinc-500 mb-4">ID: {selectedCandidate.id}</div>
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-semibold">{selectedCandidate.name}</h3>
+                  <CopyButton data={selectedCandidate as unknown as Record<string, unknown>} />
+                </div>
+                <div className="text-xs text-zinc-500 mb-4 font-mono">{selectedCandidate.id}</div>
 
                 <div className="space-y-4">
                   {/* Quality checklist */}
@@ -250,6 +366,8 @@ export default async function LibraryAdminPage({
                       <dd>{selectedCandidate.support_level}</dd>
                       <dt className="text-zinc-500">Delivery</dt>
                       <dd>{selectedCandidate.delivery_mode}</dd>
+                      <dt className="text-zinc-500">Distribution</dt>
+                      <dd>{selectedCandidate.distribution_type || '-'}</dd>
                     </dl>
                   </div>
 
@@ -297,6 +415,19 @@ export default async function LibraryAdminPage({
                       </ul>
                     </div>
                   )}
+
+                  {/* MVP Scope */}
+                  {selectedCandidate.mvp_in && selectedCandidate.mvp_in.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-medium text-zinc-400 mb-2">MVP In ({selectedCandidate.mvp_in.length})</h4>
+                      <ul className="space-y-1 text-xs text-zinc-400">
+                        {selectedCandidate.mvp_in.slice(0, 5).map((item, i) => (
+                          <li key={i}>• {item}</li>
+                        ))}
+                        {selectedCandidate.mvp_in.length > 5 && <li className="text-zinc-500">... +{selectedCandidate.mvp_in.length - 5} more</li>}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -307,26 +438,23 @@ export default async function LibraryAdminPage({
           </div>
         </div>
 
-        {/* Export buttons */}
+        {/* Import instructions */}
         <div className="mt-8 pt-8 border-t border-zinc-800">
-          <h3 className="font-semibold mb-4">Export Tools</h3>
-          <div className="flex gap-4">
-            <a
-              href="/api/admin/library/export"
-              className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700"
-            >
-              Export library.json
-            </a>
-            <a
-              href="/api/admin/library/csv-template"
-              className="px-4 py-2 bg-zinc-800 rounded-lg text-sm hover:bg-zinc-700"
-            >
-              Download CSV Template
-            </a>
+          <h3 className="font-semibold mb-4">Import Tools</h3>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 space-y-3 text-sm">
+            <p className="text-zinc-400">
+              To import candidates from CSV:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 text-zinc-300">
+              <li>Create a CSV with required columns (see <code className="bg-zinc-800 px-1.5 py-0.5 rounded">data/README.md</code> for schema)</li>
+              <li>Run: <code className="bg-zinc-800 px-2 py-1 rounded">npx tsx scripts/library/import-csv.ts path/to/file.csv</code></li>
+              <li>Review validation report for errors</li>
+              <li>Add valid candidates: <code className="bg-zinc-800 px-2 py-1 rounded">npx tsx scripts/library/add-batch.ts path/to/patch.json</code></li>
+            </ol>
+            <p className="text-zinc-500 text-xs mt-4">
+              Quality requirements: 3+ competitors, 3+ VoC quotes, 7+ MVP in-scope, 5+ MVP out-scope, wedge, interest/avoid tags
+            </p>
           </div>
-          <p className="text-sm text-zinc-500 mt-4">
-            To import: <code className="bg-zinc-800 px-2 py-0.5 rounded">npx tsx scripts/library/import-csv.ts path/to/file.csv</code>
-          </p>
         </div>
       </div>
     </div>
