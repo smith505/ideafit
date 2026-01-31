@@ -61,7 +61,7 @@ doc
   .fillColor('#8b5cf6')
   .text('87% Match', { continued: true })
   .fillColor('#71717a')
-  .text('  •  Chrome extension utility')
+  .text('  -  Chrome extension utility')
   .moveDown(0.5)
 
 doc
@@ -125,7 +125,7 @@ doc.fontSize(12).fillColor('#10b981').text('In Scope:').moveDown(0.3)
 
 const mvpIn = ['One-click sweep', 'Auto-group by domain', 'Hibernation', 'Restore last 3 sessions', 'Weekly time-saved estimate']
 mvpIn.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`• ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`- ${item}`)
 })
 
 doc.moveDown(0.5)
@@ -134,16 +134,16 @@ doc.fontSize(12).fillColor('#ef4444').text('Out of Scope:').moveDown(0.3)
 
 const mvpOut = ['Team features', 'Cross-device sync', 'AI categorization']
 mvpOut.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`• ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`- ${item}`)
 })
 
 doc.moveDown(2)
 
-// Blurred section indicator
+// Blurred section indicator (using ASCII-safe dashes)
 doc
   .fontSize(14)
   .fillColor('#71717a')
-  .text('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', { align: 'center' })
+  .text('-----------------------------------', { align: 'center' })
   .moveDown(0.5)
 
 doc
@@ -154,11 +154,11 @@ doc
 
 doc.fontSize(11).fillColor('#52525b')
 const fullReportItems = [
-  '✓ Voice of Customer quotes with source links',
-  '✓ Complete 14-day ship plan',
-  '✓ Claude prompts for your stack',
-  '✓ 4 additional matched ideas',
-  '✓ PDF export & 5 regenerations',
+  '[+] Voice of Customer quotes with source links',
+  '[+] Complete 14-day ship plan',
+  '[+] Claude prompts for your stack',
+  '[+] 4 additional matched ideas',
+  '[+] PDF export & 5 regenerations',
 ]
 fullReportItems.forEach((item) => {
   doc.text(item, { align: 'center' })
@@ -173,7 +173,7 @@ doc
 
 // Footer
 doc.moveDown(3)
-doc.fontSize(10).fillColor('#a1a1aa').text('© 2026 IdeaFit. Find your fit. Ship your idea.', { align: 'center' })
+doc.fontSize(10).fillColor('#a1a1aa').text('(c) 2026 IdeaFit. Find your fit. Ship your idea.', { align: 'center' })
 
 doc.end()
 
