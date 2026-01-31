@@ -19,6 +19,23 @@ import {
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
+// Candidate type with proof data
+interface CandidateProof {
+  distribution_type?: string
+  support_level?: string
+  timebox_days?: number
+  competitors?: Array<{ name: string; price: string; gap: string }>
+  voc_quotes?: Array<{ quote: string; source: string; pain_tag?: string }>
+  mvp_in?: string[]
+  wedge?: string
+}
+
+// Truncate text with ellipsis
+function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength - 3) + '...'
+}
+
 // Result card component for consistent display
 function ResultCard({
   idea,
@@ -33,18 +50,21 @@ function ResultCard({
   badgeColor: string
   chips: MatchChip[]
 }) {
-  const candidate = getIdeaById(idea.id) as {
-    distribution_type?: string
-    support_level?: string
-    timebox_days?: number
-  } | undefined
+  const candidate = getIdeaById(idea.id) as CandidateProof | undefined
 
   const distType = candidate?.distribution_type || 'organic'
   const supportLevel = candidate?.support_level || 'medium'
   const timeboxDays = candidate?.timebox_days || 14
+  const competitors = candidate?.competitors || []
+  const vocQuotes = candidate?.voc_quotes || []
+  const mvpIn = candidate?.mvp_in || []
 
   const matchChips = chips.filter((c) => c.type === 'match').slice(0, 3)
   const avoidChips = chips.filter((c) => c.type === 'avoided').slice(0, 2)
+
+  // Get first VoC quote (truncated to ~120 chars)
+  const firstVoc = vocQuotes[0]
+  const vocText = firstVoc ? truncate(firstVoc.quote, 120) : null
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
@@ -139,6 +159,68 @@ function ResultCard({
               </div>
             </div>
           )}
+
+          {/* Proof Preview Section */}
+          <div className="mt-4 pt-4 border-t border-zinc-800 space-y-4">
+            {/* Competitor snapshot */}
+            {competitors.length > 0 && (
+              <div>
+                <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Competitors
+                </p>
+                <div className="space-y-1.5">
+                  {competitors.slice(0, 2).map((comp, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs">
+                      <span className="text-zinc-300 font-medium shrink-0">{comp.name}</span>
+                      <span className="text-zinc-600">·</span>
+                      <span className="text-zinc-500">{comp.price}</span>
+                      <span className="text-zinc-600">·</span>
+                      <span className="text-zinc-400 italic">{truncate(comp.gap, 50)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* VoC proof */}
+            {vocText && firstVoc && (
+              <div>
+                <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  Voice of Customer
+                </p>
+                <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
+                  <p className="text-xs text-zinc-300 italic">&ldquo;{vocText}&rdquo;</p>
+                  <p className="text-xs text-zinc-500 mt-1">— {firstVoc.source}</p>
+                </div>
+              </div>
+            )}
+
+            {/* MVP first steps */}
+            {mvpIn.length > 0 && (
+              <div>
+                <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  MVP First Steps
+                </p>
+                <ul className="space-y-1">
+                  {mvpIn.slice(0, 3).map((step, i) => (
+                    <li key={i} className="text-xs text-zinc-400 flex items-start gap-2">
+                      <span className="text-violet-400 shrink-0">•</span>
+                      {step}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -304,7 +386,7 @@ export default function ResultsClient() {
             Quiz Complete
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">Your Matches</h1>
-          <p className="text-zinc-400">Based on your 13 answers, here are your best startup ideas.</p>
+          <p className="text-zinc-400">Based on your {QUIZ_QUESTIONS.length} answers, here are your best startup ideas.</p>
         </div>
 
         {/* Confidence indicator */}

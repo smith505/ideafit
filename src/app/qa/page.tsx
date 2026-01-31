@@ -136,6 +136,7 @@ export default function QAPage() {
   const [currentAnswers, setCurrentAnswers] = useState<QuizAnswers | null>(null)
   const [shuffleSeed, setShuffleSeed] = useState<number | undefined>(undefined)
   const [confidence, setConfidence] = useState<{ level: ConfidenceLevel; gap: number; explanation: string } | null>(null)
+  const [shuffleAnalysis, setShuffleAnalysis] = useState<{ winnerCounts: Record<string, number>; totalRuns: number } | null>(null)
 
   const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA?.slice(0, 7) || 'dev'
 
@@ -255,6 +256,28 @@ export default function QAPage() {
     URL.revokeObjectURL(url)
   }
 
+  const run20Shuffles = () => {
+    if (!currentAnswers) {
+      alert('No quiz answers in localStorage. Select a profile first.')
+      return
+    }
+
+    const winnerCounts: Record<string, number> = {}
+    const totalRuns = 20
+
+    for (let i = 0; i < totalRuns; i++) {
+      const seed = Date.now() + i * 1000 + Math.floor(Math.random() * 1000)
+      const ranked = rankIdeas(currentAnswers, { seed, limit: 1 })
+      const winner = ranked.rankedIdeas[0]
+      if (winner) {
+        const key = `${winner.name} (${winner.id})`
+        winnerCounts[key] = (winnerCounts[key] || 0) + 1
+      }
+    }
+
+    setShuffleAnalysis({ winnerCounts, totalRuns })
+  }
+
   // Compute red flags for top result
   const getRedFlags = (): string[] => {
     if (debugResults.length === 0) return []
@@ -362,6 +385,12 @@ export default function QAPage() {
             >
               Export JSON
             </button>
+            <button
+              onClick={run20Shuffles}
+              className="px-4 py-2 bg-orange-900/50 hover:bg-orange-900 text-orange-300 rounded-lg transition-colors"
+            >
+              Run 20 Shuffles
+            </button>
             <Link
               href="/results"
               className="px-4 py-2 bg-fuchsia-900/50 hover:bg-fuchsia-900 text-fuchsia-300 rounded-lg transition-colors"
@@ -425,6 +454,71 @@ export default function QAPage() {
                 </ul>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Shuffle Analysis */}
+        {shuffleAnalysis && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold mb-4">
+              Shuffle Analysis ({shuffleAnalysis.totalRuns} runs)
+            </h2>
+
+            {/* Check for dominant winner (>40%) */}
+            {(() => {
+              const entries = Object.entries(shuffleAnalysis.winnerCounts).sort((a, b) => b[1] - a[1])
+              const topWinner = entries[0]
+              const topPercent = topWinner ? Math.round((topWinner[1] / shuffleAnalysis.totalRuns) * 100) : 0
+              const isDominant = topPercent > 40
+
+              return (
+                <>
+                  {isDominant && (
+                    <div className="bg-amber-900/20 border border-amber-800 rounded-lg p-3 mb-4">
+                      <div className="flex items-center gap-2 text-amber-400 text-sm font-medium">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Dominant Winner Detected
+                      </div>
+                      <p className="text-xs text-amber-300 mt-1">
+                        &quot;{topWinner[0]}&quot; wins {topPercent}% of shuffles. This may indicate insufficient differentiation for this profile.
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    {entries.map(([name, count], i) => {
+                      const percent = Math.round((count / shuffleAnalysis.totalRuns) * 100)
+                      return (
+                        <div key={name} className="flex items-center gap-3">
+                          <div className="w-8 text-zinc-500 text-xs text-right">#{i + 1}</div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-sm text-zinc-200">{name}</span>
+                              <span className="text-xs text-zinc-400">{count} wins ({percent}%)</span>
+                            </div>
+                            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full ${
+                                  percent > 40 ? 'bg-amber-500' : percent > 20 ? 'bg-violet-500' : 'bg-zinc-600'
+                                }`}
+                                style={{ width: `${percent}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-zinc-500">
+                    <p>Unique winners: {entries.length}</p>
+                    <p>Most frequent: {topWinner?.[0]} ({topPercent}%)</p>
+                  </div>
+                </>
+              )
+            })()}
           </div>
         )}
 

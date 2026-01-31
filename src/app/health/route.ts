@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { QUIZ_QUESTIONS } from '@/lib/quiz-questions'
+import { validateLibrary } from '@/lib/validate-library'
 import library from '../../../data/library.json'
 
 interface CandidateWithTags {
@@ -41,6 +42,9 @@ export async function GET() {
   // Count by delivery mode
   const onlineOnlyCount = candidates.filter((c) => c.delivery_mode === 'online_only').length
 
+  // Library quality validation
+  const libraryValidation = validateLibrary()
+
   return NextResponse.json({
     build: buildSha,
     quizQuestionCount: QUIZ_QUESTIONS.length,
@@ -58,6 +62,7 @@ export async function GET() {
     deliveryModeBreakdown: {
       onlineOnly: onlineOnlyCount,
     },
+    libraryQuality: libraryValidation.quality,
     timestamp: new Date().toISOString(),
   })
 }
