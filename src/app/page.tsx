@@ -127,7 +127,7 @@ export default function LandingPage() {
         </h2>
         <div className="grid md:grid-cols-4 gap-8">
           {[
-            { step: '1', title: 'Take Quiz', desc: '10 questions about your time, skills, and goals' },
+            { step: '1', title: 'Take Quiz', desc: '~7 min quiz about your time, skills, and goals' },
             { step: '2', title: 'Get Matched', desc: 'AI matches you to ideas from our validated library' },
             { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $49' },
             { step: '4', title: 'Start Building', desc: 'Follow the 14-day plan with Claude prompts' },

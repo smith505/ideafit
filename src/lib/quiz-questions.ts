@@ -6,9 +6,12 @@ export interface QuizOption {
 export interface QuizQuestion {
   id: string
   question: string
-  type: 'single' | 'multi'
-  options: QuizOption[]
+  type: 'single' | 'multi' | 'text'
+  options?: QuizOption[]
   skippable?: boolean
+  maxSelections?: number
+  placeholder?: string
+  maxLength?: number
 }
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
@@ -68,6 +71,42 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
+    id: 'interest_themes',
+    question: 'What topics interest you most?',
+    type: 'multi',
+    maxSelections: 3,
+    skippable: true,
+    options: [
+      { value: 'money', label: 'Money / budgeting / saving' },
+      { value: 'health', label: 'Health / fitness' },
+      { value: 'career', label: 'Career / productivity' },
+      { value: 'tech', label: 'Tech / tools' },
+      { value: 'gaming', label: 'Gaming' },
+      { value: 'shopping', label: 'Shopping / deals' },
+      { value: 'home', label: 'Home / DIY' },
+      { value: 'learning', label: 'Learning / education' },
+      { value: 'travel', label: 'Travel' },
+      { value: 'none', label: 'No preference' },
+    ],
+  },
+  {
+    id: 'avoid_list',
+    question: 'What do you want to avoid in your business?',
+    type: 'multi',
+    maxSelections: 4,
+    skippable: true,
+    options: [
+      { value: 'calls', label: 'Calls / demos' },
+      { value: 'social', label: 'Social media posting' },
+      { value: 'support', label: 'Customer support' },
+      { value: 'content', label: 'Writing content / SEO' },
+      { value: 'ads', label: 'Ads management' },
+      { value: 'community', label: 'Building a community' },
+      { value: 'integrations', label: 'Integrations / APIs' },
+      { value: 'none', label: 'No strong avoids' },
+    ],
+  },
+  {
     id: 'quit_reason',
     question: 'What usually makes you quit a side project?',
     type: 'single',
@@ -95,6 +134,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     id: 'audience_access',
     question: 'Do you have access to any of these audiences already?',
     type: 'multi',
+    maxSelections: 3,
     skippable: true,
     options: [
       { value: 'developers', label: 'Developers / tech people' },
@@ -118,6 +158,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     id: 'existing_skills',
     question: 'What skills do you bring to the table?',
     type: 'multi',
+    maxSelections: 3,
     skippable: true,
     options: [
       { value: 'design', label: 'Design / UI' },
@@ -127,6 +168,14 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { value: 'coding', label: 'Coding' },
       { value: 'ops', label: 'Operations / Systems' },
     ],
+  },
+  {
+    id: 'optional_notes',
+    question: 'Anything you absolutely want to avoid or include?',
+    type: 'text',
+    skippable: true,
+    placeholder: 'e.g., "No subscriptions", "Chrome extension only", "Needs to work with FB ads", "No B2B"',
+    maxLength: 200,
   },
 ]
 

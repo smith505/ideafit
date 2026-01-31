@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { QUIZ_QUESTIONS, QuizAnswers } from '@/lib/quiz-questions'
-import { rankIdeas, RankedIdea, FitProfile } from '@/lib/fit-algorithm'
+import { rankIdeas, RankedIdea, FitProfile, generateMatchChips, MatchChip } from '@/lib/fit-algorithm'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
@@ -20,6 +20,7 @@ export default function ResultsPage() {
     fitTrack: string
     winnerId: string
   } | null>(null)
+  const [matchChips, setMatchChips] = useState<MatchChip[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -42,6 +43,9 @@ export default function ResultsPage() {
       setAnswers(quizAnswers)
       const ranked = rankIdeas(quizAnswers)
       setResults(ranked)
+      // Generate match chips for the winner
+      const chips = generateMatchChips(ranked.profile, ranked.winnerId)
+      setMatchChips(chips)
     } catch {
       router.push('/quiz')
     }
@@ -146,6 +150,37 @@ export default function ResultsPage() {
                   {winner.score}% match
                 </span>
               </div>
+
+              {/* Match chips */}
+              {matchChips.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-zinc-800">
+                  <p className="text-xs text-zinc-500 mb-2">Why this matches you</p>
+                  <div className="flex flex-wrap gap-2">
+                    {matchChips.filter(c => c.type === 'match').map((chip, i) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-900/40 text-violet-300 text-xs font-medium"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {chip.label}
+                      </span>
+                    ))}
+                    {matchChips.filter(c => c.type === 'avoided').map((chip, i) => (
+                      <span
+                        key={`avoided-${i}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900/40 text-emerald-300 text-xs font-medium"
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                        {chip.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

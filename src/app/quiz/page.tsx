@@ -14,7 +14,7 @@ function QuizSkeleton() {
             </div>
             <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
           </Link>
-          <span className="text-sm text-zinc-500">1 of 10</span>
+          <span className="text-sm text-zinc-500">1 of 13</span>
         </div>
       </header>
 
@@ -35,12 +35,14 @@ function QuizSkeleton() {
         {/* Skeleton question placeholders for SEO */}
         <div className="sr-only">
           <h1>Quick Fit Quiz</h1>
-          <p>Answer 10 quick questions about your time, skills, and goals to find your best startup idea match.</p>
+          <p>Take our ~7 minute quiz about your time, skills, and goals to find your best startup idea match.</p>
           <ul>
             <li>How many hours per week can you dedicate?</li>
             <li>What is your technical background?</li>
             <li>What revenue goal are you targeting?</li>
             <li>How do you prefer to build?</li>
+            <li>What topics interest you most?</li>
+            <li>What do you want to avoid in your business?</li>
             <li>What usually makes you quit a side project?</li>
             <li>How comfortable are you getting customers?</li>
           </ul>

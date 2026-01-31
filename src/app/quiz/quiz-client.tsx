@@ -12,6 +12,7 @@ export default function QuizClient() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswers>({})
   const [isLoaded, setIsLoaded] = useState(false)
+  const [textValue, setTextValue] = useState('')
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -35,25 +36,42 @@ export default function QuizClient() {
     }
   }, [answers, currentIndex, isLoaded])
 
+  // Sync text value when navigating to text question
+  useEffect(() => {
+    const currentQuestion = QUIZ_QUESTIONS[currentIndex]
+    if (currentQuestion?.type === 'text') {
+      setTextValue((answers[currentQuestion.id] as string) || '')
+    }
+  }, [currentIndex, answers])
+
   const currentQuestion = QUIZ_QUESTIONS[currentIndex]
-  const progress = ((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100
+  const totalQuestions = QUIZ_QUESTIONS.length
+  const progress = ((currentIndex + 1) / totalQuestions) * 100
+  const maxSelections = currentQuestion?.maxSelections || 3
 
   const handleSelect = (value: string) => {
     if (currentQuestion.type === 'single') {
       setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }))
-    } else {
-      // Multi-select toggle (max 3)
+    } else if (currentQuestion.type === 'multi') {
+      // Multi-select toggle with configurable max
       const current = (answers[currentQuestion.id] as string[]) || []
       if (current.includes(value)) {
         // Remove
         const updated = current.filter((v) => v !== value)
         setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }))
-      } else if (current.length < 3) {
+      } else if (current.length < maxSelections) {
         // Add only if under limit
         const updated = [...current, value]
         setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }))
       }
     }
+  }
+
+  const handleTextChange = (value: string) => {
+    const maxLen = currentQuestion.maxLength || 200
+    const trimmed = value.slice(0, maxLen)
+    setTextValue(trimmed)
+    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: trimmed }))
   }
 
   const isSelected = (value: string) => {
@@ -65,6 +83,9 @@ export default function QuizClient() {
   }
 
   const canProceed = () => {
+    if (currentQuestion.type === 'text') {
+      return true // Text is always optional
+    }
     const answer = answers[currentQuestion.id]
     if (currentQuestion.type === 'single') {
       return !!answer
@@ -81,7 +102,7 @@ export default function QuizClient() {
   }
 
   const handleNext = () => {
-    if (currentIndex < QUIZ_QUESTIONS.length - 1) {
+    if (currentIndex < totalQuestions - 1) {
       setCurrentIndex((prev) => prev + 1)
     } else {
       // Quiz complete, go to results
@@ -96,6 +117,9 @@ export default function QuizClient() {
       delete updated[currentQuestion.id]
       return updated
     })
+    if (currentQuestion.type === 'text') {
+      setTextValue('')
+    }
     handleNext()
   }
 
@@ -103,6 +127,14 @@ export default function QuizClient() {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1)
     }
+  }
+
+  // Calculate time remaining estimate
+  const getTimeRemaining = () => {
+    const remaining = totalQuestions - currentIndex - 1
+    if (remaining <= 3) return '~30 sec left'
+    if (remaining <= 5) return '~1 min left'
+    return null
   }
 
   if (!isLoaded) {
@@ -122,10 +154,10 @@ export default function QuizClient() {
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-zinc-500">
-              {currentIndex + 1} of {QUIZ_QUESTIONS.length}
+              {currentIndex + 1} of {totalQuestions}
             </span>
-            {currentIndex >= 7 && (
-              <span className="text-xs text-violet-400">~1 min left</span>
+            {getTimeRemaining() && (
+              <span className="text-xs text-violet-400">{getTimeRemaining()}</span>
             )}
           </div>
         </div>
@@ -147,64 +179,94 @@ export default function QuizClient() {
 
       {/* Question */}
       <main className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl md:text-3xl font-bold text-zinc-100 mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-zinc-100 mb-2">
           {currentQuestion.question}
         </h1>
 
-        {currentQuestion.type === 'multi' && (
+        {currentQuestion.type === 'text' && (
           <p className="text-sm text-zinc-500 mb-6">
-            Select up to 3 ({getMultiSelectCount()}/3 selected)
+            Optional - 1-2 sentences max
           </p>
         )}
 
-        <div className="space-y-3">
-          {currentQuestion.options.map((option) => {
-            const selected = isSelected(option.value)
-            const atLimit = currentQuestion.type === 'multi' && getMultiSelectCount() >= 3 && !selected
+        {currentQuestion.type === 'multi' && (
+          <p className="text-sm text-zinc-500 mb-6">
+            Select up to {maxSelections} ({getMultiSelectCount()}/{maxSelections} selected)
+          </p>
+        )}
 
-            return (
-              <button
-                key={option.value}
-                onClick={() => handleSelect(option.value)}
-                disabled={atLimit}
-                className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${
-                  selected
-                    ? 'border-violet-500 bg-violet-500/10 text-zinc-100'
-                    : atLimit
-                      ? 'border-zinc-800 bg-zinc-900/50 text-zinc-600 cursor-not-allowed'
-                      : 'border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-5 h-5 rounded-${currentQuestion.type === 'single' ? 'full' : 'md'} border-2 flex items-center justify-center ${
-                      selected
-                        ? 'border-violet-500 bg-violet-500'
-                        : 'border-zinc-600'
-                    }`}
-                  >
-                    {selected && (
-                      <svg
-                        className="w-3 h-3 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
+        {currentQuestion.type === 'single' && <div className="mb-6" />}
+
+        {/* Text input for 'text' type */}
+        {currentQuestion.type === 'text' && (
+          <div className="space-y-3">
+            <textarea
+              value={textValue}
+              onChange={(e) => handleTextChange(e.target.value)}
+              placeholder={currentQuestion.placeholder}
+              maxLength={currentQuestion.maxLength || 200}
+              className="w-full px-5 py-4 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-100 placeholder:text-zinc-600 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 resize-none"
+              rows={3}
+            />
+            <div className="flex justify-end">
+              <span className="text-xs text-zinc-600">
+                {textValue.length}/{currentQuestion.maxLength || 200}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Options for single/multi type */}
+        {currentQuestion.type !== 'text' && currentQuestion.options && (
+          <div className="space-y-3">
+            {currentQuestion.options.map((option) => {
+              const selected = isSelected(option.value)
+              const atLimit = currentQuestion.type === 'multi' && getMultiSelectCount() >= maxSelections && !selected
+
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => handleSelect(option.value)}
+                  disabled={atLimit}
+                  className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${
+                    selected
+                      ? 'border-violet-500 bg-violet-500/10 text-zinc-100'
+                      : atLimit
+                        ? 'border-zinc-800 bg-zinc-900/50 text-zinc-600 cursor-not-allowed'
+                        : 'border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-5 h-5 rounded-${currentQuestion.type === 'single' ? 'full' : 'md'} border-2 flex items-center justify-center ${
+                        selected
+                          ? 'border-violet-500 bg-violet-500'
+                          : 'border-zinc-600'
+                      }`}
+                    >
+                      {selected && (
+                        <svg
+                          className="w-3 h-3 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={3}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span>{option.label}</span>
                   </div>
-                  <span>{option.label}</span>
-                </div>
-              </button>
-            )
-          })}
-        </div>
+                </button>
+              )
+            })}
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex items-center justify-between mt-10">
@@ -232,14 +294,14 @@ export default function QuizClient() {
 
             <button
               onClick={handleNext}
-              disabled={!canProceed()}
+              disabled={!canProceed() && !currentQuestion.skippable}
               className={`px-8 py-3 rounded-full font-semibold transition-all ${
-                canProceed()
+                canProceed() || currentQuestion.skippable
                   ? 'bg-violet-600 hover:bg-violet-500 text-white'
                   : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
               }`}
             >
-              {currentIndex === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
+              {currentIndex === totalQuestions - 1 ? 'See Results' : 'Next'}
             </button>
           </div>
         </div>

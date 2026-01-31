@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { getIdeaById, getTrackById } from '@/lib/fit-algorithm'
+import { getIdeaById, getTrackById, generateMatchChips, FitProfile } from '@/lib/fit-algorithm'
 import CheckoutButton from './checkout-button'
 
 interface PreviewPageProps {
@@ -40,6 +40,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
   // Get first competitor and VoC quote for teaser
   const firstCompetitor = winnerIdea?.competitors?.[0]
   const firstVocQuote = winnerIdea?.voc_quotes?.[0]
+
+  // Generate match chips from stored fit profile
+  const fitProfile = report.fitProfile as FitProfile | null
+  const matchChips = fitProfile ? generateMatchChips(fitProfile, winner.id) : []
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -124,6 +128,37 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
           </div>
 
           <p className="text-zinc-400 mb-6">{winner.reason}</p>
+
+          {/* Match chips - Why this matches you */}
+          {matchChips.length > 0 && (
+            <div className="mb-6">
+              <p className="text-xs text-zinc-500 mb-2">Why this matches you</p>
+              <div className="flex flex-wrap gap-2">
+                {matchChips.filter(c => c.type === 'match').map((chip, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-900/40 text-violet-300 text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {chip.label}
+                  </span>
+                ))}
+                {matchChips.filter(c => c.type === 'avoided').map((chip, i) => (
+                  <span
+                    key={`avoided-${i}`}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900/40 text-emerald-300 text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    {chip.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* The Wedge - visible teaser */}
           {winnerIdea && (
