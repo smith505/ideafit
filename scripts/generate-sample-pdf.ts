@@ -2,15 +2,18 @@ import PDFDocument from 'pdfkit'
 import * as fs from 'fs'
 import * as path from 'path'
 
+// Generate versioned PDF
+const VERSION = 'v1'
 const doc = new PDFDocument({ margin: 50 })
-const outputPath = path.join(process.cwd(), 'public', 'sample-report.pdf')
+const outputPath = path.join(process.cwd(), 'public', `sample-report-${VERSION}.pdf`)
 
 // Ensure public directory exists
 if (!fs.existsSync(path.dirname(outputPath))) {
   fs.mkdirSync(path.dirname(outputPath), { recursive: true })
 }
 
-doc.pipe(fs.createWriteStream(outputPath))
+const writeStream = fs.createWriteStream(outputPath)
+doc.pipe(writeStream)
 
 // Header
 doc
@@ -125,16 +128,17 @@ doc.fontSize(12).fillColor('#10b981').text('In Scope:').moveDown(0.3)
 
 const mvpIn = ['One-click sweep', 'Auto-group by domain', 'Hibernation', 'Restore last 3 sessions', 'Weekly time-saved estimate']
 mvpIn.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`- ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`)
 })
 
-doc.moveDown(0.5)
+doc.moveDown(0.8)
 
 doc.fontSize(12).fillColor('#ef4444').text('Out of Scope:').moveDown(0.3)
 
+// Fixed: Each out-of-scope item on its own line with proper spacing
 const mvpOut = ['Team features', 'Cross-device sync', 'AI categorization']
 mvpOut.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`- ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`)
 })
 
 doc.moveDown(2)
@@ -177,4 +181,15 @@ doc.fontSize(10).fillColor('#a1a1aa').text('(c) 2026 IdeaFit. Find your fit. Shi
 
 doc.end()
 
-console.log(`Sample PDF generated at: ${outputPath}`)
+// Wait for file to finish writing before copying
+writeStream.on('finish', () => {
+  console.log(`Sample PDF generated at: ${outputPath}`)
+
+  // Also create a legacy redirect file (for backwards compatibility)
+  const legacyPath = path.join(process.cwd(), 'public', 'sample-report.pdf')
+  if (fs.existsSync(legacyPath)) {
+    fs.unlinkSync(legacyPath)
+  }
+  fs.copyFileSync(outputPath, legacyPath)
+  console.log(`Legacy PDF copied to: ${legacyPath}`)
+})

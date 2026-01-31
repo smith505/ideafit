@@ -36,7 +36,7 @@ export default function LandingPage() {
               href="/quiz"
               className="text-sm text-violet-400 hover:text-violet-300"
             >
-              Take the Quiz →
+              Take the Quiz
             </Link>
           </div>
         </div>
@@ -59,10 +59,10 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-8 py-4 rounded-full text-lg transition-colors"
           >
             Take the Quick Fit Quiz
-            <span className="text-violet-200">— Free</span>
+            <span className="text-violet-200">- Free</span>
           </Link>
           <a
-            href="/sample-report.pdf"
+            href="/sample-report-v1.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 font-medium px-4 py-3 transition-colors"
@@ -74,7 +74,7 @@ export default function LandingPage() {
           </a>
         </div>
         <p className="text-sm text-zinc-500 mt-4">
-          5-7 minutes · No account required
+          5-7 minutes - No account required
         </p>
       </section>
 
@@ -127,7 +127,7 @@ export default function LandingPage() {
         </h2>
         <div className="grid md:grid-cols-4 gap-8">
           {[
-            { step: '1', title: 'Take Quiz', desc: '8 questions about your time, skills, and goals' },
+            { step: '1', title: 'Take Quiz', desc: '10 questions about your time, skills, and goals' },
             { step: '2', title: 'Get Matched', desc: 'AI matches you to ideas from our validated library' },
             { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $49' },
             { step: '4', title: 'Start Building', desc: 'Follow the 14-day plan with Claude prompts' },
@@ -191,10 +191,67 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="max-w-3xl mx-auto px-6 py-16 border-t border-zinc-800">
+        <h2 className="text-2xl font-bold text-zinc-100 mb-10 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div className="space-y-6">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="font-semibold text-zinc-100 mb-2">
+              What kind of ideas are in the library?
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              Our library includes validated micro-SaaS, browser extensions, Chrome tools, and utility products.
+              Each idea has been researched with real competitor analysis and voice-of-customer quotes from Reddit,
+              Twitter, and forums.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="font-semibold text-zinc-100 mb-2">
+              How does the matching work?
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              We score each idea based on your quiz answers: time availability, technical skills, support tolerance,
+              revenue goals, and audience access. You get matched to ideas that fit your specific constraints and strengths.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="font-semibold text-zinc-100 mb-2">
+              What if the report isn&apos;t useful?
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              Every report includes at least 3 competitor analyses, 3 voice-of-customer quotes, and a clear wedge
+              (differentiation strategy). If your report doesn&apos;t meet these standards, email us within 7 days
+              and we&apos;ll either fix it or give you a full refund.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="font-semibold text-zinc-100 mb-2">
+              What are regenerations?
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              If you don&apos;t love your matched idea, you can regenerate your report up to 5 times to explore
+              different matches from our library. Same quiz answers, different top picks.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+            <h3 className="font-semibold text-zinc-100 mb-2">
+              Can I see a sample before I pay?
+            </h3>
+            <p className="text-zinc-400 text-sm">
+              Yes! The quiz is completely free. After completing it, you&apos;ll see a preview with your #1 match,
+              the wedge, one competitor, and one VoC quote. You only pay $49 if you want the full report with
+              all 5 matches, complete validation data, and the 14-day ship plan.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-8">
         <div className="max-w-5xl mx-auto px-6 text-center text-sm text-zinc-600">
-          © 2026 IdeaFit. Find your fit. Ship your idea.
+          (c) 2026 IdeaFit. Find your fit. Ship your idea.
         </div>
       </footer>
     </div>

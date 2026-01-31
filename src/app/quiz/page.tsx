@@ -14,14 +14,14 @@ function QuizSkeleton() {
             </div>
             <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
           </Link>
-          <span className="text-sm text-zinc-500">1 of 8</span>
+          <span className="text-sm text-zinc-500">1 of 10</span>
         </div>
       </header>
 
       {/* Progress bar skeleton */}
       <div className="max-w-2xl mx-auto px-6 pt-6">
         <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-          <div className="h-full w-[12%] bg-gradient-to-r from-violet-500 to-fuchsia-500" />
+          <div className="h-full w-[10%] bg-gradient-to-r from-violet-500 to-fuchsia-500" />
         </div>
       </div>
 
@@ -35,12 +35,14 @@ function QuizSkeleton() {
         {/* Skeleton question placeholders for SEO */}
         <div className="sr-only">
           <h1>Quick Fit Quiz</h1>
-          <p>Answer 8 quick questions about your time, skills, and goals to find your best startup idea match.</p>
+          <p>Answer 10 quick questions about your time, skills, and goals to find your best startup idea match.</p>
           <ul>
             <li>How many hours per week can you dedicate?</li>
-            <li>What&apos;s your technical background?</li>
+            <li>What is your technical background?</li>
             <li>What revenue goal are you targeting?</li>
             <li>How do you prefer to build?</li>
+            <li>What usually makes you quit a side project?</li>
+            <li>How comfortable are you getting customers?</li>
           </ul>
         </div>
       </main>

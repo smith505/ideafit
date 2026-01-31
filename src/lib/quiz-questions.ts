@@ -8,6 +8,7 @@ export interface QuizQuestion {
   question: string
   type: 'single' | 'multi'
   options: QuizOption[]
+  skippable?: boolean
 }
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
@@ -24,13 +25,13 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
   {
     id: 'tech_comfort',
-    question: 'What\'s your comfort level with coding or no-code tools?',
+    question: "What's your comfort level with coding or no-code tools?",
     type: 'single',
     options: [
-      { value: 'none', label: 'I can\'t code and don\'t want to learn' },
+      { value: 'none', label: "I can't code and don't want to learn" },
       { value: 'nocode', label: 'I can use no-code tools (Webflow, Bubble, etc.)' },
       { value: 'some', label: 'I can code simple things or copy/paste code' },
-      { value: 'dev', label: 'I\'m a developer' },
+      { value: 'dev', label: "I'm a developer" },
     ],
   },
   {
@@ -46,7 +47,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
   {
     id: 'revenue_goal',
-    question: 'What\'s your revenue goal in the next 6 months?',
+    question: "What's your revenue goal in the next 6 months?",
     type: 'single',
     options: [
       { value: 'side', label: '$500-1k/mo (side income)' },
@@ -62,14 +63,39 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     options: [
       { value: 'solo', label: 'Solo - I do everything myself' },
       { value: 'ai', label: 'Solo + AI assistants (ChatGPT, Claude, etc.)' },
-      { value: 'freelance', label: 'I\'ll outsource dev/design work' },
+      { value: 'freelance', label: "I'll outsource dev/design work" },
       { value: 'cofounder', label: 'Looking for a cofounder' },
+    ],
+  },
+  {
+    id: 'quit_reason',
+    question: 'What usually makes you quit a side project?',
+    type: 'single',
+    options: [
+      { value: 'motivation', label: 'I lose motivation after the initial excitement' },
+      { value: 'stuck', label: 'I get stuck on technical problems' },
+      { value: 'no_users', label: "I can't find users or customers" },
+      { value: 'time', label: 'Life gets busy and I run out of time' },
+      { value: 'never', label: "I usually don't quit - I ship things" },
+    ],
+  },
+  {
+    id: 'distribution_comfort',
+    question: 'How comfortable are you getting customers?',
+    type: 'single',
+    options: [
+      { value: 'seo', label: 'SEO / Content - I can write and wait for organic traffic' },
+      { value: 'communities', label: 'Communities - I can engage in Reddit, Discord, forums' },
+      { value: 'ads', label: 'Paid ads - I can spend money to test demand' },
+      { value: 'partnerships', label: 'Partnerships - I can reach out to influencers/businesses' },
+      { value: 'unsure', label: "I'm not sure - this is my weak spot" },
     ],
   },
   {
     id: 'audience_access',
     question: 'Do you have access to any of these audiences already?',
     type: 'multi',
+    skippable: true,
     options: [
       { value: 'developers', label: 'Developers / tech people' },
       { value: 'smb', label: 'Small business owners' },
@@ -80,18 +106,19 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
   {
     id: 'risk_tolerance',
-    question: 'What\'s your risk tolerance for launching?',
+    question: "What's your risk tolerance for launching?",
     type: 'single',
     options: [
       { value: 'low', label: 'Low - I need validation before building anything' },
-      { value: 'medium', label: 'Medium - I\'ll build a quick MVP to test' },
-      { value: 'high', label: 'High - I\'ll ship fast and figure it out' },
+      { value: 'medium', label: "Medium - I'll build a quick MVP to test" },
+      { value: 'high', label: "High - I'll ship fast and figure it out" },
     ],
   },
   {
     id: 'existing_skills',
-    question: 'What skills do you bring to the table? (select all that apply)',
+    question: 'What skills do you bring to the table?',
     type: 'multi',
+    skippable: true,
     options: [
       { value: 'design', label: 'Design / UI' },
       { value: 'marketing', label: 'Marketing / Growth' },

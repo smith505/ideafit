@@ -37,6 +37,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
   const winnerIdea = getIdeaById(winner.id)
   const track = getTrackById(winner.track)
 
+  // Get first competitor and VoC quote for teaser
+  const firstCompetitor = winnerIdea?.competitors?.[0]
+  const firstVocQuote = winnerIdea?.voc_quotes?.[0]
+
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
@@ -63,8 +67,18 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
           </p>
         </div>
 
+        {/* Track badge */}
+        {track && (
+          <div className="mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800">
+              <span className="text-sm text-zinc-500">Your fit track:</span>
+              <span className="text-sm font-medium text-violet-400">{track.name}</span>
+            </div>
+          </div>
+        )}
+
         {/* Winner card - visible */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 mb-8">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 mb-6">
           <div className="flex items-center gap-2 mb-6">
             <span className="px-3 py-1 rounded-full bg-violet-900/50 text-violet-400 text-sm font-medium">
               Your #1 Match
@@ -78,26 +92,88 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             {winner.name}
           </h2>
 
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-3 bg-zinc-800 rounded-full overflow-hidden">
+          {/* Enhanced Score Visual */}
+          <div className="bg-zinc-800/50 rounded-xl p-4 mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm text-zinc-400">Fit Score</span>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-violet-400">{winner.score}%</span>
+                {winner.score >= 80 && (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-900/50 text-emerald-400 text-xs font-medium">
+                    Excellent
+                  </span>
+                )}
+                {winner.score >= 60 && winner.score < 80 && (
+                  <span className="px-2 py-0.5 rounded-full bg-amber-900/50 text-amber-400 text-xs font-medium">
+                    Good
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="h-3 bg-zinc-700 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
+                className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 transition-all duration-500"
                 style={{ width: `${winner.score}%` }}
               />
             </div>
-            <span className="text-lg font-semibold text-violet-400">
-              {winner.score}% match
-            </span>
+            <div className="flex justify-between mt-2 text-xs text-zinc-600">
+              <span>0</span>
+              <span>50</span>
+              <span>100</span>
+            </div>
           </div>
 
           <p className="text-zinc-400 mb-6">{winner.reason}</p>
 
+          {/* The Wedge - visible teaser */}
           {winnerIdea && (
             <div className="pt-6 border-t border-zinc-800">
+              <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2">
+                The Wedge
+              </h3>
               <p className="text-zinc-300">{winnerIdea.wedge}</p>
             </div>
           )}
         </div>
+
+        {/* First Competitor - visible teaser */}
+        {firstCompetitor && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-zinc-100">
+                Competitor Snapshot
+              </h3>
+              <span className="text-xs text-zinc-500">1 of {winnerIdea?.competitors?.length || 3}+</span>
+            </div>
+            <div className="p-4 bg-zinc-800/50 rounded-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium text-zinc-100">{firstCompetitor.name}</span>
+                <span className="text-sm text-violet-400">{firstCompetitor.price}</span>
+              </div>
+              <p className="text-sm text-zinc-500">
+                Gap: {firstCompetitor.gap}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* First VoC Quote - visible teaser */}
+        {firstVocQuote && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-zinc-100">
+                Voice of Customer
+              </h3>
+              <span className="text-xs text-zinc-500">1 of {winnerIdea?.voc_quotes?.length || 3}+</span>
+            </div>
+            <blockquote className="border-l-2 border-violet-500 pl-4">
+              <p className="text-zinc-300 italic mb-2">&ldquo;{firstVocQuote.quote}&rdquo;</p>
+              <cite className="text-sm text-zinc-500">
+                {firstVocQuote.pain_tag} - <a href={firstVocQuote.url} target="_blank" rel="noopener noreferrer" className="text-violet-400 hover:underline">source</a>
+              </cite>
+            </blockquote>
+          </div>
+        )}
 
         {/* Blurred sections */}
         <div className="space-y-6 relative">
@@ -114,7 +190,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
                 Unlock Your Full Report
               </h3>
               <p className="text-zinc-400 mb-6">
-                Get complete validation data, MVP spec, competitor analysis,
+                Get complete validation data, MVP spec, all competitors,
                 and your personalized 14-day ship plan.
               </p>
 
@@ -130,6 +206,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
               <div className="mt-4 text-sm text-zinc-500">
                 5 regenerations · 30-day access · PDF export
               </div>
+
+              <p className="mt-4 text-xs text-zinc-600">
+                Quality guarantee: 3+ competitors, 3+ VoC quotes, clear wedge - or we fix it / refund (7 days)
+              </p>
             </div>
           </div>
 
@@ -155,10 +235,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
               </div>
             </div>
 
-            {/* Competitor section */}
+            {/* More competitors */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-6">
               <h3 className="text-lg font-semibold text-zinc-100 mb-4">
-                Competitor Analysis
+                Full Competitor Analysis
               </h3>
               <div className="grid md:grid-cols-3 gap-4">
                 {[1, 2, 3].map((i) => (

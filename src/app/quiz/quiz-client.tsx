@@ -42,12 +42,17 @@ export default function QuizClient() {
     if (currentQuestion.type === 'single') {
       setAnswers((prev) => ({ ...prev, [currentQuestion.id]: value }))
     } else {
-      // Multi-select toggle
+      // Multi-select toggle (max 3)
       const current = (answers[currentQuestion.id] as string[]) || []
-      const updated = current.includes(value)
-        ? current.filter((v) => v !== value)
-        : [...current, value]
-      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }))
+      if (current.includes(value)) {
+        // Remove
+        const updated = current.filter((v) => v !== value)
+        setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }))
+      } else if (current.length < 3) {
+        // Add only if under limit
+        const updated = [...current, value]
+        setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }))
+      }
     }
   }
 
@@ -67,6 +72,14 @@ export default function QuizClient() {
     return Array.isArray(answer) && answer.length > 0
   }
 
+  const getMultiSelectCount = () => {
+    const answer = answers[currentQuestion.id]
+    if (Array.isArray(answer)) {
+      return answer.length
+    }
+    return 0
+  }
+
   const handleNext = () => {
     if (currentIndex < QUIZ_QUESTIONS.length - 1) {
       setCurrentIndex((prev) => prev + 1)
@@ -74,6 +87,16 @@ export default function QuizClient() {
       // Quiz complete, go to results
       router.push('/results')
     }
+  }
+
+  const handleSkip = () => {
+    // Clear any answer for this question and move on
+    setAnswers((prev) => {
+      const updated = { ...prev }
+      delete updated[currentQuestion.id]
+      return updated
+    })
+    handleNext()
   }
 
   const handleBack = () => {
@@ -97,9 +120,14 @@ export default function QuizClient() {
             </div>
             <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
           </Link>
-          <span className="text-sm text-zinc-500">
-            {currentIndex + 1} of {QUIZ_QUESTIONS.length}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-zinc-500">
+              {currentIndex + 1} of {QUIZ_QUESTIONS.length}
+            </span>
+            {currentIndex >= 7 && (
+              <span className="text-xs text-violet-400">~1 min left</span>
+            )}
+          </div>
         </div>
       </header>
 
@@ -111,6 +139,10 @@ export default function QuizClient() {
             style={{ width: `${progress}%` }}
           />
         </div>
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-xs text-zinc-600">Saved automatically</span>
+          <span className="text-xs text-zinc-600">{Math.round(progress)}%</span>
+        </div>
       </div>
 
       {/* Question */}
@@ -120,48 +152,58 @@ export default function QuizClient() {
         </h1>
 
         {currentQuestion.type === 'multi' && (
-          <p className="text-sm text-zinc-500 mb-6">Select all that apply</p>
+          <p className="text-sm text-zinc-500 mb-6">
+            Select up to 3 ({getMultiSelectCount()}/3 selected)
+          </p>
         )}
 
         <div className="space-y-3">
-          {currentQuestion.options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option.value)}
-              className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${
-                isSelected(option.value)
-                  ? 'border-violet-500 bg-violet-500/10 text-zinc-100'
-                  : 'border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-5 h-5 rounded-${currentQuestion.type === 'single' ? 'full' : 'md'} border-2 flex items-center justify-center ${
-                    isSelected(option.value)
-                      ? 'border-violet-500 bg-violet-500'
-                      : 'border-zinc-600'
-                  }`}
-                >
-                  {isSelected(option.value) && (
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={3}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
+          {currentQuestion.options.map((option) => {
+            const selected = isSelected(option.value)
+            const atLimit = currentQuestion.type === 'multi' && getMultiSelectCount() >= 3 && !selected
+
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleSelect(option.value)}
+                disabled={atLimit}
+                className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${
+                  selected
+                    ? 'border-violet-500 bg-violet-500/10 text-zinc-100'
+                    : atLimit
+                      ? 'border-zinc-800 bg-zinc-900/50 text-zinc-600 cursor-not-allowed'
+                      : 'border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-5 h-5 rounded-${currentQuestion.type === 'single' ? 'full' : 'md'} border-2 flex items-center justify-center ${
+                      selected
+                        ? 'border-violet-500 bg-violet-500'
+                        : 'border-zinc-600'
+                    }`}
+                  >
+                    {selected && (
+                      <svg
+                        className="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <span>{option.label}</span>
                 </div>
-                <span>{option.label}</span>
-              </div>
-            </button>
-          ))}
+              </button>
+            )
+          })}
         </div>
 
         {/* Navigation */}
@@ -178,17 +220,28 @@ export default function QuizClient() {
             Back
           </button>
 
-          <button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className={`px-8 py-3 rounded-full font-semibold transition-all ${
-              canProceed()
-                ? 'bg-violet-600 hover:bg-violet-500 text-white'
-                : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-            }`}
-          >
-            {currentIndex === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
-          </button>
+          <div className="flex items-center gap-3">
+            {currentQuestion.skippable && (
+              <button
+                onClick={handleSkip}
+                className="px-6 py-3 rounded-full font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                Skip
+              </button>
+            )}
+
+            <button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className={`px-8 py-3 rounded-full font-semibold transition-all ${
+                canProceed()
+                  ? 'bg-violet-600 hover:bg-violet-500 text-white'
+                  : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+              }`}
+            >
+              {currentIndex === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
+            </button>
+          </div>
         </div>
       </main>
     </div>
