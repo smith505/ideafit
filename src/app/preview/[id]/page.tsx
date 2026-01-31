@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getIdeaById, getTrackById, generateMatchChips, FitProfile } from '@/lib/fit-algorithm'
 import CheckoutButton from './checkout-button'
+import { AnalyticsTracker } from '@/components/analytics-tracker'
 
 // Force dynamic rendering to prevent edge caching
 export const dynamic = 'force-dynamic'
@@ -51,6 +52,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
 
   return (
     <div className="min-h-screen bg-zinc-950">
+      <AnalyticsTracker event="preview_viewed" properties={{ reportId: id }} />
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { QUIZ_QUESTIONS, QuizAnswers } from '@/lib/quiz-questions'
 import { BuildVersion } from '@/components/build-version'
+import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
@@ -14,19 +15,35 @@ export default function QuizClient() {
   const [answers, setAnswers] = useState<QuizAnswers>({})
   const [isLoaded, setIsLoaded] = useState(false)
   const [textValue, setTextValue] = useState('')
+  const startTrackedRef = useRef(false)
 
   // Load from localStorage on mount
   useEffect(() => {
+    // Ensure session ID exists
+    getOrCreateSessionId()
+
     const saved = localStorage.getItem(STORAGE_KEY)
+    let isResuming = false
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
-        setAnswers(parsed.answers || {})
-        setCurrentIndex(parsed.currentIndex || 0)
+        const savedAnswers = parsed.answers || {}
+        const savedIndex = parsed.currentIndex || 0
+        setAnswers(savedAnswers)
+        setCurrentIndex(savedIndex)
+        // Consider it resuming if they have any answers
+        isResuming = Object.keys(savedAnswers).length > 0
       } catch {
         // Invalid data, start fresh
       }
     }
+
+    // Track quiz start only once and only if not resuming
+    if (!startTrackedRef.current && !isResuming) {
+      startTrackedRef.current = true
+      trackEvent('start_quiz')
+    }
+
     setIsLoaded(true)
   }, [])
 
@@ -106,7 +123,9 @@ export default function QuizClient() {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex((prev) => prev + 1)
     } else {
-      // Quiz complete, go to results
+      // Quiz complete - track and go to results
+      const audienceMode = answers.audience_mode as string
+      trackEvent('complete_quiz', { audienceMode })
       router.push('/results')
     }
   }

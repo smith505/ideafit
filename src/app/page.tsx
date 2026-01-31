@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { BuildVersion } from '@/components/build-version'
+import { AnalyticsTracker, SampleReportTracker } from '@/components/analytics-tracker'
 
 // Force dynamic rendering to prevent edge caching
 export const dynamic = 'force-dynamic'
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-zinc-950">
+      <AnalyticsTracker event="view_home" />
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -65,14 +67,12 @@ export default function LandingPage() {
           >
             Take the Free Quiz →
           </Link>
-          <a
+          <SampleReportTracker
             href="/sample-report-v1.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 font-medium px-4 py-3 transition-colors border border-zinc-700 rounded-full hover:border-zinc-600"
           >
             View Sample Report
-          </a>
+          </SampleReportTracker>
         </div>
         <p className="text-sm text-zinc-500 mt-4">
           Quiz is free • Full report $49 • 7-day quality guarantee

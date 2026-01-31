@@ -16,6 +16,7 @@ import {
   supportLevelLabels,
   getIdeaById,
 } from '@/lib/fit-algorithm'
+import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
@@ -310,6 +311,14 @@ export default function ResultsClient() {
       // Get top 10 for wildcard search
       const ranked = rankIdeas(quizAnswers, { limit: 10 })
       setResults(ranked)
+
+      // Track results view
+      const audienceMode = quizAnswers.audience_mode as string
+      const confidence = calculateConfidence(ranked.rankedIdeas[0]?.score || 0, ranked.rankedIdeas[1]?.score || 0)
+      trackEvent('view_results', {
+        audienceMode,
+        confidenceBucket: confidence.level,
+      })
     } catch {
       router.push('/quiz')
     }
@@ -319,6 +328,9 @@ export default function ResultsClient() {
     e.preventDefault()
     setError('')
     setIsSubmitting(true)
+
+    // Track click
+    trackEvent('click_save_results')
 
     try {
       const res = await fetch('/api/reports', {
@@ -333,6 +345,9 @@ export default function ResultsClient() {
       }
 
       const { reportId } = await res.json()
+
+      // Track email submitted
+      trackEvent('email_submitted', { reportId })
 
       // Clear quiz answers from localStorage
       localStorage.removeItem(STORAGE_KEY)
@@ -493,6 +508,21 @@ export default function ResultsClient() {
             />
           )}
         </div>
+
+        {/* Compare button */}
+        {runnerUp && (
+          <div className="text-center mb-8">
+            <Link
+              href={`/compare?ids=${topMatch.id},${runnerUp.id}`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm text-zinc-300 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Compare top 2 side-by-side
+            </Link>
+          </div>
+        )}
 
         {/* What's in the report */}
         <div className="mb-10">
