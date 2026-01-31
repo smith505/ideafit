@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "postinstall": "prisma generate",
     "ingest": "tsx scripts/ingest-library.ts",
     "ingest:watch": "tsx scripts/watch-library.ts",
     "gpt": "tsx scripts/ask-gpt.ts"
