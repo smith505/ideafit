@@ -117,7 +117,12 @@ competitors.forEach((comp) => {
 
 doc.moveDown(1)
 
-// MVP Section
+// MVP Section - add page break check to prevent orphan bullets
+const mvpYPosition = doc.y
+if (mvpYPosition > 580) {
+  doc.addPage()
+}
+
 doc
   .fontSize(18)
   .fillColor('#18181b')
@@ -128,20 +133,20 @@ doc.fontSize(12).fillColor('#10b981').text('In Scope:').moveDown(0.3)
 
 const mvpIn = ['One-click sweep', 'Auto-group by domain', 'Hibernation', 'Restore last 3 sessions', 'Weekly time-saved estimate']
 mvpIn.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`).moveDown(0.15)
 })
 
-doc.moveDown(0.8)
+doc.moveDown(0.6)
 
 doc.fontSize(12).fillColor('#ef4444').text('Out of Scope:').moveDown(0.3)
 
-// Fixed: Each out-of-scope item on its own line with proper spacing
+// Each out-of-scope item on its own line with proper spacing
 const mvpOut = ['Team features', 'Cross-device sync', 'AI categorization']
 mvpOut.forEach((item) => {
-  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`)
+  doc.fontSize(11).fillColor('#52525b').text(`  - ${item}`).moveDown(0.15)
 })
 
-doc.moveDown(2)
+doc.moveDown(1.5)
 
 // Blurred section indicator (using ASCII-safe dashes)
 doc

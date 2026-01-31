@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { BuildVersion } from '@/components/build-version'
 
 export const metadata: Metadata = {
   title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
@@ -250,8 +251,11 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-8">
-        <div className="max-w-5xl mx-auto px-6 text-center text-sm text-zinc-600">
-          (c) 2026 IdeaFit. Find your fit. Ship your idea.
+        <div className="max-w-5xl mx-auto px-6 flex flex-col items-center gap-2">
+          <span className="text-sm text-zinc-600">
+            (c) 2026 IdeaFit. Find your fit. Ship your idea.
+          </span>
+          <BuildVersion />
         </div>
       </footer>
     </div>

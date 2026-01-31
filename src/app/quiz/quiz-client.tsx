@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { QUIZ_QUESTIONS, QuizAnswers } from '@/lib/quiz-questions'
+import { BuildVersion } from '@/components/build-version'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
@@ -306,6 +307,11 @@ export default function QuizClient() {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="max-w-2xl mx-auto px-6 pb-6 text-center">
+        <BuildVersion />
+      </footer>
     </div>
   )
 }
