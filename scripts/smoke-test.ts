@@ -55,7 +55,8 @@ async function runTests() {
 
   const tests = [
     { path: '/', name: 'Landing page', contentType: 'text/html' },
-    { path: '/sample-report.pdf', name: 'Sample report PDF', contentType: 'application/pdf' },
+    { path: '/sample-report-v1.pdf', name: 'Sample report PDF (versioned)', contentType: 'application/pdf' },
+    { path: '/sample-report.pdf', name: 'Sample report PDF (legacy)', contentType: 'application/pdf' },
     { path: '/quiz', name: 'Quiz page', contentType: 'text/html' },
     { path: '/access', name: 'Access page', contentType: 'text/html' },
     { path: '/login', name: 'Login page', contentType: 'text/html' },

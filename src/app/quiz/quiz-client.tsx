@@ -76,6 +76,16 @@ export default function QuizClient() {
     }
   }
 
+  const handleSkip = () => {
+    // Clear any answer for this question and move on
+    setAnswers((prev) => {
+      const updated = { ...prev }
+      delete updated[currentQuestion.id]
+      return updated
+    })
+    handleNext()
+  }
+
   const handleBack = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1)
@@ -178,17 +188,28 @@ export default function QuizClient() {
             Back
           </button>
 
-          <button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className={`px-8 py-3 rounded-full font-semibold transition-all ${
-              canProceed()
-                ? 'bg-violet-600 hover:bg-violet-500 text-white'
-                : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
-            }`}
-          >
-            {currentIndex === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
-          </button>
+          <div className="flex items-center gap-3">
+            {currentQuestion.skippable && (
+              <button
+                onClick={handleSkip}
+                className="px-6 py-3 rounded-full font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                Skip
+              </button>
+            )}
+
+            <button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className={`px-8 py-3 rounded-full font-semibold transition-all ${
+                canProceed()
+                  ? 'bg-violet-600 hover:bg-violet-500 text-white'
+                  : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+              }`}
+            >
+              {currentIndex === QUIZ_QUESTIONS.length - 1 ? 'See Results' : 'Next'}
+            </button>
+          </div>
         </div>
       </main>
     </div>
