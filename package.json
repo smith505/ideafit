@@ -13,7 +13,9 @@
     "gpt": "tsx scripts/ask-gpt.ts",
     "smoke-test": "tsx scripts/smoke-test.ts",
     "generate-sample-pdf": "tsx scripts/generate-sample-pdf.ts",
-    "verify-pdf": "tsx scripts/verify-pdf.ts"
+    "verify-pdf": "tsx scripts/verify-pdf.ts",
+    "test:e2e": "tsx scripts/test-e2e.ts",
+    "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideafit-production.up.railway.app"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
