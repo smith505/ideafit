@@ -1,25 +1,26 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Build SHA for debugging
+// Build SHA and timestamp for debugging
 const BUILD_SHA = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'dev').slice(0, 7)
+const BUILD_TIMESTAMP = new Date().toISOString()
 
-// HTML routes that should never be cached
-const NO_CACHE_ROUTES = ['/', '/quiz', '/results', '/access', '/login']
-const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth']
+// Routes that should never be cached (pages + API)
+const NO_CACHE_ROUTES = ['/', '/quiz', '/results', '/access', '/login', '/health', '/debug/build']
+const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth', '/api']
 
-// Static assets that should NOT have no-store applied
-const STATIC_PREFIXES = ['/_next', '/favicon', '/sample-report', '/api']
+// Static assets that should NOT have headers modified
+const STATIC_PREFIXES = ['/_next', '/favicon', '/sample-report']
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip static assets and API routes
+  // Skip static assets only
   if (STATIC_PREFIXES.some(prefix => pathname.startsWith(prefix))) {
     return NextResponse.next()
   }
 
-  // Check if this is an HTML route that should not be cached
+  // Check if this is a dynamic route that should not be cached
   const isNoCacheRoute = NO_CACHE_ROUTES.includes(pathname) ||
     NO_CACHE_PREFIXES.some(prefix => pathname.startsWith(prefix))
 
@@ -29,6 +30,7 @@ export function middleware(request: NextRequest) {
     // Set cache control to prevent edge caching
     response.headers.set('Cache-Control', 'no-store, must-revalidate')
     response.headers.set('x-ideafit-build', BUILD_SHA)
+    response.headers.set('x-ideafit-timestamp', BUILD_TIMESTAMP)
 
     return response
   }

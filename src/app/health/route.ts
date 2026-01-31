@@ -3,6 +3,14 @@ import { QUIZ_QUESTIONS } from '@/lib/quiz-questions'
 import { validateLibrary } from '@/lib/validate-library'
 import library from '../../../data/library.json'
 
+// Force dynamic to prevent any caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+// Build info captured at startup
+const BUILD_SHA = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'dev').slice(0, 7)
+const BUILD_TIMESTAMP = new Date().toISOString()
+
 interface CandidateWithTags {
   id: string
   interest_tags?: string[]
@@ -12,7 +20,7 @@ interface CandidateWithTags {
 }
 
 export async function GET() {
-  const buildSha = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'dev').slice(0, 7)
+  const buildSha = BUILD_SHA
 
   const candidates = library.candidates as CandidateWithTags[]
 
@@ -45,24 +53,33 @@ export async function GET() {
   // Library quality validation
   const libraryValidation = validateLibrary()
 
-  return NextResponse.json({
-    build: buildSha,
-    quizQuestionCount: QUIZ_QUESTIONS.length,
-    candidateCount: candidates.length,
-    hasTagsCoverage: {
-      interestAndAvoidTags: `${tagsCoverage}%`,
-      audienceMode: `${audienceModeCoverage}%`,
-      deliveryMode: `${deliveryModeCoverage}%`,
+  return NextResponse.json(
+    {
+      build: buildSha,
+      quizQuestionCount: QUIZ_QUESTIONS.length,
+      candidateCount: candidates.length,
+      hasTagsCoverage: {
+        interestAndAvoidTags: `${tagsCoverage}%`,
+        audienceMode: `${audienceModeCoverage}%`,
+        deliveryMode: `${deliveryModeCoverage}%`,
+      },
+      audienceModeBreakdown: {
+        consumer: consumerCount,
+        builder: builderCount,
+        both: bothCount,
+      },
+      deliveryModeBreakdown: {
+        onlineOnly: onlineOnlyCount,
+      },
+      libraryQuality: libraryValidation.quality,
+      timestamp: new Date().toISOString(),
     },
-    audienceModeBreakdown: {
-      consumer: consumerCount,
-      builder: builderCount,
-      both: bothCount,
-    },
-    deliveryModeBreakdown: {
-      onlineOnly: onlineOnlyCount,
-    },
-    libraryQuality: libraryValidation.quality,
-    timestamp: new Date().toISOString(),
-  })
+    {
+      headers: {
+        'Cache-Control': 'no-store, must-revalidate',
+        'x-ideafit-build': BUILD_SHA,
+        'x-ideafit-timestamp': BUILD_TIMESTAMP,
+      },
+    }
+  )
 }

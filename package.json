@@ -17,7 +17,9 @@
     "generate-sample-pdf": "tsx scripts/generate-sample-pdf.ts",
     "verify-pdf": "tsx scripts/verify-pdf.ts",
     "test:e2e": "tsx scripts/test-e2e.ts",
-    "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideafit-production.up.railway.app"
+    "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideafit-production.up.railway.app",
+    "build:parity": "tsx scripts/check-build-parity.ts",
+    "build:parity:prod": "BASE_URL=https://ideafit-production.up.railway.app tsx scripts/check-build-parity.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
