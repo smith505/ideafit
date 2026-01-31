@@ -1,6 +1,10 @@
 import { Metadata } from 'next'
 import AccessForm from './access-form'
 
+// Force dynamic rendering to prevent edge caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: 'Access Your Report | IdeaFit',
   description: 'Enter your email to receive a magic link and access your IdeaFit report.',

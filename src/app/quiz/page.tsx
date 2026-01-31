@@ -2,6 +2,10 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import QuizClient from './quiz-client'
 
+// Force dynamic rendering to prevent edge caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 function QuizSkeleton() {
   return (
     <div className="min-h-screen bg-zinc-950">

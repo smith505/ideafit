@@ -2,6 +2,10 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { BuildVersion } from '@/components/build-version'
 
+// Force dynamic rendering to prevent edge caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
   description:

@@ -4,6 +4,10 @@ import { prisma } from '@/lib/prisma'
 import { getIdeaById, getTrackById, generateMatchChips, FitProfile } from '@/lib/fit-algorithm'
 import CheckoutButton from './checkout-button'
 
+// Force dynamic rendering to prevent edge caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 interface PreviewPageProps {
   params: Promise<{ id: string }>
 }
