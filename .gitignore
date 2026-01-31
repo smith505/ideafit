@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# generated data files
-/data/library.json
+# generated data files (kept for deployment)
+# /data/library.json

@@ -1,0 +1,198 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-01-31T16:19:00.825Z",
+  "source_file": "IdeaFit_Idea_Library_Template.xlsx",
+  "candidates": [
+    {
+      "id": "d440400b5269",
+      "name": "CSV Cleaner for Small Businesses",
+      "status": "draft",
+      "track_id": "Data-to-dashboard microtool",
+      "wedge": "",
+      "mvp_in": "",
+      "mvp_out": "",
+      "first10_channel": "Google search ads + marketplaces",
+      "first10_steps": "1) Create SEO landing pages per destination\n2) Run $10/day on intent keywords\n3) Add freemium limit\n4) Convert via $9 one-time or $5/mo",
+      "keywords_checked": false,
+      "competitors": [
+        {
+          "name": "CSVed",
+          "url": "https://csved.sjfrancke.nl/",
+          "price": "",
+          "gap": "Not destination templates; less guided"
+        },
+        {
+          "name": "DataPrep tools",
+          "url": "https://www.microsoft.com/",
+          "price": "",
+          "gap": "Too heavy for quick imports"
+        },
+        {
+          "name": "Online CSV cleaners",
+          "url": "https://www.google.com/",
+          "price": "",
+          "gap": "No trust, no templates"
+        }
+      ],
+      "voc_quotes": [
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "import errors",
+          "quote": "I keep getting import errors and I don’t know what’s wrong with my CSV."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "guidance",
+          "quote": "I just want a tool that tells me what to fix and lets me download a clean file."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "pricing",
+          "quote": "I only need this once in a while, not a monthly subscription."
+        }
+      ],
+      "assumptions": "Occasional use fits one-time pricing; templates increase success rate.",
+      "risk_checklist": {
+        "market_risk": false,
+        "tech_risk": false,
+        "regulatory_risk": false,
+        "competition_risk": false
+      }
+    },
+    {
+      "id": "89dd12c50fbe",
+      "name": "Instant Quote Widget for Local Services",
+      "status": "draft",
+      "track_id": "Local SMB lead/quote tool",
+      "wedge": "",
+      "mvp_in": "",
+      "mvp_out": "",
+      "first10_channel": "Cold email + local FB groups",
+      "first10_steps": "1) Build 1-page demo\n2) Offer 10 free installs\n3) Convert to $49/mo after 14 days\n4) Collect testimonials",
+      "keywords_checked": false,
+      "competitors": [
+        {
+          "name": "ConvertCalculator",
+          "url": "https://convertcalculator.com/",
+          "price": "",
+          "gap": "Generic; not vertical templates"
+        },
+        {
+          "name": "Outgrow",
+          "url": "https://outgrow.co/",
+          "price": "",
+          "gap": "More marketing quiz; not quote-first"
+        },
+        {
+          "name": "Calconic",
+          "url": "https://www.calconic.com/",
+          "price": "",
+          "gap": "Builder is powerful but setup friction"
+        }
+      ],
+      "voc_quotes": [
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "lead loss",
+          "quote": "People ask for prices and never fill out my contact form."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "speed",
+          "quote": "If I could text them a quote instantly I’d book more jobs."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "simplicity",
+          "quote": "I don’t want a full CRM, just a simple estimator widget."
+        }
+      ],
+      "assumptions": "SMBs pay if it clearly increases leads; SMS delivery is key differentiator.",
+      "risk_checklist": {
+        "market_risk": false,
+        "tech_risk": false,
+        "regulatory_risk": false,
+        "competition_risk": false
+      }
+    },
+    {
+      "id": "eaa6e7fdf3b9",
+      "name": "Tab Sweeper for Work Sessions",
+      "status": "draft",
+      "track_id": "Chrome extension utility",
+      "wedge": "",
+      "mvp_in": "",
+      "mvp_out": "",
+      "first10_channel": "Chrome Web Store + Reddit",
+      "first10_steps": "1) Ship free basic version\n2) Post on r/chrome_extensions and productivity subs\n3) Offer 50 beta codes for Pro\n4) Ask for reviews",
+      "keywords_checked": false,
+      "competitors": [
+        {
+          "name": "The Great Suspender",
+          "url": "https://chromewebstore.google.com/",
+          "price": "",
+          "gap": "No ‘session sweep’ + no savings feedback loop"
+        },
+        {
+          "name": "OneTab",
+          "url": "https://chromewebstore.google.com/",
+          "price": "",
+          "gap": "Batch list only; no auto-group + no restore UX"
+        },
+        {
+          "name": "Workona",
+          "url": "https://workona.com/",
+          "price": "",
+          "gap": "Too heavy; setup friction for casual users"
+        }
+      ],
+      "voc_quotes": [
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "focus",
+          "quote": "My tabs get out of control and it kills my focus."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "simplicity",
+          "quote": "I want something simple that just closes or sleeps tabs automatically."
+        },
+        {
+          "url": "https://www.reddit.com/",
+          "pain_tag": "setup friction",
+          "quote": "Most tab managers feel like a whole project to set up."
+        }
+      ],
+      "assumptions": "Users will pay small fee for ‘set and forget’ + visible time saved.\nChrome store discovery + Reddit can seed first users.",
+      "risk_checklist": {
+        "market_risk": false,
+        "tech_risk": false,
+        "regulatory_risk": false,
+        "competition_risk": false
+      }
+    }
+  ],
+  "tracks": [
+    {
+      "id": "87481c2ee86b",
+      "name": "Chrome extension utility",
+      "candidate_ids": [
+        "eaa6e7fdf3b9"
+      ]
+    },
+    {
+      "id": "e93a973faff2",
+      "name": "Data-to-dashboard microtool",
+      "candidate_ids": [
+        "d440400b5269"
+      ]
+    },
+    {
+      "id": "b9f8d661c01f",
+      "name": "Local SMB lead/quote tool",
+      "candidate_ids": [
+        "89dd12c50fbe"
+      ]
+    }
+  ]
+}
