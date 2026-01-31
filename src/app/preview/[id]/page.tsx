@@ -164,11 +164,11 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             </div>
           )}
 
-          {/* The Wedge - visible teaser */}
+          {/* Why this wins - visible teaser */}
           {winnerIdea && (
             <div className="pt-6 border-t border-zinc-800">
               <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2">
-                The Wedge
+                Why this wins
               </h3>
               <p className="text-zinc-300">{winnerIdea.wedge}</p>
             </div>
@@ -196,12 +196,12 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
           </div>
         )}
 
-        {/* First VoC Quote - visible teaser */}
+        {/* First real user quote - visible teaser */}
         {firstVocQuote && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-zinc-100">
-                Voice of Customer
+                Real user quote
               </h3>
               <span className="text-xs text-zinc-500">1 of {winnerIdea?.voc_quotes?.length || 3}+</span>
             </div>
@@ -247,7 +247,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
               </div>
 
               <p className="mt-4 text-xs text-zinc-600">
-                Quality guarantee: 3+ competitors, 3+ VoC quotes, clear wedge - or we fix it / refund (7 days)
+                Quality guarantee: 3+ competitors, 3+ real user quotes, clear positioning - or we fix it / refund (7 days)
               </p>
             </div>
           </div>

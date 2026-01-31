@@ -58,7 +58,7 @@ export function validateLibrary(): ValidationResult {
     if (vocCount >= 3) {
       vocPass++
     } else {
-      candidateErrors.push(`only ${vocCount} VoC quotes (need 3)`)
+      candidateErrors.push(`only ${vocCount} user quotes (need 3)`)
     }
 
     // Check wedge (non-empty)

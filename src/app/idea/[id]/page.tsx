@@ -129,7 +129,7 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
               )}
               {candidate.wedge && (
                 <div>
-                  <h3 className="text-sm text-zinc-500 mb-1">Wedge</h3>
+                  <h3 className="text-sm text-zinc-500 mb-1">Why this wins</h3>
                   <p className="text-zinc-200">{candidate.wedge}</p>
                 </div>
               )}
@@ -163,14 +163,14 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           </Section>
         )}
 
-        {/* Distribution & Support */}
+        {/* How you'd get users & Support */}
         {(candidate.distribution_type || candidate.support_level) && (
-          <Section title="Distribution Strategy">
+          <Section title="How you'd get users">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
               <div className="flex items-center gap-6">
                 {candidate.distribution_type && (
                   <div>
-                    <span className="text-sm text-zinc-500">Distribution Type</span>
+                    <span className="text-sm text-zinc-500">Channel</span>
                     <p className="text-zinc-200 font-medium capitalize">{candidate.distribution_type}</p>
                   </div>
                 )}
@@ -246,9 +246,9 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           </Section>
         )}
 
-        {/* VoC Quotes */}
+        {/* Real user quotes */}
         {candidate.voc_quotes.length > 0 && (
-          <Section title={`Voice of Customer (${candidate.voc_quotes.length})`}>
+          <Section title={`Real user quotes (${candidate.voc_quotes.length})`}>
             <div className="grid gap-4">
               {candidate.voc_quotes.map((quote, i) => (
                 <VoCCard key={i} quote={quote} />

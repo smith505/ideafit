@@ -629,7 +629,7 @@ export default function QAPage() {
 
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>
-                      <span className="text-zinc-500">Distribution:</span>{' '}
+                      <span className="text-zinc-500">How you&apos;d get users:</span>{' '}
                       <span className="text-zinc-300">{result.distributionType}</span>
                     </div>
                     <div>

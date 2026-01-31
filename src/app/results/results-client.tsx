@@ -50,6 +50,11 @@ function ResultCard({
   badgeColor: string
   chips: MatchChip[]
 }) {
+  // Expand/collapse state for proof sections
+  const [showMoreCompetitors, setShowMoreCompetitors] = useState(false)
+  const [showMoreVoc, setShowMoreVoc] = useState(false)
+  const [showMoreMvp, setShowMoreMvp] = useState(false)
+
   const candidate = getIdeaById(idea.id) as CandidateProof | undefined
 
   const distType = candidate?.distribution_type || 'organic'
@@ -62,9 +67,10 @@ function ResultCard({
   const matchChips = chips.filter((c) => c.type === 'match').slice(0, 3)
   const avoidChips = chips.filter((c) => c.type === 'avoided').slice(0, 2)
 
-  // Get first VoC quote (truncated to ~120 chars)
+  // Get first VoC quote - show pain_tag first (short), full quote on expand
   const firstVoc = vocQuotes[0]
-  const vocText = firstVoc ? truncate(firstVoc.quote, 120) : null
+  const vocPainLine = firstVoc?.pain_tag || (firstVoc ? truncate(firstVoc.quote, 60) : null)
+  const vocFullText = firstVoc ? truncate(firstVoc.quote, 120) : null
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
@@ -110,7 +116,7 @@ function ResultCard({
               <span className="text-zinc-400">Timeline:</span> {timeboxDays} days
             </span>
             <span>
-              <span className="text-zinc-400">Distribution:</span>{' '}
+              <span className="text-zinc-400">How you&apos;d get users:</span>{' '}
               {distributionTypeLabels[distType] || distType}
             </span>
             <span>
@@ -162,7 +168,7 @@ function ResultCard({
 
           {/* Proof Preview Section */}
           <div className="mt-4 pt-4 border-t border-zinc-800 space-y-4">
-            {/* Competitor snapshot */}
+            {/* Competitor snapshot - show 1 by default */}
             {competitors.length > 0 && (
               <div>
                 <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
@@ -172,52 +178,94 @@ function ResultCard({
                   Competitors
                 </p>
                 <div className="space-y-1.5">
-                  {competitors.slice(0, 2).map((comp, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs">
-                      <span className="text-zinc-300 font-medium shrink-0">{comp.name}</span>
+                  {/* Always show first competitor */}
+                  <div className="flex items-start gap-2 text-xs">
+                    <span className="text-zinc-300 font-medium shrink-0">{competitors[0].name}</span>
+                    <span className="text-zinc-600">·</span>
+                    <span className="text-zinc-500">{competitors[0].price}</span>
+                    <span className="text-zinc-600">·</span>
+                    <span className="text-zinc-400 italic">{truncate(competitors[0].gap, 50)}</span>
+                  </div>
+                  {/* Show 2nd competitor when expanded */}
+                  {showMoreCompetitors && competitors[1] && (
+                    <div className="flex items-start gap-2 text-xs">
+                      <span className="text-zinc-300 font-medium shrink-0">{competitors[1].name}</span>
                       <span className="text-zinc-600">·</span>
-                      <span className="text-zinc-500">{comp.price}</span>
+                      <span className="text-zinc-500">{competitors[1].price}</span>
                       <span className="text-zinc-600">·</span>
-                      <span className="text-zinc-400 italic">{truncate(comp.gap, 50)}</span>
+                      <span className="text-zinc-400 italic">{truncate(competitors[1].gap, 50)}</span>
                     </div>
-                  ))}
+                  )}
+                  {/* Expand link */}
+                  {competitors.length > 1 && !showMoreCompetitors && (
+                    <button
+                      onClick={() => setShowMoreCompetitors(true)}
+                      className="text-xs text-violet-400 hover:text-violet-300 underline underline-offset-2"
+                    >
+                      Show 2nd competitor
+                    </button>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* VoC proof */}
-            {vocText && firstVoc && (
+            {/* Real user quote - show pain line by default */}
+            {vocPainLine && firstVoc && (
               <div>
                 <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  Voice of Customer
+                  Real user quote
                 </p>
                 <div className="bg-zinc-800/50 rounded-lg px-3 py-2">
-                  <p className="text-xs text-zinc-300 italic">&ldquo;{vocText}&rdquo;</p>
-                  <p className="text-xs text-zinc-500 mt-1">— {firstVoc.source}</p>
+                  {showMoreVoc ? (
+                    <>
+                      <p className="text-xs text-zinc-300 italic">&ldquo;{vocFullText}&rdquo;</p>
+                      <p className="text-xs text-zinc-500 mt-1">— {firstVoc.source}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-xs text-zinc-300 italic">&ldquo;{vocPainLine}&rdquo;</p>
+                      {vocFullText && vocFullText !== vocPainLine && (
+                        <button
+                          onClick={() => setShowMoreVoc(true)}
+                          className="text-xs text-violet-400 hover:text-violet-300 underline underline-offset-2 mt-1"
+                        >
+                          More
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* MVP first steps */}
+            {/* MVP first steps - show 2 by default */}
             {mvpIn.length > 0 && (
               <div>
                 <p className="text-xs text-zinc-500 mb-2 flex items-center gap-1">
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                   </svg>
-                  MVP First Steps
+                  First steps
                 </p>
                 <ul className="space-y-1">
-                  {mvpIn.slice(0, 3).map((step, i) => (
+                  {mvpIn.slice(0, showMoreMvp ? 3 : 2).map((step, i) => (
                     <li key={i} className="text-xs text-zinc-400 flex items-start gap-2">
                       <span className="text-violet-400 shrink-0">•</span>
                       {step}
                     </li>
                   ))}
                 </ul>
+                {mvpIn.length > 2 && !showMoreMvp && (
+                  <button
+                    onClick={() => setShowMoreMvp(true)}
+                    className="text-xs text-violet-400 hover:text-violet-300 underline underline-offset-2 mt-1"
+                  >
+                    Show all {Math.min(mvpIn.length, 3)}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -444,7 +492,7 @@ export default function ResultsClient() {
               'Detailed Fit Profile analysis',
               'All 5 matched ideas with full breakdowns',
               'Competitor analysis & pricing data',
-              'Voice of Customer quotes',
+              'Real user quotes',
               'Complete MVP specification',
               'Ship plan with Claude AI prompts',
             ].map((item, i) => (

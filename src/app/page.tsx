@@ -108,7 +108,7 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-semibold text-zinc-100 mb-2">Winner Idea + Validation</h3>
             <p className="text-zinc-400 text-sm">
-              Your top-matched idea with competitors, VoC quotes, and market signals.
+              Your top-matched idea with competitors, real user quotes, and market signals.
             </p>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
@@ -164,7 +164,7 @@ export default function LandingPage() {
               'Complete Fit Profile analysis',
               'Top 5 matched ideas with scores',
               'Competitor & pricing research',
-              'Voice of Customer quotes',
+              'Real user quotes',
               'Full MVP specification',
               '14-day ship plan + Claude prompts',
               '5 regenerations included',
@@ -191,7 +191,7 @@ export default function LandingPage() {
             <svg className="w-4 h-4 inline-block mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
-            Quality guarantee: 3 competitors + 3 VoC quotes + clear wedge, or we fix it / refund (7 days).
+            Quality guarantee: 3 competitors + 3 real user quotes + clear positioning, or we fix it / refund (7 days).
           </p>
         </div>
       </section>
@@ -226,8 +226,8 @@ export default function LandingPage() {
               What if the report isn&apos;t useful?
             </h3>
             <p className="text-zinc-400 text-sm">
-              Every report includes at least 3 competitor analyses, 3 voice-of-customer quotes, and a clear wedge
-              (differentiation strategy). If your report doesn&apos;t meet these standards, email us within 7 days
+              Every report includes at least 3 competitor analyses, 3 real user quotes, and clear positioning
+              (why this idea wins). If your report doesn&apos;t meet these standards, email us within 7 days
               and we&apos;ll either fix it or give you a full refund.
             </p>
           </div>
@@ -246,7 +246,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-zinc-400 text-sm">
               Yes! The quiz is completely free. After completing it, you&apos;ll see a preview with your #1 match,
-              the wedge, one competitor, and one VoC quote. You only pay $49 if you want the full report with
+              why it wins, one competitor, and one real user quote. You only pay $49 if you want the full report with
               all 5 matches, complete validation data, and the 14-day ship plan.
             </p>
           </div>

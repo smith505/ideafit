@@ -79,7 +79,7 @@ export async function GET(request: Request, { params }: RouteParams) {
       <div class="winner-name">${winner.name}</div>
       <div class="score">${winner.score}% Match</div>
       <p>${winner.reason}</p>
-      ${winnerIdea ? `<p><strong>The Wedge:</strong> ${winnerIdea.wedge}</p>` : ''}
+      ${winnerIdea ? `<p><strong>Why this wins:</strong> ${winnerIdea.wedge}</p>` : ''}
     </div>
   </div>
 
@@ -140,7 +140,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   </div>
 
   <div class="section">
-    <h2>Voice of Customer</h2>
+    <h2>Real User Quotes</h2>
     ${winnerIdea.voc_quotes.map(v => `
       <div class="quote">
         <div class="pain-tag">${v.pain_tag}</div>
@@ -151,8 +151,8 @@ export async function GET(request: Request, { params }: RouteParams) {
   </div>
 
   <div class="section">
-    <h2>Distribution Strategy</h2>
-    <p><strong>Distribution Type:</strong> ${(winnerIdea as { distribution_type: string }).distribution_type}</p>
+    <h2>How You'd Get Users</h2>
+    <p><strong>Channel:</strong> ${(winnerIdea as { distribution_type: string }).distribution_type}</p>
     <p><strong>Support Level:</strong> ${(winnerIdea as { support_level: string }).support_level}</p>
   </div>
   ` : ''}

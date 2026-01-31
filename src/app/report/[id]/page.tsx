@@ -148,7 +148,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
               <>
                 <div className="border-t border-zinc-800 pt-6 mb-6">
                   <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                    The Wedge
+                    Why this wins
                   </h4>
                   <p className="text-zinc-300">{winnerIdea.wedge}</p>
                 </div>
@@ -257,7 +257,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
           </section>
         )}
 
-        {/* VoC Quotes */}
+        {/* Real user quotes */}
         {winnerIdea && winnerIdea.voc_quotes.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
@@ -266,7 +266,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </span>
-              Voice of Customer
+              Real user quotes
             </h2>
 
             <div className="space-y-4">
@@ -309,7 +309,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
                   <p className="text-xs text-zinc-500 mt-1">to MVP</p>
                 </div>
                 <div className="bg-zinc-800/50 rounded-xl p-4 text-center">
-                  <h4 className="text-sm text-zinc-500 mb-2">Distribution</h4>
+                  <h4 className="text-sm text-zinc-500 mb-2">How you&apos;d get users</h4>
                   <p className="text-lg font-semibold text-violet-400 capitalize">
                     {(winnerIdea as { distribution_type?: string }).distribution_type || 'Mixed'}
                   </p>
