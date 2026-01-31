@@ -208,7 +208,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             <blockquote className="border-l-2 border-violet-500 pl-4">
               <p className="text-zinc-300 italic mb-2">&ldquo;{firstVocQuote.quote}&rdquo;</p>
               <cite className="text-sm text-zinc-500">
-                {firstVocQuote.pain_tag} - <a href={firstVocQuote.url} target="_blank" rel="noopener noreferrer" className="text-violet-400 hover:underline">source</a>
+                {firstVocQuote.pain_tag} - <span className="text-violet-400">{(firstVocQuote as { source?: string }).source || 'User feedback'}</span>
               </cite>
             </blockquote>
           </div>

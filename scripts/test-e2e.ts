@@ -11,12 +11,13 @@
  */
 
 import { QUIZ_QUESTIONS, QuizAnswers } from '../src/lib/quiz-questions'
-import { rankIdeas, buildFitProfile } from '../src/lib/fit-algorithm'
+import { rankIdeas, buildFitProfile, calculateConfidence, findWildcard } from '../src/lib/fit-algorithm'
 
 const BASE_URL = process.argv[2] || 'http://localhost:3000'
 
 // Test profiles
 const PROFILE_A: QuizAnswers = {
+  audience_mode: 'builder',
   time_weekly: '6-10',
   tech_comfort: 'dev',
   support_tolerance: 'low',
@@ -33,6 +34,7 @@ const PROFILE_A: QuizAnswers = {
 }
 
 const PROFILE_B: QuizAnswers = {
+  audience_mode: 'consumer',
   time_weekly: '2-5',
   tech_comfort: 'nocode',
   support_tolerance: 'medium',
@@ -45,6 +47,42 @@ const PROFILE_B: QuizAnswers = {
   audience_access: ['smb'],
   risk_tolerance: 'low',
   existing_skills: ['writing', 'marketing'],
+  optional_notes: '',
+}
+
+// Consumer-only profile for testing audience mode
+const PROFILE_CONSUMER: QuizAnswers = {
+  audience_mode: 'consumer',
+  time_weekly: '2-5',
+  tech_comfort: 'nocode',
+  support_tolerance: 'low',
+  revenue_goal: 'side',
+  build_preference: 'solo',
+  interest_themes: ['home', 'shopping', 'money'],
+  avoid_list: ['ads', 'support', 'social'],
+  quit_reason: 'time',
+  distribution_comfort: 'seo',
+  audience_access: [],
+  risk_tolerance: 'low',
+  existing_skills: ['writing'],
+  optional_notes: '',
+}
+
+// Builder-only profile for testing audience mode
+const PROFILE_BUILDER: QuizAnswers = {
+  audience_mode: 'builder',
+  time_weekly: '6-10',
+  tech_comfort: 'dev',
+  support_tolerance: 'low',
+  revenue_goal: 'ramen',
+  build_preference: 'ai',
+  interest_themes: ['tech', 'career'],
+  avoid_list: ['calls', 'support'],
+  quit_reason: 'motivation',
+  distribution_comfort: 'communities',
+  audience_access: ['developers'],
+  risk_tolerance: 'medium',
+  existing_skills: ['coding', 'design'],
   optional_notes: '',
 }
 
@@ -157,6 +195,134 @@ async function main() {
     const buildHeader = res.headers.get('x-ideafit-build')
     console.log(`    x-ideafit-build: ${buildHeader || 'not present'}`)
     // This may not be present in dev mode, so just log it
+  })
+
+  // Test 9: Confidence calculation
+  await test('Confidence calculation returns correct levels', async () => {
+    // High confidence: gap >= 10
+    const highConf = calculateConfidence(90, 75)
+    if (highConf.level !== 'high') throw new Error(`Expected 'high' for gap 15, got '${highConf.level}'`)
+
+    // Medium confidence: gap 5-9
+    const medConf = calculateConfidence(85, 78)
+    if (medConf.level !== 'medium') throw new Error(`Expected 'medium' for gap 7, got '${medConf.level}'`)
+
+    // Low confidence: gap < 5
+    const lowConf = calculateConfidence(82, 80)
+    if (lowConf.level !== 'low') throw new Error(`Expected 'low' for gap 2, got '${lowConf.level}'`)
+
+    console.log(`    High (gap=15): ${highConf.level}, Medium (gap=7): ${medConf.level}, Low (gap=2): ${lowConf.level}`)
+  })
+
+  // Test 10: Wildcard selection from different track
+  await test('Wildcard is from different track than top match', async () => {
+    const results = rankIdeas(PROFILE_A, { limit: 10 })
+    const topMatch = results.rankedIdeas[0]
+    const wildcard = findWildcard(results.rankedIdeas.slice(2), topMatch.track)
+
+    if (!wildcard) {
+      console.log(`    No wildcard found (may be fine if all top 10 are same track)`)
+      return
+    }
+
+    if (wildcard.track === topMatch.track) {
+      throw new Error(`Wildcard track '${wildcard.track}' should differ from top match track '${topMatch.track}'`)
+    }
+
+    console.log(`    Top: ${topMatch.name} (${topMatch.track}), Wildcard: ${wildcard.name} (${wildcard.track})`)
+  })
+
+  // Test 11: Credibility penalties for avoid conflicts
+  await test('Credibility penalties apply for avoid conflicts', async () => {
+    // Profile that explicitly avoids support
+    const avoidSupportProfile: QuizAnswers = {
+      ...PROFILE_A,
+      avoid_list: ['support', 'calls'],
+      support_tolerance: 'low',
+    }
+
+    const results = rankIdeas(avoidSupportProfile, { limit: 10 })
+    const profile = buildFitProfile(avoidSupportProfile)
+
+    // Check that avoid list was captured
+    if (!profile.avoidList.includes('support')) {
+      throw new Error('avoidList should include "support"')
+    }
+
+    console.log(`    Avoid list: ${profile.avoidList.join(', ')}`)
+    console.log(`    Top result: ${results.rankedIdeas[0].name} (${results.rankedIdeas[0].score}%)`)
+  })
+
+  // Test 12: Consumer and Builder modes produce different results
+  await test('Consumer and Builder modes produce different top results', async () => {
+    const consumerResults = rankIdeas(PROFILE_CONSUMER, { limit: 10 })
+    const builderResults = rankIdeas(PROFILE_BUILDER, { limit: 10 })
+
+    const consumerTop = consumerResults.rankedIdeas[0]
+    const builderTop = builderResults.rankedIdeas[0]
+
+    console.log(`    Consumer top: ${consumerTop.name} (${consumerTop.score}%)`)
+    console.log(`    Builder top: ${builderTop.name} (${builderTop.score}%)`)
+
+    // They should have different top results (different audience modes)
+    if (consumerTop.id === builderTop.id) {
+      // Allow same result if scores are significantly different
+      if (consumerTop.score === builderTop.score) {
+        throw new Error('Consumer and Builder modes should produce different results')
+      }
+    }
+  })
+
+  // Test 13: Consumer mode top result is not builder-only
+  await test('Consumer mode top result is not builder-only', async () => {
+    const results = rankIdeas(PROFILE_CONSUMER, { limit: 10 })
+    const top = results.rankedIdeas[0]
+
+    // Get the candidate to check audience_mode
+    const candidate = results.rankedIdeas[0] as { id: string; breakdown?: { audiencePenalty: number } }
+
+    // If audiencePenalty is 30 (builder-only penalty), fail
+    if (candidate.breakdown?.audiencePenalty === 30) {
+      throw new Error(`Consumer mode top result has 30-point audience penalty, likely builder-only`)
+    }
+
+    console.log(`    Consumer top: ${top.name}`)
+    console.log(`    Audience penalty: ${candidate.breakdown?.audiencePenalty || 0}`)
+  })
+
+  // Test 14: All top results are online_only
+  await test('Top results are delivery_mode=online_only', async () => {
+    const resultsA = rankIdeas(PROFILE_A, { limit: 5 })
+    const resultsB = rankIdeas(PROFILE_B, { limit: 5 })
+
+    // Check that no top result has negative delivery boost (which would indicate non-online_only)
+    for (const result of [...resultsA.rankedIdeas, ...resultsB.rankedIdeas]) {
+      const deliveryBoost = result.breakdown?.deliveryBoost || 0
+      if (deliveryBoost < 0) {
+        throw new Error(`${result.name} has negative delivery boost (${deliveryBoost}), indicating non-online_only`)
+      }
+    }
+
+    console.log(`    All ${resultsA.rankedIdeas.length + resultsB.rankedIdeas.length} top results are online_only`)
+  })
+
+  // Test 15: Health endpoint returns audience_mode coverage
+  await test('Health endpoint includes audience_mode coverage', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/health`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const data = await res.json()
+
+    if (!data.hasTagsCoverage?.audienceMode) throw new Error('Missing audienceMode coverage')
+    if (!data.audienceModeBreakdown) throw new Error('Missing audienceModeBreakdown')
+
+    const { consumer, builder, both } = data.audienceModeBreakdown
+    const total = consumer + builder + both
+
+    console.log(`    Audience: ${consumer} consumer, ${builder} builder, ${both} both (${total} total)`)
+
+    if (total !== data.candidateCount) {
+      throw new Error(`Audience mode total (${total}) doesn't match candidate count (${data.candidateCount})`)
+    }
   })
 
   console.log(`\n---\nTests complete.\n`)

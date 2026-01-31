@@ -61,7 +61,8 @@ export async function GET(request: Request, { params }: RouteParams) {
     .competitor-price { color: #8b5cf6; font-size: 14px; }
     .quote { background: #faf5ff; padding: 16px; border-left: 4px solid #8b5cf6; margin-bottom: 12px; font-style: italic; }
     .pain-tag { display: inline-block; background: #8b5cf6; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-bottom: 8px; }
-    .mvp-list { white-space: pre-line; }
+    .mvp-list { padding-left: 20px; }
+    .mvp-list li { margin-bottom: 8px; color: #52525b; }
     .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e4e4e7; text-align: center; color: #71717a; font-size: 12px; }
   </style>
 </head>
@@ -115,10 +116,16 @@ export async function GET(request: Request, { params }: RouteParams) {
   ${winnerIdea ? `
   <div class="section">
     <h2>MVP Specification</h2>
-    <h3>In Scope</h3>
-    <p class="mvp-list">${winnerIdea.mvp_in}</p>
-    <h3>Out of Scope</h3>
-    <p class="mvp-list">${winnerIdea.mvp_out}</p>
+    <h3>What to Build (In Scope)</h3>
+    <ul class="mvp-list">
+      ${(winnerIdea.mvp_in as string[]).map(item => `<li>${item}</li>`).join('')}
+    </ul>
+    <h3>What to Skip (Out of Scope)</h3>
+    <ul class="mvp-list">
+      ${(winnerIdea.mvp_out as string[]).map(item => `<li>${item}</li>`).join('')}
+    </ul>
+    <h3>Timeline</h3>
+    <p>Estimated ${(winnerIdea as { timebox_days: number }).timebox_days} days to MVP</p>
   </div>
 
   <div class="section">
@@ -138,22 +145,15 @@ export async function GET(request: Request, { params }: RouteParams) {
       <div class="quote">
         <div class="pain-tag">${v.pain_tag}</div>
         <p>"${v.quote}"</p>
+        <small>- ${(v as { source?: string }).source || 'User feedback'}</small>
       </div>
     `).join('')}
   </div>
 
   <div class="section">
-    <h2>14-Day Ship Plan</h2>
-    <h3>First 10 Channel</h3>
-    <p>${winnerIdea.first10_channel}</p>
-    <h3>First 10 Steps</h3>
-    <p class="mvp-list">${winnerIdea.first10_steps}</p>
-    <h3>Pricing</h3>
-    <p>${winnerIdea.pricing_model} - ${winnerIdea.pricing_range}</p>
-    <h3>Key Assumptions</h3>
-    <p>${winnerIdea.assumptions}</p>
-    <h3>Risks</h3>
-    <p class="mvp-list">${winnerIdea.risks}</p>
+    <h2>Distribution Strategy</h2>
+    <p><strong>Distribution Type:</strong> ${(winnerIdea as { distribution_type: string }).distribution_type}</p>
+    <p><strong>Support Level:</strong> ${(winnerIdea as { support_level: string }).support_level}</p>
   </div>
   ` : ''}
 

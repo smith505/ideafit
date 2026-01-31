@@ -10,9 +10,14 @@ type CandidateWithTags = Candidate & {
   avoid_tags: string[]
   distribution_type: string
   support_level: string
+  audience_mode: 'consumer' | 'builder' | 'both'
+  delivery_mode: 'online_only' | 'hybrid' | 'offline'
 }
 
+export type AudienceMode = 'consumer' | 'builder'
+
 export interface FitProfile {
+  audienceMode: AudienceMode
   timeWeekly: string
   techComfort: string
   supportTolerance: string
@@ -35,10 +40,12 @@ export interface RankedIdea {
   score: number
   reason: string
   track: string
+  breakdown?: ScoreBreakdown
 }
 
 export function buildFitProfile(answers: QuizAnswers): FitProfile {
   return {
+    audienceMode: (answers.audience_mode as AudienceMode) || 'builder',
     timeWeekly: (answers.time_weekly as string) || '6-10',
     techComfort: (answers.tech_comfort as string) || 'some',
     supportTolerance: (answers.support_tolerance as string) || 'low',
@@ -61,20 +68,172 @@ function extractPriceNumber(priceStr: string): number {
   return match ? parseInt(match[1], 10) : 0
 }
 
-function computeFitScore(candidate: Candidate, profile: FitProfile): { score: number; reasons: string[] } {
+// Score breakdown for debugging
+export interface ScoreBreakdown {
+  baseFit: number
+  interestBoost: number
+  avoidPenalty: number
+  distributionBoost: number
+  quitReasonBoost: number
+  // Credibility penalties (strong violations of user preferences)
+  credibilityPenalty: number
+  credibilityFlags: string[]
+  // Audience mode penalties
+  audiencePenalty: number
+  // Delivery mode boost/penalty
+  deliveryBoost: number
+  total: number
+  wasCapped: boolean
+}
+
+// Human-readable distribution type labels
+export const distributionTypeLabels: Record<string, string> = {
+  seo: 'Search & SEO',
+  communities: 'Community forums',
+  ads: 'Paid advertising',
+  partnerships: 'Partner outreach',
+  marketplace: 'App stores & marketplaces',
+  direct: 'Direct sales',
+  social: 'Social media',
+  organic: 'Organic discovery',
+}
+
+// Human-readable support level labels
+export const supportLevelLabels: Record<string, string> = {
+  low: 'Minimal support needed',
+  medium: 'Some support expected',
+  high: 'High-touch support required',
+}
+
+// Confidence level calculation
+export type ConfidenceLevel = 'high' | 'medium' | 'low'
+
+export function calculateConfidence(topScore: number, runnerUpScore: number): {
+  level: ConfidenceLevel
+  gap: number
+  explanation: string
+} {
+  const gap = topScore - runnerUpScore
+  if (gap >= 10) {
+    return {
+      level: 'high',
+      gap,
+      explanation: `Clear winner by ${gap} points - this idea stands out for your profile`,
+    }
+  } else if (gap >= 5) {
+    return {
+      level: 'medium',
+      gap,
+      explanation: `Good match with ${gap} point lead - runner-up is also worth considering`,
+    }
+  } else {
+    return {
+      level: 'low',
+      gap,
+      explanation: `Close call with only ${gap} point difference - consider both options carefully`,
+    }
+  }
+}
+
+// Find best wildcard from different track
+export function findWildcard(rankedIdeas: RankedIdea[], topTrack: string): RankedIdea | null {
+  for (const idea of rankedIdeas) {
+    if (idea.track !== topTrack) {
+      return idea
+    }
+  }
+  return null
+}
+
+function computeFitScore(candidate: Candidate, profile: FitProfile): { score: number; reasons: string[]; breakdown: ScoreBreakdown } {
   let score = 0
   const reasons: string[] = []
 
-  // Time match (max 20 points)
-  const timebox = candidate.timebox_minutes || 45
-  if (profile.timeWeekly === '2-5' && timebox <= 30) {
-    score += 20
+  // Track score components for debugging
+  let baseFit = 0
+  let interestBoost = 0
+  let avoidPenalty = 0
+  let distributionBoost = 0
+  let quitReasonBoost = 0
+  let credibilityPenalty = 0
+  const credibilityFlags: string[] = []
+  let audiencePenalty = 0
+  let deliveryBoost = 0
+
+  // Get candidate tags early for credibility checks
+  const candidateDistType = (candidate as CandidateWithTags).distribution_type || ''
+  const candidateSupportLevelEarly = (candidate as CandidateWithTags).support_level || ''
+  const candidateAvoidTagsEarly = (candidate as CandidateWithTags).avoid_tags || []
+  const candidateAudienceMode = (candidate as CandidateWithTags).audience_mode || 'both'
+  const candidateDeliveryMode = (candidate as CandidateWithTags).delivery_mode || 'online_only'
+
+  // ===== AUDIENCE MODE PENALTIES =====
+  // Consumer mode: hard exclude or penalize builder-only candidates
+  if (profile.audienceMode === 'consumer' && candidateAudienceMode === 'builder') {
+    audiencePenalty = 30
+    credibilityFlags.push('Audience mismatch: this is a builder-focused idea, but you selected consumer mode')
+  }
+  // Builder mode: mild penalty for consumer-only (builders can still build consumer ideas)
+  if (profile.audienceMode === 'builder' && candidateAudienceMode === 'consumer') {
+    audiencePenalty = 10
+  }
+
+  // ===== DELIVERY MODE BOOST/PENALTY =====
+  // Boost for online_only (our target for v1)
+  if (candidateDeliveryMode === 'online_only') {
+    deliveryBoost = 5
+  }
+  // Strong penalty for hybrid/offline (should never trigger in v1 if library is correct)
+  if (candidateDeliveryMode === 'hybrid' || candidateDeliveryMode === 'offline') {
+    deliveryBoost = -50
+    credibilityFlags.push(`Delivery mismatch: this idea requires ${candidateDeliveryMode} delivery`)
+  }
+
+  // ===== CREDIBILITY PENALTIES (strong violations) =====
+  // These are applied early and are much stronger than regular avoid penalties
+
+  // If user wants to avoid support, and candidate has medium/high support level
+  if (profile.avoidList.includes('support') && candidateSupportLevelEarly !== 'low') {
+    credibilityPenalty += 20
+    credibilityFlags.push(`Support conflict: you want to avoid support, but this requires ${candidateSupportLevelEarly} support`)
+  }
+
+  // If user wants to avoid ads, and candidate distribution is ads
+  if (profile.avoidList.includes('ads') && candidateDistType === 'ads') {
+    credibilityPenalty += 20
+    credibilityFlags.push('Ads conflict: you want to avoid paid ads, but this relies on ad-based distribution')
+  }
+
+  // If user wants to avoid calls, check if candidate has calls in avoid_tags or requires direct sales
+  if (profile.avoidList.includes('calls')) {
+    if (candidateAvoidTagsEarly.includes('calls') === false && (candidateDistType === 'direct' || candidateDistType === 'partnerships')) {
+      credibilityPenalty += 20
+      credibilityFlags.push('Calls conflict: you want to avoid calls, but this likely requires sales calls')
+    }
+  }
+
+  // If user wants to avoid content/SEO, and candidate distribution is seo
+  if (profile.avoidList.includes('content') && candidateDistType === 'seo') {
+    credibilityPenalty += 15
+    credibilityFlags.push('Content conflict: you want to avoid SEO/content, but this relies on content marketing')
+  }
+
+  // If user wants to avoid community, and candidate distribution is communities
+  if (profile.avoidList.includes('community') && candidateDistType === 'communities') {
+    credibilityPenalty += 15
+    credibilityFlags.push('Community conflict: you want to avoid community building, but this relies on community channels')
+  }
+
+  // Time match (max 20 points) - now using timebox_days
+  const timeboxDays = (candidate as { timebox_days?: number }).timebox_days || 14
+  if (profile.timeWeekly === '2-5' && timeboxDays <= 7) {
+    baseFit += 20
     reasons.push('Quick to build with limited time')
-  } else if (profile.timeWeekly === '6-10' && timebox <= 45) {
-    score += 15
+  } else if (profile.timeWeekly === '6-10' && timeboxDays <= 14) {
+    baseFit += 15
     reasons.push('Fits your time commitment')
   } else if (profile.timeWeekly === '11-20' || profile.timeWeekly === '20+') {
-    score += 10
+    baseFit += 10
     reasons.push('You have enough time for this')
   }
 
@@ -82,88 +241,92 @@ function computeFitScore(candidate: Candidate, profile: FitProfile): { score: nu
   const trackLower = (candidate.track_id || '').toLowerCase()
   if (profile.techComfort === 'dev') {
     if (trackLower.includes('extension') || trackLower.includes('tool')) {
-      score += 20
+      baseFit += 20
       reasons.push('Matches your dev skills')
     } else {
-      score += 15
+      baseFit += 15
     }
   } else if (profile.techComfort === 'nocode' || profile.techComfort === 'some') {
     if (trackLower.includes('widget') || trackLower.includes('smb')) {
-      score += 15
+      baseFit += 15
       reasons.push('Can be built with no-code or minimal code')
     } else {
-      score += 10
+      baseFit += 10
     }
   } else {
-    score += 5
+    baseFit += 5
   }
 
   // Support tolerance match (max 15 points)
-  const pricingModel = candidate.pricing_model || ''
+  // Using explicit support_level from candidate
+  const candidateSupportLevelBase = (candidate as CandidateWithTags).support_level || 'medium'
   if (profile.supportTolerance === 'none' || profile.supportTolerance === 'low') {
-    if (pricingModel === 'one-time') {
-      score += 15
-      reasons.push('One-time purchase = less ongoing support')
+    if (candidateSupportLevelBase === 'low') {
+      baseFit += 15
+      reasons.push('Low support requirements match your preference')
+    } else if (candidateSupportLevelBase === 'medium') {
+      baseFit += 8
     } else {
-      score += 5
+      baseFit += 3
+    }
+  } else if (profile.supportTolerance === 'medium') {
+    if (candidateSupportLevelBase !== 'high') {
+      baseFit += 12
+    } else {
+      baseFit += 6
     }
   } else {
-    score += 10
+    baseFit += 10
   }
 
   // Audience access match (max 20 points)
   const audienceLower = (candidate.audience || '').toLowerCase()
   if (profile.audienceAccess.includes('smb') && audienceLower.includes('small business')) {
-    score += 20
+    baseFit += 20
     reasons.push('You have access to the target audience')
-  } else if (profile.audienceAccess.includes('developers') && audienceLower.includes('knowledge worker')) {
-    score += 15
+  } else if (profile.audienceAccess.includes('developers') && (audienceLower.includes('developer') || audienceLower.includes('knowledge worker'))) {
+    baseFit += 15
     reasons.push('Your network includes the target users')
   } else if (profile.audienceAccess.includes('none')) {
-    // No penalty, but no bonus
-    score += 5
+    baseFit += 5
   } else {
-    score += 10
+    baseFit += 10
   }
 
-  // Revenue goal match (max 15 points)
-  const priceNum = extractPriceNumber(candidate.pricing_range || '')
-  if (profile.revenueGoal === 'side' && priceNum <= 50) {
-    score += 15
-    reasons.push('Price point fits side income goals')
-  } else if (profile.revenueGoal === 'ramen' && priceNum >= 20 && priceNum <= 100) {
-    score += 15
-    reasons.push('Revenue potential matches ramen profitability')
+  // Revenue goal match (max 15 points) - based on timebox (faster = smaller revenue potential)
+  const timeboxForRevenue = timeboxDays
+  if (profile.revenueGoal === 'side' && timeboxForRevenue <= 14) {
+    baseFit += 15
+    reasons.push('Quick build matches side income goals')
+  } else if (profile.revenueGoal === 'ramen') {
+    baseFit += 12
+    reasons.push('Good fit for sustainable indie income')
   } else if (profile.revenueGoal === 'salary' || profile.revenueGoal === 'scale') {
-    if (pricingModel === 'subscription') {
-      score += 15
-      reasons.push('Subscription model supports scaling')
-    } else {
-      score += 10
-    }
+    baseFit += 10
   } else {
-    score += 5
+    baseFit += 8
   }
 
   // Completeness bonus (max 10 points)
   if (candidate.competitors.length >= 3 && candidate.voc_quotes.length >= 3) {
-    score += 10
+    baseFit += 10
     reasons.push('Well-researched with validation data')
   } else if (candidate.competitors.length >= 2) {
-    score += 5
+    baseFit += 5
   }
 
   // ===== PERSONALIZATION SCORING =====
   const descLower = (candidate.description || '').toLowerCase()
   const nameLower = (candidate.name || '').toLowerCase()
-  const channelLower = (candidate.first10_channel || '').toLowerCase()
-  const mvpInLower = (candidate.mvp_in || '').toLowerCase()
+  // mvp_in is now an array
+  const mvpInArray = (candidate as { mvp_in?: string[] }).mvp_in || []
+  const mvpInLower = mvpInArray.join(' ').toLowerCase()
 
   // Get explicit tags from candidate (if available)
+  // Note: candidateDistType defined earlier for credibility checks
   const candidateInterestTags = (candidate as CandidateWithTags).interest_tags || []
   const candidateAvoidTags = (candidate as CandidateWithTags).avoid_tags || []
-  const candidateDistType = (candidate as CandidateWithTags).distribution_type || ''
-  const candidateSupportLevel = (candidate as CandidateWithTags).support_level || ''
+  const candidateSupportLevel = candidateSupportLevelEarly
 
   // Interest themes matching (max 15 points)
   // Prefer explicit tags, fallback to keyword matching
@@ -201,7 +364,7 @@ function computeFitScore(candidate: Candidate, profile: FitProfile): { score: nu
 
   if (themeMatches > 0 && profile.interestThemes.length > 0) {
     const themeBonus = Math.min(15, themeMatches * 3)
-    score += themeBonus
+    interestBoost += themeBonus
     if (themeMatches >= 2) {
       reasons.push('Matches your interest areas')
     }
@@ -209,144 +372,156 @@ function computeFitScore(candidate: Candidate, profile: FitProfile): { score: nu
 
   // Avoid list penalties (up to -20 points)
   // Check explicit avoid_tags first, then fallback to heuristics
-  let avoidPenalty = 0
+  let localAvoidPenalty = 0
 
   for (const avoid of profile.avoidList) {
     if (avoid === 'none') continue
 
     // Check explicit avoid tags first (stronger penalty)
     if (candidateAvoidTags.includes(avoid)) {
-      avoidPenalty += 8
+      localAvoidPenalty += 8
       continue
     }
 
-    // Fallback to heuristic matching
+    // Fallback to heuristic matching based on explicit distribution_type and support_level
     switch (avoid) {
       case 'calls':
-        if (channelLower.includes('demo') || channelLower.includes('call') || channelLower.includes('cold')) {
-          avoidPenalty += 5
+        // If distribution involves direct sales, it likely needs calls
+        if (candidateDistType === 'partnerships' || candidateDistType === 'direct') {
+          localAvoidPenalty += 5
         }
         break
       case 'social':
-        if (channelLower.includes('social') || channelLower.includes('twitter') ||
-            channelLower.includes('fb ') || channelLower.includes('facebook') ||
-            channelLower.includes('instagram') || channelLower.includes('tiktok')) {
-          avoidPenalty += 5
+        // If distribution is social media based
+        if (candidateDistType === 'social' || descLower.includes('social') || descLower.includes('twitter')) {
+          localAvoidPenalty += 5
         }
         break
       case 'support':
         if (candidateSupportLevel === 'high' || candidateSupportLevel === 'medium') {
-          avoidPenalty += 5
-        } else if (pricingModel === 'subscription' && candidateSupportLevel !== 'low') {
-          avoidPenalty += 3
+          localAvoidPenalty += 5
         }
         break
       case 'content':
-        if (channelLower.includes('seo') || channelLower.includes('content') || channelLower.includes('blog')) {
-          avoidPenalty += 5
+        // If distribution is SEO/content based
+        if (candidateDistType === 'seo' || descLower.includes('seo') || descLower.includes('blog')) {
+          localAvoidPenalty += 5
         }
         break
       case 'ads':
         if (candidateDistType === 'ads') {
-          avoidPenalty += 5
-        } else if (channelLower.includes('ads') || channelLower.includes('adwords') ||
-            channelLower.includes('ppc') || channelLower.includes('paid')) {
-          avoidPenalty += 4
+          localAvoidPenalty += 5
         }
         break
       case 'community':
-        if (channelLower.includes('community') || channelLower.includes('discord') ||
-            channelLower.includes('forum')) {
-          avoidPenalty += 5
+        if (candidateDistType === 'communities' || descLower.includes('community') || descLower.includes('forum')) {
+          localAvoidPenalty += 5
         }
         break
       case 'integrations':
         if (mvpInLower.includes('api') || mvpInLower.includes('integration') ||
             mvpInLower.includes('connect')) {
-          avoidPenalty += 5
+          localAvoidPenalty += 5
         }
         break
     }
   }
 
   // Apply penalty (capped at -20)
-  score -= Math.min(20, avoidPenalty)
+  avoidPenalty = Math.min(20, localAvoidPenalty)
 
   // Distribution comfort alignment (max 10 points)
   if (profile.distributionComfort && profile.distributionComfort !== 'unsure') {
-    // Check explicit distribution_type first
+    // Check explicit distribution_type
     if (candidateDistType && candidateDistType === profile.distributionComfort) {
-      score += 10
+      distributionBoost += 10
       reasons.push('Distribution channel matches your strength')
-    } else {
-      // Fallback to heuristic matching
-      switch (profile.distributionComfort) {
-        case 'seo':
-          if (channelLower.includes('seo') || channelLower.includes('search')) {
-            score += 8
-            reasons.push('Matches your SEO/content distribution strength')
-          }
-          break
-        case 'communities':
-          if (channelLower.includes('reddit') || channelLower.includes('discord') ||
-              channelLower.includes('forum') || channelLower.includes('group')) {
-            score += 8
-            reasons.push('Community distribution fits your style')
-          }
-          break
-        case 'ads':
-          if (channelLower.includes('ads') || channelLower.includes('paid')) {
-            score += 8
-            reasons.push('Paid ads channel matches your preference')
-          }
-          break
-        case 'partnerships':
-          if (channelLower.includes('partner') || channelLower.includes('influencer') ||
-              channelLower.includes('outreach')) {
-            score += 8
-            reasons.push('Partnership-driven distribution matches you')
-          }
-          break
+    } else if (candidateDistType) {
+      // Partial match based on related distribution types
+      const distRelated: Record<string, string[]> = {
+        seo: ['content', 'organic'],
+        communities: ['reddit', 'discord', 'forums'],
+        ads: ['paid', 'ppc'],
+        partnerships: ['affiliate', 'influencer'],
+      }
+      const related = distRelated[profile.distributionComfort] || []
+      if (related.includes(candidateDistType)) {
+        distributionBoost += 6
+        reasons.push('Related distribution channel')
       }
     }
   }
 
   // Quit reason alignment (max 5 points)
-  if (profile.quitReason === 'motivation' && candidate.timebox_minutes && candidate.timebox_minutes <= 30) {
-    score += 5
+  if (profile.quitReason === 'motivation' && timeboxDays <= 7) {
+    quitReasonBoost += 5
     reasons.push('Quick to build - stays motivating')
   }
   if (profile.quitReason === 'stuck' && profile.techComfort === 'dev') {
-    score += 5
+    quitReasonBoost += 5
   }
-  if (profile.quitReason === 'no_users' && channelLower.includes('chrome web store')) {
-    score += 5
+  if (profile.quitReason === 'no_users' && trackLower.includes('extension')) {
+    // Chrome extensions have built-in distribution via the Chrome Web Store
+    quitReasonBoost += 5
     reasons.push('Built-in distribution channel')
   }
 
-  return { score, reasons }
+  // Calculate total score and cap at 100
+  const rawScore = baseFit + interestBoost - avoidPenalty + distributionBoost + quitReasonBoost - credibilityPenalty - audiencePenalty + deliveryBoost
+  const wasCapped = rawScore > 100
+  score = Math.min(100, Math.max(0, rawScore)) // Cap between 0-100
+
+  const breakdown: ScoreBreakdown = {
+    baseFit,
+    interestBoost,
+    avoidPenalty,
+    distributionBoost,
+    quitReasonBoost,
+    credibilityPenalty,
+    credibilityFlags,
+    audiencePenalty,
+    deliveryBoost,
+    total: score,
+    wasCapped,
+  }
+
+  return { score, reasons, breakdown }
 }
 
-export function rankIdeas(answers: QuizAnswers): {
+export function rankIdeas(answers: QuizAnswers, options?: { seed?: number; limit?: number }): {
   profile: FitProfile
   rankedIdeas: RankedIdea[]
   fitTrack: string
   winnerId: string
 } {
   const profile = buildFitProfile(answers)
+  const limit = options?.limit || 5
 
   const scored = library.candidates.map((candidate) => {
-    const { score, reasons } = computeFitScore(candidate, profile)
+    const { score, reasons, breakdown } = computeFitScore(candidate, profile)
     return {
       id: candidate.id,
       name: candidate.name,
       score,
       reason: reasons.slice(0, 2).join('. ') || 'Good fit for your profile',
       track: candidate.track_id || 'Uncategorized',
+      breakdown,
     }
   })
 
-  const rankedIdeas = scored.sort((a, b) => b.score - a.score).slice(0, 5)
+  // Sort by score, with optional shuffle for ties using seed
+  let sorted = scored.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score
+    // For ties, use seed-based deterministic shuffle if provided
+    if (options?.seed !== undefined) {
+      const aHash = hashCode(a.id + options.seed)
+      const bHash = hashCode(b.id + options.seed)
+      return bHash - aHash
+    }
+    return 0
+  })
+
+  const rankedIdeas = sorted.slice(0, limit)
   const winner = rankedIdeas[0]
 
   return {
@@ -355,6 +530,17 @@ export function rankIdeas(answers: QuizAnswers): {
     fitTrack: winner.track,
     winnerId: winner.id,
   }
+}
+
+// Simple deterministic hash for seed-based shuffling
+function hashCode(str: string): number {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash
+  }
+  return hash
 }
 
 export function getIdeaById(id: string) {
@@ -424,7 +610,7 @@ export function generateMatchChips(profile: FitProfile, candidateId: string): Ma
   // Support tolerance chip
   if (profile.supportTolerance === 'none' || profile.supportTolerance === 'low') {
     const candidateSupportLevel = candidate.support_level || ''
-    if (candidateSupportLevel === 'low' || candidate.pricing_model === 'one-time') {
+    if (candidateSupportLevel === 'low') {
       chips.push({ label: chipLabels.supportTolerance[profile.supportTolerance], type: 'match' })
     }
   }
@@ -432,14 +618,12 @@ export function generateMatchChips(profile: FitProfile, candidateId: string): Ma
   // Distribution comfort chip
   if (profile.distributionComfort && profile.distributionComfort !== 'unsure') {
     const candidateDistType = candidate.distribution_type || ''
-    const channelLower = (candidate.first10_channel || '').toLowerCase()
 
     const distMatches =
       candidateDistType === profile.distributionComfort ||
-      (profile.distributionComfort === 'communities' &&
-        (channelLower.includes('reddit') || channelLower.includes('group'))) ||
-      (profile.distributionComfort === 'ads' && channelLower.includes('ads')) ||
-      (profile.distributionComfort === 'seo' && channelLower.includes('seo'))
+      (profile.distributionComfort === 'communities' && candidateDistType === 'communities') ||
+      (profile.distributionComfort === 'ads' && candidateDistType === 'ads') ||
+      (profile.distributionComfort === 'seo' && candidateDistType === 'seo')
 
     if (distMatches) {
       chips.push({ label: chipLabels.distributionComfort[profile.distributionComfort], type: 'match' })
@@ -449,10 +633,13 @@ export function generateMatchChips(profile: FitProfile, candidateId: string): Ma
   // Quit reason chip
   if (profile.quitReason && profile.quitReason !== '') {
     const label = chipLabels.quitReason[profile.quitReason]
+    const timeboxDays = (candidate as { timebox_days?: number }).timebox_days || 14
+    const trackLower = (candidate.track_id || '').toLowerCase()
     if (label) {
-      if (profile.quitReason === 'motivation' && candidate.timebox_minutes && candidate.timebox_minutes <= 45) {
+      if (profile.quitReason === 'motivation' && timeboxDays <= 14) {
         chips.push({ label, type: 'match' })
-      } else if (profile.quitReason === 'no_users' && (candidate.first10_channel || '').toLowerCase().includes('chrome web store')) {
+      } else if (profile.quitReason === 'no_users' && trackLower.includes('extension')) {
+        // Chrome extensions have built-in distribution via the Chrome Web Store
         chips.push({ label, type: 'match' })
       } else if (profile.quitReason === 'never') {
         chips.push({ label, type: 'match' })

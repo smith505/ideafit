@@ -16,6 +16,15 @@ export interface QuizQuestion {
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
+    id: 'audience_mode',
+    question: 'What are you here for?',
+    type: 'single',
+    options: [
+      { value: 'consumer', label: 'A simple tool for my personal life (normal user)' },
+      { value: 'builder', label: 'A product idea I can build and sell (builder)' },
+    ],
+  },
+  {
     id: 'time_weekly',
     question: 'How many hours per week can you dedicate to building?',
     type: 'single',

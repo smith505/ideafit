@@ -1,216 +1,1093 @@
 {
-  "version": "1.0.0",
-  "generated_at": "2026-01-31T16:22:55.936Z",
-  "source_file": "IdeaFit_Idea_Library_Template.xlsx",
+  "version": "1.1.0",
+  "generated_at": "2026-01-31T21:00:00.000Z",
+  "source_file": "manual-v1-audience-mode",
   "candidates": [
     {
-      "id": "csv-cleaner",
-      "name": "CSV Cleaner for Small Businesses",
-      "status": "draft",
-      "track_id": "Data-to-dashboard microtool",
-      "description": "A web tool that fixes messy CSVs (dates, currency, duplicates) and outputs clean imports for QuickBooks/Shopify/Sheets. Includes templates per destination.",
-      "audience": "small businesses / ops assistants",
-      "wedge": "Instead of a full ETL product, it's a one-purpose 'make this import work' tool with destination templates and instant preview.",
-      "interest_tags": ["money", "tech"],
-      "avoid_tags": ["support", "community"],
-      "distribution_type": "ads",
+      "id": "tab-sweeper",
+      "name": "Tab Sweeper for Work Sessions",
+      "status": "active",
+      "track_id": "chrome-extension",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "A Chrome extension that auto-groups and hibernates tabs by project with one-click restore. Shows a weekly 'time saved' dashboard.",
+      "audience": "knowledge workers, students",
+      "wedge": "Unlike OneTab's messy lists, we auto-group by project and show time-saved stats that make the habit stick.",
+      "mvp_in": [
+        "One-click sweep button",
+        "Auto-group tabs by domain",
+        "Hibernation to reduce memory",
+        "Restore last 3 sessions",
+        "Weekly time-saved estimate",
+        "Keyboard shortcut support",
+        "Export session as bookmark folder"
+      ],
+      "mvp_out": [
+        "Team/shared sessions",
+        "Cross-device sync",
+        "AI categorization",
+        "Calendar integration",
+        "Analytics dashboard"
+      ],
+      "distribution_type": "marketplace",
       "support_level": "low",
-      "mvp_in": "• Upload CSV\n• 6 common fixes\n• Preview table\n• Export cleaned CSV\n• 3 destination templates",
-      "mvp_out": "• API connectors\n• Team collaboration\n• Automation schedules",
-      "first10_channel": "Google search ads + marketplaces",
-      "first10_steps": "1) Create SEO landing pages per destination\n2) Run $10/day on intent keywords\n3) Add freemium limit\n4) Convert via $9 one-time or $5/mo",
-      "pricing_model": "one-time",
-      "pricing_range": "$9/report or $19 bundle",
-      "keywords_checked": "fix csv import; clean csv quickbooks; shopify csv errors",
-      "serp_notes": "Tools vs Blogs: mixed; Ads: unknown; Some tool intent; lots of help articles",
+      "interest_tags": ["career", "tech"],
+      "avoid_tags": ["calls", "support", "ads"],
+      "keywords": ["tab manager chrome", "reduce chrome tabs", "tab hibernation", "browser productivity"],
       "competitors": [
-        {
-          "name": "CSVed",
-          "url": "https://csved.sjfrancke.nl/",
-          "price": "free",
-          "gap": "Not destination templates; less guided"
-        },
-        {
-          "name": "DataPrep tools",
-          "url": "https://www.microsoft.com/",
-          "price": "varies",
-          "gap": "Too heavy for quick imports"
-        },
-        {
-          "name": "Online CSV cleaners",
-          "url": "https://www.google.com/",
-          "price": "free",
-          "gap": "No trust, no templates"
-        }
+        { "name": "OneTab", "price": "Free", "gap": "No auto-grouping, no time-saved feedback" },
+        { "name": "Workona", "price": "$7+/mo", "gap": "Too complex for casual users" },
+        { "name": "The Great Suspender", "price": "Free", "gap": "No session restore UX" }
       ],
       "voc_quotes": [
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "import errors",
-          "quote": "I keep getting import errors and I don’t know what’s wrong with my CSV."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "guidance",
-          "quote": "I just want a tool that tells me what to fix and lets me download a clean file."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "pricing",
-          "quote": "I only need this once in a while, not a monthly subscription."
-        }
+        { "quote": "My tabs get out of control and kill my focus", "source": "r/productivity", "pain_tag": "overwhelm" },
+        { "quote": "I want something simple that just sleeps tabs automatically", "source": "r/chrome", "pain_tag": "simplicity" },
+        { "quote": "Most tab managers feel like a project to set up", "source": "HN", "pain_tag": "setup friction" }
       ],
-      "assumptions": "Occasional use fits one-time pricing; templates increase success rate.",
-      "risks": "• Handling sensitive data\n• Free competitors\n• Trust barrier for uploads",
-      "timebox_minutes": 45,
-      "notes": "Add privacy messaging; consider local-only processing later."
+      "timebox_days": 3
     },
     {
-      "id": "desk-quote-widget",
-      "name": "Instant Quote Widget for Local Services",
-      "status": "draft",
-      "track_id": "Local SMB lead/quote tool",
-      "description": "A drop-in website widget that gives instant ballpark quotes for common services (junk removal, detailing, landscaping) and captures phone/email. Sends the lead to SMS instantly.",
-      "audience": "local service businesses",
-      "wedge": "Most quote tools are complex; this is a 10-minute setup widget with 3 templates and an SMS-first workflow for faster close rates.",
-      "interest_tags": ["home", "money"],
-      "avoid_tags": ["integrations"],
+      "id": "screenshot-annotator",
+      "name": "Screenshot Annotator & Sharer",
+      "status": "active",
+      "track_id": "chrome-extension",
+      "audience_mode": "both",
+      "delivery_mode": "online_only",
+      "description": "Capture, annotate, and share screenshots with one click. Auto-uploads to a shareable link, no account required for viewers.",
+      "audience": "remote workers, support teams, freelancers",
+      "wedge": "Unlike Loom's video-first approach, we're screenshot-first with instant annotation and a shareable link in 2 clicks.",
+      "mvp_in": [
+        "One-click full page or selection capture",
+        "Arrow, box, text annotations",
+        "Blur sensitive areas",
+        "Auto-upload to shareable link",
+        "Copy link to clipboard",
+        "No viewer login required",
+        "7-day auto-expiry for free tier"
+      ],
+      "mvp_out": [
+        "Video recording",
+        "Team workspaces",
+        "Slack/Discord integrations",
+        "Custom domains",
+        "Permanent storage"
+      ],
+      "distribution_type": "marketplace",
+      "support_level": "low",
+      "interest_tags": ["career", "tech"],
+      "avoid_tags": ["support", "community"],
+      "keywords": ["screenshot share link", "annotate screenshot chrome", "quick screenshot tool"],
+      "competitors": [
+        { "name": "Loom", "price": "$12.50/mo", "gap": "Video-focused, overkill for screenshots" },
+        { "name": "Awesome Screenshot", "price": "$6/mo", "gap": "Cluttered UI, too many features" },
+        { "name": "Lightshot", "price": "Free", "gap": "No annotations, ads everywhere" }
+      ],
+      "voc_quotes": [
+        { "quote": "I just want to share a quick screenshot without signing up for anything", "source": "r/remotework", "pain_tag": "friction" },
+        { "quote": "Loom is too much when I just need to show one screen", "source": "Twitter", "pain_tag": "overkill" },
+        { "quote": "Why do all screenshot tools require the viewer to log in?", "source": "r/webdev", "pain_tag": "viewer friction" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "price-tracker-ext",
+      "name": "Price Drop Alert Extension",
+      "status": "active",
+      "track_id": "chrome-extension",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Track prices on any product page. Get email alerts when prices drop. See price history charts before you buy.",
+      "audience": "online shoppers, deal hunters",
+      "wedge": "Unlike Honey's coupon focus, we show price history charts and email you only when prices actually drop.",
+      "mvp_in": [
+        "One-click 'Track this price' button",
+        "Price history chart overlay",
+        "Email alerts on price drops",
+        "Track up to 50 items free",
+        "Works on Amazon, Walmart, Target, Best Buy",
+        "Dashboard of tracked items",
+        "Unsubscribe from individual items",
+        "Weekly digest option"
+      ],
+      "mvp_out": [
+        "Mobile app",
+        "Browser push notifications",
+        "Price predictions",
+        "Deal aggregation feed",
+        "Affiliate cashback"
+      ],
+      "distribution_type": "marketplace",
+      "support_level": "low",
+      "interest_tags": ["shopping", "money"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["price tracker extension", "price drop alert", "amazon price history"],
+      "competitors": [
+        { "name": "Honey", "price": "Free", "gap": "Coupon-focused, no real price tracking" },
+        { "name": "Keepa", "price": "Free/$2mo", "gap": "Amazon-only, ugly charts" },
+        { "name": "CamelCamelCamel", "price": "Free", "gap": "Website-only, no extension overlay" }
+      ],
+      "voc_quotes": [
+        { "quote": "I wish I knew if this price is actually a deal or just normal", "source": "r/Frugal", "pain_tag": "price uncertainty" },
+        { "quote": "Honey never actually saves me money, just tracks cookies", "source": "Twitter", "pain_tag": "misleading tools" },
+        { "quote": "I want to track prices across multiple stores not just Amazon", "source": "r/deals", "pain_tag": "store limitation" }
+      ],
+      "timebox_days": 14
+    },
+    {
+      "id": "csv-cleaner",
+      "name": "CSV Cleaner for Imports",
+      "status": "active",
+      "track_id": "data-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Upload messy CSVs, fix common issues (dates, currency, duplicates), download clean files ready for QuickBooks/Shopify/Sheets.",
+      "audience": "small business owners, bookkeepers, ops assistants",
+      "wedge": "Unlike complex ETL tools, we're a one-purpose 'make this import work' tool with templates for popular destinations.",
+      "mvp_in": [
+        "Drag-and-drop CSV upload",
+        "Auto-detect and fix date formats",
+        "Standardize currency columns",
+        "Remove duplicate rows",
+        "Preview cleaned data",
+        "Download cleaned CSV",
+        "Templates for QuickBooks, Shopify, Google Sheets"
+      ],
+      "mvp_out": [
+        "API connectors",
+        "Scheduled imports",
+        "Team collaboration",
+        "Custom transformation rules",
+        "Excel file support"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "career"],
+      "avoid_tags": ["support", "community"],
+      "keywords": ["fix csv import", "clean csv quickbooks", "csv date format fixer"],
+      "competitors": [
+        { "name": "CSVed", "price": "Free", "gap": "Desktop-only, no destination templates" },
+        { "name": "Parabola", "price": "$80/mo", "gap": "Way too complex for simple fixes" },
+        { "name": "Excel", "price": "$10/mo", "gap": "Manual work, no auto-detection" }
+      ],
+      "voc_quotes": [
+        { "quote": "I keep getting import errors and don't know what's wrong with my CSV", "source": "r/QuickBooks", "pain_tag": "import errors" },
+        { "quote": "I just want a tool that tells me what to fix and lets me download a clean file", "source": "r/smallbusiness", "pain_tag": "guidance" },
+        { "quote": "I only need this once in a while, not a monthly subscription", "source": "r/Bookkeeping", "pain_tag": "pricing" }
+      ],
+      "timebox_days": 3
+    },
+    {
+      "id": "spreadsheet-dashboard",
+      "name": "Instant Dashboard from Spreadsheet",
+      "status": "active",
+      "track_id": "data-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Paste a Google Sheets or Excel link, get a beautiful dashboard with charts. Share with clients or embed on your site.",
+      "audience": "freelancers, consultants, small agencies",
+      "wedge": "Unlike Tableau's learning curve, paste a spreadsheet link and get a shareable dashboard in 60 seconds.",
+      "mvp_in": [
+        "Paste Google Sheets link to import",
+        "Auto-generate charts from data",
+        "5 dashboard templates",
+        "Shareable public link",
+        "Embed code for websites",
+        "Auto-refresh from source",
+        "Mobile-responsive dashboards"
+      ],
+      "mvp_out": [
+        "Excel file upload",
+        "Custom branding",
+        "Password protection",
+        "Multiple data sources",
+        "Scheduled email reports"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["career", "money"],
+      "avoid_tags": ["calls", "integrations"],
+      "keywords": ["spreadsheet to dashboard", "google sheets dashboard", "embed charts from spreadsheet"],
+      "competitors": [
+        { "name": "Tableau", "price": "$70/mo", "gap": "Massive learning curve" },
+        { "name": "Google Data Studio", "price": "Free", "gap": "Complex setup, ugly defaults" },
+        { "name": "Geckoboard", "price": "$49/mo", "gap": "Requires API integrations" }
+      ],
+      "voc_quotes": [
+        { "quote": "My clients want to see charts but I don't have time to learn Tableau", "source": "r/freelance", "pain_tag": "learning curve" },
+        { "quote": "I just want to turn my spreadsheet into something I can show in a meeting", "source": "r/consulting", "pain_tag": "presentation" },
+        { "quote": "Google Data Studio is free but takes forever to set up", "source": "Twitter", "pain_tag": "setup time" }
+      ],
+      "timebox_days": 10
+    },
+    {
+      "id": "form-to-sheet",
+      "name": "Form Builder with Sheet Backend",
+      "status": "active",
+      "track_id": "data-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Create forms that save responses directly to Google Sheets. Embed anywhere, no database required.",
+      "audience": "small businesses, event organizers, teachers",
+      "wedge": "Unlike Typeform's pricing, we're $5/mo unlimited forms with native Google Sheets sync.",
+      "mvp_in": [
+        "Drag-and-drop form builder",
+        "10+ field types",
+        "Connect to Google Sheets",
+        "Embed code generator",
+        "Email notifications on submission",
+        "Thank you page customization",
+        "Spam protection",
+        "Mobile-friendly forms"
+      ],
+      "mvp_out": [
+        "Payment collection",
+        "Conditional logic",
+        "File uploads",
+        "Zapier integration",
+        "Custom domains"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["career", "learning"],
+      "avoid_tags": ["support", "integrations"],
+      "keywords": ["form to google sheet", "embed form website", "simple form builder"],
+      "competitors": [
+        { "name": "Typeform", "price": "$25/mo", "gap": "Expensive for simple forms" },
+        { "name": "Google Forms", "price": "Free", "gap": "Ugly, limited customization" },
+        { "name": "JotForm", "price": "$34/mo", "gap": "Complex, enterprise-focused" }
+      ],
+      "voc_quotes": [
+        { "quote": "Typeform is beautiful but I can't justify $25/mo for a contact form", "source": "r/webdev", "pain_tag": "pricing" },
+        { "quote": "I want form responses in a spreadsheet not some dashboard I'll never check", "source": "r/smallbusiness", "pain_tag": "workflow" },
+        { "quote": "Google Forms works but looks terrible on my site", "source": "IndieHackers", "pain_tag": "aesthetics" }
+      ],
+      "timebox_days": 14
+    },
+    {
+      "id": "quote-widget",
+      "name": "Instant Quote Widget for Services",
+      "status": "active",
+      "track_id": "smb-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Embed a quote calculator on your website. Visitors get instant ballpark pricing, you get their contact info via SMS.",
+      "audience": "local service businesses (junk removal, cleaning, landscaping)",
+      "wedge": "Unlike complex quote builders, setup takes 10 minutes and leads come via SMS for faster response.",
+      "mvp_in": [
+        "3 vertical templates (cleaning, junk, landscaping)",
+        "Embed script for any website",
+        "Quote rules editor",
+        "SMS lead notifications",
+        "Email backup notifications",
+        "Simple admin dashboard",
+        "Mobile-optimized widget"
+      ],
+      "mvp_out": [
+        "Payment collection",
+        "Scheduling integration",
+        "CRM integrations",
+        "Custom branding",
+        "Multi-location support"
+      ],
       "distribution_type": "communities",
       "support_level": "medium",
-      "mvp_in": "• 3 vertical templates\n• Embed script\n• Quote rules editor\n• SMS + email lead delivery\n• Simple admin dashboard",
-      "mvp_out": "• Payments\n• Scheduling\n• CRM integrations",
-      "first10_channel": "Cold email + local FB groups",
-      "first10_steps": "1) Build 1-page demo\n2) Offer 10 free installs\n3) Convert to $49/mo after 14 days\n4) Collect testimonials",
-      "pricing_model": "subscription",
-      "pricing_range": "$49/mo",
-      "keywords_checked": "instant quote widget; estimate widget; lead capture widget",
-      "serp_notes": "Tools vs Blogs: tools; Ads: unknown; Strong tool intent; many SaaS pages",
+      "interest_tags": ["home", "money"],
+      "avoid_tags": ["integrations"],
+      "keywords": ["instant quote widget", "service pricing calculator", "lead capture widget"],
       "competitors": [
-        {
-          "name": "ConvertCalculator",
-          "url": "https://convertcalculator.com/",
-          "price": "$29+/mo",
-          "gap": "Generic; not vertical templates"
-        },
-        {
-          "name": "Outgrow",
-          "url": "https://outgrow.co/",
-          "price": "$22+/mo",
-          "gap": "More marketing quiz; not quote-first"
-        },
-        {
-          "name": "Calconic",
-          "url": "https://www.calconic.com/",
-          "price": "$19+/mo",
-          "gap": "Builder is powerful but setup friction"
-        }
+        { "name": "ConvertCalculator", "price": "$29/mo", "gap": "Generic, not vertical-focused" },
+        { "name": "Outgrow", "price": "$22/mo", "gap": "Marketing quiz, not quote-first" },
+        { "name": "Calconic", "price": "$19/mo", "gap": "Powerful but complex setup" }
       ],
       "voc_quotes": [
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "lead loss",
-          "quote": "People ask for prices and never fill out my contact form."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "speed",
-          "quote": "If I could text them a quote instantly I’d book more jobs."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "simplicity",
-          "quote": "I don’t want a full CRM, just a simple estimator widget."
-        }
+        { "quote": "People ask for prices and never fill out my contact form", "source": "r/sweatystartup", "pain_tag": "lead loss" },
+        { "quote": "If I could text them a quote instantly I'd book more jobs", "source": "r/lawncare", "pain_tag": "speed" },
+        { "quote": "I don't want a full CRM, just a simple estimator widget", "source": "r/HomeImprovement", "pain_tag": "simplicity" }
       ],
-      "assumptions": "SMBs pay if it clearly increases leads; SMS delivery is key differentiator.",
-      "risks": "• Compliance for SMS\n• Many incumbents\n• SMB churn if no ROI",
-      "timebox_minutes": 45,
-      "notes": "Needs real VoC quotes + proof of SMB willingness to pay."
+      "timebox_days": 10
     },
     {
-      "id": "ext-tab-sweeper",
-      "name": "Tab Sweeper for Work Sessions",
-      "status": "draft",
-      "track_id": "Chrome extension utility",
-      "description": "A Chrome extension that auto-groups and hibernates tabs by project with one-click restore. It shows a simple weekly 'time saved' dashboard so users feel the payoff.",
-      "audience": "knowledge workers / students",
-      "wedge": "Unlike heavy tab managers, it's one-button 'clean my session' with zero setup and a weekly savings score that makes the habit stick.",
-      "interest_tags": ["career", "tech", "learning"],
-      "avoid_tags": ["calls", "support", "ads"],
+      "id": "review-collector",
+      "name": "Review Collector for Local Business",
+      "status": "active",
+      "track_id": "smb-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Send customers a link after service. Happy ones go to Google Reviews, unhappy ones go to private feedback.",
+      "audience": "local service businesses, restaurants, salons",
+      "wedge": "Unlike review platforms, we filter before posting—happy customers to Google, complaints to you privately.",
+      "mvp_in": [
+        "Generate shareable review link",
+        "Happiness gate (1-5 stars)",
+        "Route 4-5 stars to Google Reviews",
+        "Route 1-3 stars to private form",
+        "Email/SMS link sender",
+        "QR code generator",
+        "Basic analytics dashboard"
+      ],
+      "mvp_out": [
+        "Yelp/Facebook routing",
+        "Automated follow-ups",
+        "Review response templates",
+        "Multi-location management",
+        "White-label option"
+      ],
       "distribution_type": "communities",
       "support_level": "low",
-      "mvp_in": "• One-click sweep\n• Auto-group by domain\n• Hibernation\n• Restore last 3 sessions\n• Weekly time-saved estimate",
-      "mvp_out": "• Team features\n• Cross-device sync\n• AI categorization",
-      "first10_channel": "Chrome Web Store + Reddit",
-      "first10_steps": "1) Ship free basic version\n2) Post on r/chrome_extensions and productivity subs\n3) Offer 50 beta codes for Pro\n4) Ask for reviews",
-      "pricing_model": "subscription",
-      "pricing_range": "$3/mo or $20/yr",
-      "keywords_checked": "tab hibernation extension; reduce tabs chrome; tab manager simple",
-      "serp_notes": "Tools vs Blogs: mixed; Ads: unknown; Some tools, many blog posts; extension intent exists",
+      "interest_tags": ["money", "career"],
+      "avoid_tags": ["calls", "community"],
+      "keywords": ["get more google reviews", "review collection tool", "local business reviews"],
       "competitors": [
-        {
-          "name": "The Great Suspender",
-          "url": "https://chromewebstore.google.com/",
-          "price": "free",
-          "gap": "No ‘session sweep’ + no savings feedback loop"
-        },
-        {
-          "name": "OneTab",
-          "url": "https://chromewebstore.google.com/",
-          "price": "free",
-          "gap": "Batch list only; no auto-group + no restore UX"
-        },
-        {
-          "name": "Workona",
-          "url": "https://workona.com/",
-          "price": "$7+/mo",
-          "gap": "Too heavy; setup friction for casual users"
-        }
+        { "name": "Podium", "price": "$249/mo", "gap": "Enterprise pricing, way overkill" },
+        { "name": "Birdeye", "price": "$300/mo", "gap": "Too expensive for small business" },
+        { "name": "Grade.us", "price": "$90/mo", "gap": "Complex, agency-focused" }
       ],
       "voc_quotes": [
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "focus",
-          "quote": "My tabs get out of control and it kills my focus."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "simplicity",
-          "quote": "I want something simple that just closes or sleeps tabs automatically."
-        },
-        {
-          "url": "https://www.reddit.com/",
-          "pain_tag": "setup friction",
-          "quote": "Most tab managers feel like a whole project to set up."
-        }
+        { "quote": "I need more Google reviews but don't want to pay $300/mo for Podium", "source": "r/smallbusiness", "pain_tag": "pricing" },
+        { "quote": "I wish unhappy customers told me before posting a 1-star review", "source": "r/restaurateur", "pain_tag": "damage control" },
+        { "quote": "I just want a simple link to send after each job", "source": "r/HVAC", "pain_tag": "simplicity" }
       ],
-      "assumptions": "Users will pay small fee for ‘set and forget’ + visible time saved.\nChrome store discovery + Reddit can seed first users.",
-      "risks": "• Chrome policy changes\n• Competing free tools\n• Retention if ‘time saved’ feels fake",
-      "timebox_minutes": 45,
-      "notes": "Replace VoC + competitor links with real sources during research."
+      "timebox_days": 5
+    },
+    {
+      "id": "booking-link",
+      "name": "Simple Booking Link for Services",
+      "status": "active",
+      "track_id": "smb-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Create a booking page in 5 minutes. Customers pick a time, you get notified. Syncs with Google Calendar.",
+      "audience": "freelancers, consultants, personal trainers",
+      "wedge": "Unlike Calendly's feature bloat, we're booking-only with zero setup friction and a free forever tier.",
+      "mvp_in": [
+        "Create booking page in 5 minutes",
+        "Set available hours",
+        "Google Calendar sync",
+        "Email confirmations",
+        "SMS reminders (optional)",
+        "Shareable link",
+        "Embed on website",
+        "Time zone detection"
+      ],
+      "mvp_out": [
+        "Payment collection",
+        "Team scheduling",
+        "Custom branding",
+        "Zoom integration",
+        "Round-robin assignment"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["career", "health"],
+      "avoid_tags": ["calls", "support", "integrations"],
+      "keywords": ["simple booking page", "free appointment scheduler", "calendar booking link"],
+      "competitors": [
+        { "name": "Calendly", "price": "$10/mo", "gap": "Too many features, confusing setup" },
+        { "name": "Acuity", "price": "$16/mo", "gap": "Enterprise features you don't need" },
+        { "name": "Cal.com", "price": "Free/$15mo", "gap": "Dev-focused, complex" }
+      ],
+      "voc_quotes": [
+        { "quote": "Calendly is overkill for my personal training business", "source": "r/personaltraining", "pain_tag": "complexity" },
+        { "quote": "I just need a link where clients can pick a time slot", "source": "r/freelance", "pain_tag": "simplicity" },
+        { "quote": "Why do all booking tools try to sell me a CRM?", "source": "Twitter", "pain_tag": "feature bloat" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "expense-snap",
+      "name": "Expense Tracker with Receipt Snap",
+      "status": "active",
+      "track_id": "finance-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Snap a photo of any receipt. We extract the amount, date, and category. Export to CSV for tax time.",
+      "audience": "freelancers, small business owners, gig workers",
+      "wedge": "Unlike Expensify's enterprise complexity, snap and done—no approval workflows or corporate features.",
+      "mvp_in": [
+        "Snap photo to add expense",
+        "Auto-extract amount and date",
+        "Manual expense entry",
+        "Category assignment",
+        "Monthly spending summary",
+        "Export to CSV",
+        "Basic search and filter"
+      ],
+      "mvp_out": [
+        "Bank connection",
+        "Multi-currency",
+        "Team expense reports",
+        "Mileage tracking",
+        "Accounting software sync"
+      ],
+      "distribution_type": "marketplace",
+      "support_level": "low",
+      "interest_tags": ["money", "career"],
+      "avoid_tags": ["calls", "support", "integrations"],
+      "keywords": ["receipt scanner app", "expense tracker freelancer", "simple expense app"],
+      "competitors": [
+        { "name": "Expensify", "price": "$5/mo", "gap": "Enterprise features, complex" },
+        { "name": "Wave", "price": "Free", "gap": "Full accounting, overkill" },
+        { "name": "Mint", "price": "Free", "gap": "No receipt scanning, ads everywhere" }
+      ],
+      "voc_quotes": [
+        { "quote": "I just need to track receipts for tax deductions, nothing else", "source": "r/freelance", "pain_tag": "simplicity" },
+        { "quote": "Expensify is for corporations, I'm one person", "source": "r/selfemployed", "pain_tag": "complexity" },
+        { "quote": "I lose receipts and panic at tax time every year", "source": "r/personalfinance", "pain_tag": "organization" }
+      ],
+      "timebox_days": 10
+    },
+    {
+      "id": "subscription-tracker",
+      "name": "Subscription Tracker & Cancellation Reminders",
+      "status": "active",
+      "track_id": "finance-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "List all your subscriptions in one place. Get reminders before free trials end or annual renewals hit.",
+      "audience": "consumers, families, budget-conscious individuals",
+      "wedge": "Unlike Truebill's bank-linking requirement, manually add subscriptions and get reminder-only—no upsells.",
+      "mvp_in": [
+        "Add subscriptions manually",
+        "Set renewal dates",
+        "Email reminders before renewal",
+        "Monthly cost summary",
+        "Categorize by type",
+        "Mark as cancelled",
+        "Free trial expiry alerts"
+      ],
+      "mvp_out": [
+        "Bank account linking",
+        "Auto-detection of subscriptions",
+        "Cancellation assistance",
+        "Family sharing",
+        "Price comparison"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "shopping"],
+      "avoid_tags": ["calls", "support", "integrations"],
+      "keywords": ["track subscriptions", "subscription reminder", "free trial reminder"],
+      "competitors": [
+        { "name": "Truebill/Rocket Money", "price": "$3-12/mo", "gap": "Requires bank linking, upsells cancellation" },
+        { "name": "Bobby", "price": "$2 one-time", "gap": "iOS only, no reminders" },
+        { "name": "Spreadsheet", "price": "Free", "gap": "No reminders, manual work" }
+      ],
+      "voc_quotes": [
+        { "quote": "I forgot to cancel a free trial and got charged for a year", "source": "r/personalfinance", "pain_tag": "forgotten trials" },
+        { "quote": "I don't want to link my bank account to anything", "source": "r/privacy", "pain_tag": "privacy" },
+        { "quote": "I have no idea how much I spend on subscriptions each month", "source": "Twitter", "pain_tag": "visibility" }
+      ],
+      "timebox_days": 5
+    },
+    {
+      "id": "invoice-generator",
+      "name": "Simple Invoice Generator",
+      "status": "active",
+      "track_id": "finance-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Create professional invoices in 2 minutes. Send via email or download PDF. Track paid/unpaid status.",
+      "audience": "freelancers, contractors, side hustlers",
+      "wedge": "Unlike FreshBooks' monthly fee, pay per invoice or use free tier forever for basic needs.",
+      "mvp_in": [
+        "Create invoice from template",
+        "Add logo and business info",
+        "Line items with quantities",
+        "Auto-calculate totals",
+        "Download as PDF",
+        "Email directly to client",
+        "Mark paid/unpaid",
+        "Invoice numbering"
+      ],
+      "mvp_out": [
+        "Online payment collection",
+        "Recurring invoices",
+        "Expense tracking",
+        "Time tracking",
+        "Client portal"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "career"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["free invoice generator", "simple invoice maker", "invoice pdf creator"],
+      "competitors": [
+        { "name": "FreshBooks", "price": "$17/mo", "gap": "Monthly fee for occasional invoicers" },
+        { "name": "Wave", "price": "Free", "gap": "Full accounting suite, overkill" },
+        { "name": "Invoice Ninja", "price": "Free/$10mo", "gap": "Complex, too many features" }
+      ],
+      "voc_quotes": [
+        { "quote": "I only invoice a few clients a month, FreshBooks is too expensive", "source": "r/freelance", "pain_tag": "pricing" },
+        { "quote": "I just want to make a PDF invoice and email it", "source": "r/sidehustle", "pain_tag": "simplicity" },
+        { "quote": "Wave is free but I have to sign up for a whole accounting system", "source": "IndieHackers", "pain_tag": "overkill" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "focus-timer",
+      "name": "Focus Timer with Site Blocker",
+      "status": "active",
+      "track_id": "productivity-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Start a focus session, block distracting sites, get stats on your deep work hours.",
+      "audience": "remote workers, students, knowledge workers",
+      "wedge": "Unlike Forest's gamification, we're stats-focused—see your actual deep work hours per week.",
+      "mvp_in": [
+        "Start focus timer (25/50/90 min)",
+        "Block list of distracting sites",
+        "Can't unblock during session",
+        "Daily/weekly focus stats",
+        "Desktop notifications",
+        "Keyboard shortcut to start",
+        "Export stats to CSV"
+      ],
+      "mvp_out": [
+        "Mobile app",
+        "Team leaderboards",
+        "Calendar integration",
+        "Pomodoro sequences",
+        "Ambient sounds"
+      ],
+      "distribution_type": "marketplace",
+      "support_level": "low",
+      "interest_tags": ["career", "learning"],
+      "avoid_tags": ["calls", "support", "community"],
+      "keywords": ["focus timer chrome", "block distracting sites", "deep work tracker"],
+      "competitors": [
+        { "name": "Forest", "price": "$4", "gap": "Gamification over stats, mobile-focused" },
+        { "name": "Freedom", "price": "$7/mo", "gap": "Expensive, complex scheduling" },
+        { "name": "Cold Turkey", "price": "$39 one-time", "gap": "Harsh, no stats focus" }
+      ],
+      "voc_quotes": [
+        { "quote": "I need to see how many hours of real focus I get each week", "source": "r/productivity", "pain_tag": "visibility" },
+        { "quote": "Forest is cute but I want data, not trees", "source": "r/getdisciplined", "pain_tag": "stats" },
+        { "quote": "I always unblock sites 5 minutes into a session", "source": "Twitter", "pain_tag": "willpower" }
+      ],
+      "timebox_days": 5
+    },
+    {
+      "id": "meeting-cost-calc",
+      "name": "Meeting Cost Calculator",
+      "status": "active",
+      "track_id": "productivity-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Show the real-time cost of a meeting based on attendees. Chrome extension overlays on Google Meet/Zoom.",
+      "audience": "managers, team leads, meeting-heavy organizations",
+      "wedge": "Unlike meeting-free advocacy, we show the dollar cost in real-time to nudge behavior change.",
+      "mvp_in": [
+        "Chrome extension for Google Meet",
+        "Set hourly rates per role",
+        "Real-time cost ticker",
+        "End-of-meeting cost summary",
+        "Weekly meeting cost report",
+        "Shareable cost screenshots"
+      ],
+      "mvp_out": [
+        "Zoom integration",
+        "Calendar cost forecasting",
+        "Team dashboards",
+        "Slack notifications",
+        "Cost trend analysis"
+      ],
+      "distribution_type": "communities",
+      "support_level": "low",
+      "interest_tags": ["career", "money"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["meeting cost calculator", "expensive meeting timer", "reduce meeting time"],
+      "competitors": [
+        { "name": "Clockwise", "price": "$7/mo", "gap": "Calendar optimization, not cost visibility" },
+        { "name": "Reclaim", "price": "$8/mo", "gap": "AI scheduling, not cost awareness" },
+        { "name": "Manual math", "price": "Free", "gap": "No real-time visibility" }
+      ],
+      "voc_quotes": [
+        { "quote": "Nobody realizes a 1-hour meeting with 10 people costs $500+", "source": "r/startups", "pain_tag": "awareness" },
+        { "quote": "I want to show my team the cost of our meetings without being preachy", "source": "HN", "pain_tag": "culture change" },
+        { "quote": "We have too many meetings but no one sees the problem", "source": "r/ExperiencedDevs", "pain_tag": "visibility" }
+      ],
+      "timebox_days": 3
+    },
+    {
+      "id": "thumbnail-maker",
+      "name": "YouTube Thumbnail Maker",
+      "status": "active",
+      "track_id": "creator-tool",
+      "audience_mode": "builder",
+      "delivery_mode": "online_only",
+      "description": "Create click-worthy YouTube thumbnails in 5 minutes. Templates, text effects, and face cutout tools included.",
+      "audience": "YouTubers, video creators, course creators",
+      "wedge": "Unlike Canva's generic templates, we're YouTube-specific with proven thumbnail formats and face tools.",
+      "mvp_in": [
+        "50+ YouTube thumbnail templates",
+        "Drag-and-drop editor",
+        "Auto face cutout from photo",
+        "Bold text effects",
+        "Emoji and sticker library",
+        "1280x720 export",
+        "Save designs for reuse"
+      ],
+      "mvp_out": [
+        "A/B test thumbnails",
+        "YouTube analytics integration",
+        "Team collaboration",
+        "Brand kit storage",
+        "Video frame extraction"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["career", "learning"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["youtube thumbnail maker", "thumbnail generator", "youtube thumbnail template"],
+      "competitors": [
+        { "name": "Canva", "price": "Free/$13mo", "gap": "Generic, not YouTube-optimized" },
+        { "name": "Snappa", "price": "$10/mo", "gap": "Limited YouTube templates" },
+        { "name": "Photoshop", "price": "$21/mo", "gap": "Overkill, steep learning curve" }
+      ],
+      "voc_quotes": [
+        { "quote": "Canva templates all look the same, my thumbnails don't stand out", "source": "r/NewTubers", "pain_tag": "differentiation" },
+        { "quote": "I spend way too long on thumbnails when I should be making videos", "source": "r/youtubers", "pain_tag": "time" },
+        { "quote": "I can't afford to pay a designer for every video", "source": "Twitter", "pain_tag": "cost" }
+      ],
+      "timebox_days": 10
+    },
+    {
+      "id": "bio-link-page",
+      "name": "Bio Link Page Builder",
+      "status": "active",
+      "track_id": "creator-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Create a beautiful link-in-bio page in 5 minutes. Custom themes, analytics, and no Linktree branding.",
+      "audience": "influencers, creators, small businesses",
+      "wedge": "Unlike Linktree's free tier branding, we're $3/mo for unlimited links, custom themes, and no watermark.",
+      "mvp_in": [
+        "Add unlimited links",
+        "10+ theme templates",
+        "Custom colors and fonts",
+        "Profile photo and bio",
+        "Link click analytics",
+        "No branding on $3/mo plan",
+        "Custom URL slug",
+        "Social media icons"
+      ],
+      "mvp_out": [
+        "Custom domain",
+        "Email collection",
+        "Payment links",
+        "Scheduling integration",
+        "A/B testing"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["career", "shopping"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["link in bio", "linktree alternative", "bio link page"],
+      "competitors": [
+        { "name": "Linktree", "price": "Free/$5mo", "gap": "Watermark on free, limited customization" },
+        { "name": "Beacons", "price": "Free/$10mo", "gap": "Feature bloat, creator-only focus" },
+        { "name": "Carrd", "price": "$19/yr", "gap": "Website builder, not link-focused" }
+      ],
+      "voc_quotes": [
+        { "quote": "I hate the Linktree watermark but can't justify $5/mo for a link page", "source": "r/Instagram", "pain_tag": "branding" },
+        { "quote": "Linktree themes all look the same", "source": "Twitter", "pain_tag": "customization" },
+        { "quote": "I just want a simple page with my links, nothing else", "source": "r/influencer", "pain_tag": "simplicity" }
+      ],
+      "timebox_days": 5
+    },
+    {
+      "id": "listing-optimizer",
+      "name": "Etsy/eBay Listing Optimizer",
+      "status": "active",
+      "track_id": "ecommerce-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Paste your listing, get suggestions to improve title, tags, and description for better search ranking.",
+      "audience": "Etsy sellers, eBay sellers, resellers",
+      "wedge": "Unlike eRank's data overload, we give 5 specific action items to improve your listing right now.",
+      "mvp_in": [
+        "Paste listing URL or text",
+        "Analyze title for keywords",
+        "Suggest better tags",
+        "Description improvement tips",
+        "Competitor keyword analysis",
+        "5 actionable recommendations",
+        "Before/after score"
+      ],
+      "mvp_out": [
+        "Bulk listing analysis",
+        "Trend predictions",
+        "Price optimization",
+        "Photo quality scoring",
+        "Shop-wide audits"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "shopping"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["etsy seo tool", "ebay listing optimizer", "etsy keyword tool"],
+      "competitors": [
+        { "name": "eRank", "price": "Free/$10mo", "gap": "Data dump, no clear action items" },
+        { "name": "Marmalead", "price": "$19/mo", "gap": "Etsy-only, complex interface" },
+        { "name": "Sale Samurai", "price": "$10/mo", "gap": "Keyword focused, not listing optimization" }
+      ],
+      "voc_quotes": [
+        { "quote": "eRank shows me 100 charts but I don't know what to actually change", "source": "r/Etsy", "pain_tag": "actionability" },
+        { "quote": "I need someone to just tell me what's wrong with my listing", "source": "r/Flipping", "pain_tag": "guidance" },
+        { "quote": "My listings get no views and I don't know why", "source": "r/EtsySellers", "pain_tag": "visibility" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "inventory-tracker",
+      "name": "Simple Inventory Tracker",
+      "status": "active",
+      "track_id": "ecommerce-tool",
+      "audience_mode": "both",
+      "delivery_mode": "online_only",
+      "description": "Track inventory across Etsy, eBay, and Poshmark in one spreadsheet-like view. Get low stock alerts.",
+      "audience": "multi-platform sellers, resellers",
+      "wedge": "Unlike Sellbrite's enterprise pricing, we're a simple tracker for sellers with <500 items.",
+      "mvp_in": [
+        "Add items manually",
+        "Track quantity across platforms",
+        "Low stock email alerts",
+        "Simple spreadsheet view",
+        "Filter by platform",
+        "Export to CSV",
+        "Cost and profit per item",
+        "Search and sort"
+      ],
+      "mvp_out": [
+        "API sync with platforms",
+        "Automatic quantity updates",
+        "Barcode scanning",
+        "Purchase orders",
+        "Multi-warehouse"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "shopping"],
+      "avoid_tags": ["calls", "support", "integrations"],
+      "keywords": ["etsy inventory tracker", "multi-channel inventory", "reseller inventory spreadsheet"],
+      "competitors": [
+        { "name": "Sellbrite", "price": "$29/mo", "gap": "Too expensive for small sellers" },
+        { "name": "Listing Mirror", "price": "$25/mo", "gap": "Complex, enterprise features" },
+        { "name": "Google Sheets", "price": "Free", "gap": "No alerts, manual everything" }
+      ],
+      "voc_quotes": [
+        { "quote": "I sold the same item on Etsy and eBay because I forgot to update inventory", "source": "r/Flipping", "pain_tag": "overselling" },
+        { "quote": "Sellbrite is great but $29/mo when I only have 50 items?", "source": "r/Etsy", "pain_tag": "pricing" },
+        { "quote": "I need something between a spreadsheet and a full inventory system", "source": "r/poshmark", "pain_tag": "complexity" }
+      ],
+      "timebox_days": 10
+    },
+    {
+      "id": "profit-calculator",
+      "name": "Reseller Profit Calculator",
+      "status": "active",
+      "track_id": "ecommerce-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Enter buy price, selling price, and platform. Get true profit after all fees, shipping, and taxes.",
+      "audience": "resellers, thrifters, arbitrage sellers",
+      "wedge": "Unlike generic calculators, we know exact fee structures for Etsy, eBay, Poshmark, and Mercari.",
+      "mvp_in": [
+        "Select platform",
+        "Enter buy price and sell price",
+        "Auto-calculate platform fees",
+        "Shipping cost input",
+        "Tax estimation",
+        "True profit display",
+        "Save calculations history",
+        "Compare across platforms"
+      ],
+      "mvp_out": [
+        "Inventory integration",
+        "Profit reporting over time",
+        "Category-specific fees",
+        "International shipping",
+        "Mobile app"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "shopping"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["reseller profit calculator", "ebay fee calculator", "poshmark profit calculator"],
+      "competitors": [
+        { "name": "eBay fee calculator", "price": "Free", "gap": "eBay only, basic" },
+        { "name": "Poshmark calculator apps", "price": "Free", "gap": "Poshmark only" },
+        { "name": "Manual math", "price": "Free", "gap": "Error-prone, time consuming" }
+      ],
+      "voc_quotes": [
+        { "quote": "I thought I made profit but forgot about the PayPal fee and shipping", "source": "r/Flipping", "pain_tag": "hidden fees" },
+        { "quote": "I sell on 3 platforms and each has different fees", "source": "r/poshmark", "pain_tag": "complexity" },
+        { "quote": "I need to know if a thrift find is worth flipping before I buy it", "source": "r/ThriftStoreHauls", "pain_tag": "decision making" }
+      ],
+      "timebox_days": 3
+    },
+    {
+      "id": "flashcard-maker",
+      "name": "Flashcard Maker from Notes",
+      "status": "active",
+      "track_id": "learning-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Paste your notes or PDF, get auto-generated flashcards. Review with spaced repetition.",
+      "audience": "students, medical students, certification preppers",
+      "wedge": "Unlike Anki's manual card creation, paste notes and we generate cards automatically.",
+      "mvp_in": [
+        "Paste text or upload PDF",
+        "Auto-generate Q&A flashcards",
+        "Edit generated cards",
+        "Spaced repetition review",
+        "Mark cards as learned",
+        "Study session timer",
+        "Export to Anki format"
+      ],
+      "mvp_out": [
+        "Image occlusion",
+        "Collaborative decks",
+        "Mobile app",
+        "Audio cards",
+        "AI explanations"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["learning", "career"],
+      "avoid_tags": ["calls", "support"],
+      "keywords": ["automatic flashcard generator", "notes to flashcards", "anki alternative"],
+      "competitors": [
+        { "name": "Anki", "price": "Free/$25 iOS", "gap": "Manual card creation is painful" },
+        { "name": "Quizlet", "price": "Free/$36/yr", "gap": "No auto-generation from notes" },
+        { "name": "RemNote", "price": "Free/$8mo", "gap": "Complex, note-taking focused" }
+      ],
+      "voc_quotes": [
+        { "quote": "I spend more time making Anki cards than actually studying", "source": "r/medicalschool", "pain_tag": "time" },
+        { "quote": "I wish I could just paste my notes and get flashcards", "source": "r/AnkiMCAT", "pain_tag": "automation" },
+        { "quote": "Quizlet is easier but doesn't have real spaced repetition", "source": "r/studying", "pain_tag": "effectiveness" }
+      ],
+      "timebox_days": 10
+    },
+    {
+      "id": "habit-tracker",
+      "name": "Minimal Habit Tracker",
+      "status": "active",
+      "track_id": "learning-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Track daily habits with a simple checkbox grid. See streaks and completion rates. Nothing else.",
+      "audience": "self-improvement enthusiasts, productivity people",
+      "wedge": "Unlike Habitica's gamification or Notion's complexity, we're just a checkbox grid with streaks.",
+      "mvp_in": [
+        "Add habits (max 10)",
+        "Daily checkbox grid",
+        "Current streak display",
+        "Weekly/monthly completion rate",
+        "Simple calendar view",
+        "One-tap daily check-in",
+        "Streak milestone notifications"
+      ],
+      "mvp_out": [
+        "Goal setting",
+        "Habit stacking",
+        "Social accountability",
+        "Detailed analytics",
+        "Apple Watch app"
+      ],
+      "distribution_type": "marketplace",
+      "support_level": "low",
+      "interest_tags": ["health", "career"],
+      "avoid_tags": ["calls", "support", "community"],
+      "keywords": ["simple habit tracker", "minimal habit app", "streak tracker"],
+      "competitors": [
+        { "name": "Habitica", "price": "Free/$5mo", "gap": "Too gamified, RPG mechanics" },
+        { "name": "Streaks", "price": "$5", "gap": "iOS only, limited habits" },
+        { "name": "Notion templates", "price": "Free", "gap": "Requires setup, overkill" }
+      ],
+      "voc_quotes": [
+        { "quote": "I don't want to fight dragons, I just want to check boxes", "source": "r/getdisciplined", "pain_tag": "simplicity" },
+        { "quote": "Every habit app tries to be too clever", "source": "r/productivity", "pain_tag": "feature bloat" },
+        { "quote": "I want to see my streak, that's it", "source": "Twitter", "pain_tag": "focus" }
+      ],
+      "timebox_days": 5
+    },
+    {
+      "id": "reading-list",
+      "name": "Reading List with Progress Tracking",
+      "status": "active",
+      "track_id": "learning-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Track books you want to read, are reading, and finished. Log reading sessions and see yearly stats.",
+      "audience": "book readers, Goodreads refugees",
+      "wedge": "Unlike Goodreads' social clutter, we're reading-focused with session logging and yearly stats.",
+      "mvp_in": [
+        "Add books by title/ISBN",
+        "Want to read / Reading / Finished shelves",
+        "Log reading sessions",
+        "Track current page",
+        "Books read this year",
+        "Reading streak",
+        "Simple star ratings",
+        "Export reading history"
+      ],
+      "mvp_out": [
+        "Social features",
+        "Book recommendations",
+        "Reading challenges",
+        "Kindle sync",
+        "Book club features"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["learning", "career"],
+      "avoid_tags": ["calls", "support", "community"],
+      "keywords": ["book tracker", "reading list app", "goodreads alternative"],
+      "competitors": [
+        { "name": "Goodreads", "price": "Free", "gap": "Social noise, cluttered, slow" },
+        { "name": "StoryGraph", "price": "Free/$5mo", "gap": "Recommendation focused" },
+        { "name": "Notion", "price": "Free", "gap": "Manual setup, no book database" }
+      ],
+      "voc_quotes": [
+        { "quote": "Goodreads is a social network, I just want to track my reading", "source": "r/books", "pain_tag": "social clutter" },
+        { "quote": "I want to see how many pages I read this week", "source": "r/52book", "pain_tag": "stats" },
+        { "quote": "Goodreads UX hasn't been updated since 2010", "source": "Twitter", "pain_tag": "usability" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "meal-planner",
+      "name": "Weekly Meal Planner with Grocery List",
+      "status": "active",
+      "track_id": "home-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Plan your meals for the week, auto-generate a grocery list. Share with family and check off items as you shop.",
+      "audience": "busy families, health-conscious individuals, budget shoppers",
+      "wedge": "Unlike complex recipe apps, we're meal-first—plan your week in 5 minutes and get a shareable grocery list.",
+      "mvp_in": [
+        "Drag-and-drop weekly meal calendar",
+        "Add meals by name or recipe URL",
+        "Auto-generate grocery list from meals",
+        "Check off items while shopping",
+        "Share list with family members",
+        "Saved favorite meals",
+        "Mobile-friendly interface"
+      ],
+      "mvp_out": [
+        "Recipe database integration",
+        "Nutrition tracking",
+        "Pantry inventory",
+        "Budget tracking",
+        "Meal prep schedules"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["home", "health", "money"],
+      "avoid_tags": ["calls", "support", "community"],
+      "keywords": ["meal planner app", "weekly meal plan", "grocery list generator"],
+      "competitors": [
+        { "name": "Mealime", "price": "Free/$6mo", "gap": "Recipe-focused, not planning-first" },
+        { "name": "Paprika", "price": "$5 one-time", "gap": "Recipe manager, complex" },
+        { "name": "Notion templates", "price": "Free", "gap": "Manual setup, no grocery list sync" }
+      ],
+      "voc_quotes": [
+        { "quote": "I waste so much time figuring out what to cook each night", "source": "r/MealPrepSunday", "pain_tag": "decision fatigue" },
+        { "quote": "I always forget something at the grocery store", "source": "r/budgetfood", "pain_tag": "organization" },
+        { "quote": "I need to share my grocery list with my spouse in real-time", "source": "Twitter", "pain_tag": "collaboration" }
+      ],
+      "timebox_days": 7
+    },
+    {
+      "id": "budget-tracker",
+      "name": "Simple Budget Tracker",
+      "status": "active",
+      "track_id": "finance-tool",
+      "audience_mode": "consumer",
+      "delivery_mode": "online_only",
+      "description": "Set monthly budgets by category, log expenses, see where your money goes. No bank linking required.",
+      "audience": "budget-conscious individuals, young professionals, families",
+      "wedge": "Unlike Mint's complexity and ads, we're a simple envelope-style budget with no bank linking.",
+      "mvp_in": [
+        "Set monthly budget by category",
+        "Log expenses manually",
+        "See spending vs budget progress",
+        "Category breakdown charts",
+        "Month-over-month comparison",
+        "Export to CSV",
+        "Rollover unused budget option"
+      ],
+      "mvp_out": [
+        "Bank account linking",
+        "Bill reminders",
+        "Savings goals",
+        "Investment tracking",
+        "Multi-currency"
+      ],
+      "distribution_type": "seo",
+      "support_level": "low",
+      "interest_tags": ["money", "home"],
+      "avoid_tags": ["calls", "support", "integrations"],
+      "keywords": ["simple budget app", "envelope budgeting", "expense tracker no bank"],
+      "competitors": [
+        { "name": "Mint", "price": "Free", "gap": "Ads everywhere, requires bank linking" },
+        { "name": "YNAB", "price": "$14/mo", "gap": "Expensive, steep learning curve" },
+        { "name": "Spreadsheet", "price": "Free", "gap": "No visualization, manual work" }
+      ],
+      "voc_quotes": [
+        { "quote": "I don't want to link my bank account to track spending", "source": "r/personalfinance", "pain_tag": "privacy" },
+        { "quote": "YNAB is great but $14/mo is ridiculous", "source": "r/budgetfood", "pain_tag": "pricing" },
+        { "quote": "I just want to see if I'm overspending on food this month", "source": "Twitter", "pain_tag": "simplicity" }
+      ],
+      "timebox_days": 7
     }
   ],
   "tracks": [
     {
-      "id": "87481c2ee86b",
-      "name": "Chrome extension utility",
-      "candidate_ids": [
-        "ext-tab-sweeper"
-      ]
+      "id": "chrome-extension",
+      "name": "Chrome Extension",
+      "candidate_ids": ["tab-sweeper", "screenshot-annotator", "price-tracker-ext"]
     },
     {
-      "id": "e93a973faff2",
-      "name": "Data-to-dashboard microtool",
-      "candidate_ids": [
-        "csv-cleaner"
-      ]
+      "id": "data-tool",
+      "name": "Data & Spreadsheet Tool",
+      "candidate_ids": ["csv-cleaner", "spreadsheet-dashboard", "form-to-sheet"]
     },
     {
-      "id": "b9f8d661c01f",
-      "name": "Local SMB lead/quote tool",
-      "candidate_ids": [
-        "desk-quote-widget"
-      ]
+      "id": "smb-tool",
+      "name": "Local Business Tool",
+      "candidate_ids": ["quote-widget", "review-collector", "booking-link"]
+    },
+    {
+      "id": "finance-tool",
+      "name": "Personal Finance Tool",
+      "candidate_ids": ["expense-snap", "subscription-tracker", "invoice-generator", "budget-tracker"]
+    },
+    {
+      "id": "productivity-tool",
+      "name": "Productivity & Workflow",
+      "candidate_ids": ["focus-timer", "meeting-cost-calc"]
+    },
+    {
+      "id": "creator-tool",
+      "name": "Creator & Content Tool",
+      "candidate_ids": ["thumbnail-maker", "bio-link-page"]
+    },
+    {
+      "id": "ecommerce-tool",
+      "name": "E-commerce & Reseller Tool",
+      "candidate_ids": ["listing-optimizer", "inventory-tracker", "profit-calculator"]
+    },
+    {
+      "id": "learning-tool",
+      "name": "Learning & Self-Improvement",
+      "candidate_ids": ["flashcard-maker", "habit-tracker", "reading-list"]
+    },
+    {
+      "id": "home-tool",
+      "name": "Home & Lifestyle",
+      "candidate_ids": ["meal-planner"]
     }
   ]
 }

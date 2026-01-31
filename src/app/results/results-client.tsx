@@ -4,9 +4,146 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { QUIZ_QUESTIONS, QuizAnswers } from '@/lib/quiz-questions'
-import { rankIdeas, RankedIdea, FitProfile, generateMatchChips, MatchChip } from '@/lib/fit-algorithm'
+import {
+  rankIdeas,
+  RankedIdea,
+  FitProfile,
+  generateMatchChips,
+  MatchChip,
+  calculateConfidence,
+  findWildcard,
+  distributionTypeLabels,
+  supportLevelLabels,
+  getIdeaById,
+} from '@/lib/fit-algorithm'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
+
+// Result card component for consistent display
+function ResultCard({
+  idea,
+  rank,
+  badge,
+  badgeColor,
+  chips,
+}: {
+  idea: RankedIdea
+  rank: number
+  badge: string
+  badgeColor: string
+  chips: MatchChip[]
+}) {
+  const candidate = getIdeaById(idea.id) as {
+    distribution_type?: string
+    support_level?: string
+    timebox_days?: number
+  } | undefined
+
+  const distType = candidate?.distribution_type || 'organic'
+  const supportLevel = candidate?.support_level || 'medium'
+  const timeboxDays = candidate?.timebox_days || 14
+
+  const matchChips = chips.filter((c) => c.type === 'match').slice(0, 3)
+  const avoidChips = chips.filter((c) => c.type === 'avoided').slice(0, 2)
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+      <div className="flex items-start gap-4">
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0 ${
+            rank === 1
+              ? 'bg-gradient-to-br from-violet-500 to-fuchsia-500'
+              : rank === 2
+                ? 'bg-zinc-700'
+                : 'bg-gradient-to-br from-amber-500 to-orange-500'
+          }`}
+        >
+          #{rank}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span
+              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${badgeColor}`}
+            >
+              {badge}
+            </span>
+            <span className="inline-block px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-xs font-medium">
+              {idea.track}
+            </span>
+          </div>
+          <h3 className="text-lg font-semibold text-zinc-100 mb-2">{idea.name}</h3>
+
+          {/* Score bar */}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
+                style={{ width: `${idea.score}%` }}
+              />
+            </div>
+            <span className="text-sm font-medium text-violet-400">{idea.score}%</span>
+          </div>
+
+          {/* Meta info */}
+          <div className="flex flex-wrap gap-3 text-xs text-zinc-500 mb-3">
+            <span>
+              <span className="text-zinc-400">Timeline:</span> {timeboxDays} days
+            </span>
+            <span>
+              <span className="text-zinc-400">Distribution:</span>{' '}
+              {distributionTypeLabels[distType] || distType}
+            </span>
+            <span>
+              <span className="text-zinc-400">Support:</span>{' '}
+              {supportLevelLabels[supportLevel] || supportLevel}
+            </span>
+          </div>
+
+          {/* Match chips */}
+          {(matchChips.length > 0 || avoidChips.length > 0) && (
+            <div className="pt-3 border-t border-zinc-800">
+              <p className="text-xs text-zinc-500 mb-2">Why this matches you</p>
+              <div className="flex flex-wrap gap-2">
+                {matchChips.map((chip, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-900/40 text-violet-300 text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    {chip.label}
+                  </span>
+                ))}
+                {avoidChips.map((chip, i) => (
+                  <span
+                    key={`avoided-${i}`}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-900/40 text-emerald-300 text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                      />
+                    </svg>
+                    {chip.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function ResultsClient() {
   const router = useRouter()
@@ -20,7 +157,6 @@ export default function ResultsClient() {
     fitTrack: string
     winnerId: string
   } | null>(null)
-  const [matchChips, setMatchChips] = useState<MatchChip[]>([])
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -41,11 +177,9 @@ export default function ResultsClient() {
       }
 
       setAnswers(quizAnswers)
-      const ranked = rankIdeas(quizAnswers)
+      // Get top 10 for wildcard search
+      const ranked = rankIdeas(quizAnswers, { limit: 10 })
       setResults(ranked)
-      // Generate match chips for the winner
-      const chips = generateMatchChips(ranked.profile, ranked.winnerId)
-      setMatchChips(chips)
     } catch {
       router.push('/quiz')
     }
@@ -90,7 +224,56 @@ export default function ResultsClient() {
     )
   }
 
-  const winner = results.rankedIdeas[0]
+  const topMatch = results.rankedIdeas[0]
+  const runnerUp = results.rankedIdeas[1]
+  const wildcard = findWildcard(results.rankedIdeas.slice(2), topMatch.track)
+
+  // Calculate confidence
+  const confidence = calculateConfidence(topMatch.score, runnerUp?.score || 0)
+
+  // Generate chips for each result
+  const topChips = generateMatchChips(results.profile, topMatch.id)
+  const runnerUpChips = runnerUp ? generateMatchChips(results.profile, runnerUp.id) : []
+  const wildcardChips = wildcard ? generateMatchChips(results.profile, wildcard.id) : []
+
+  // Wildcard rank in original list
+  const wildcardRank = wildcard
+    ? results.rankedIdeas.findIndex((r) => r.id === wildcard.id) + 1
+    : 0
+
+  const confidenceColors = {
+    high: 'bg-emerald-900/30 border-emerald-800 text-emerald-400',
+    medium: 'bg-amber-900/30 border-amber-800 text-amber-400',
+    low: 'bg-red-900/30 border-red-800 text-red-400',
+  }
+
+  const confidenceIcons = {
+    high: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      </svg>
+    ),
+    medium: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    ),
+    low: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    ),
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -107,85 +290,69 @@ export default function ResultsClient() {
       </header>
 
       <main className="max-w-2xl mx-auto px-6 py-12">
-        {/* Results preview */}
-        <div className="text-center mb-10">
+        {/* Results header */}
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-900/30 border border-emerald-800 text-emerald-400 text-sm font-medium mb-6">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             Quiz Complete
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">
-            Your Top Match
-          </h1>
-          <p className="text-zinc-400">
-            Based on your answers, we found your ideal startup idea.
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">Your Matches</h1>
+          <p className="text-zinc-400">Based on your 13 answers, here are your best startup ideas.</p>
         </div>
 
-        {/* Winner preview card */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg shrink-0">
-              #1
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="inline-block px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 text-xs font-medium mb-2">
-                {winner.track}
-              </span>
-              <h2 className="text-xl font-semibold text-zinc-100 mb-2">
-                {winner.name}
-              </h2>
-              <p className="text-sm text-zinc-400 mb-3">
-                {winner.reason}
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
-                    style={{ width: `${winner.score}%` }}
-                  />
-                </div>
-                <span className="text-sm font-medium text-violet-400">
-                  {winner.score}% match
-                </span>
-              </div>
-
-              {/* Match chips */}
-              {matchChips.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-zinc-800">
-                  <p className="text-xs text-zinc-500 mb-2">Why this matches you</p>
-                  <div className="flex flex-wrap gap-2">
-                    {matchChips.filter(c => c.type === 'match').map((chip, i) => (
-                      <span
-                        key={i}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-900/40 text-violet-300 text-xs font-medium"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {chip.label}
-                      </span>
-                    ))}
-                    {matchChips.filter(c => c.type === 'avoided').map((chip, i) => (
-                      <span
-                        key={`avoided-${i}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900/40 text-emerald-300 text-xs font-medium"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                        </svg>
-                        {chip.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+        {/* Confidence indicator */}
+        <div
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl border mb-8 ${confidenceColors[confidence.level]}`}
+        >
+          {confidenceIcons[confidence.level]}
+          <div>
+            <span className="font-medium capitalize">{confidence.level} Confidence</span>
+            <p className="text-sm opacity-80">{confidence.explanation}</p>
           </div>
         </div>
 
-        {/* What's in the report (blurred preview) */}
+        {/* Results cards */}
+        <div className="space-y-4 mb-8">
+          {/* Top Match */}
+          <ResultCard
+            idea={topMatch}
+            rank={1}
+            badge="Top Match"
+            badgeColor="bg-violet-900/50 text-violet-400"
+            chips={topChips}
+          />
+
+          {/* Runner-up */}
+          {runnerUp && (
+            <ResultCard
+              idea={runnerUp}
+              rank={2}
+              badge="Runner-up"
+              badgeColor="bg-zinc-700 text-zinc-300"
+              chips={runnerUpChips}
+            />
+          )}
+
+          {/* Wildcard */}
+          {wildcard && (
+            <ResultCard
+              idea={wildcard}
+              rank={wildcardRank}
+              badge="Wildcard"
+              badgeColor="bg-amber-900/50 text-amber-400"
+              chips={wildcardChips}
+            />
+          )}
+        </div>
+
+        {/* What's in the report */}
         <div className="mb-10">
           <h3 className="text-lg font-semibold text-zinc-100 mb-4">
             What&apos;s in your full report
@@ -193,19 +360,29 @@ export default function ResultsClient() {
           <div className="space-y-3">
             {[
               'Detailed Fit Profile analysis',
-              '4 more matched ideas with scores',
+              'All 5 matched ideas with full breakdowns',
               'Competitor analysis & pricing data',
               'Voice of Customer quotes',
               'Complete MVP specification',
-              '14-day ship plan with Claude prompts',
+              'Ship plan with Claude AI prompts',
             ].map((item, i) => (
               <div
                 key={i}
                 className="flex items-center gap-3 px-4 py-3 bg-zinc-900/50 border border-zinc-800 rounded-lg"
               >
                 <div className="w-5 h-5 rounded-full bg-violet-900/50 flex items-center justify-center">
-                  <svg className="w-3 h-3 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <svg
+                    className="w-3 h-3 text-violet-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                 </div>
                 <span className="text-zinc-400">{item}</span>
@@ -233,9 +410,7 @@ export default function ResultsClient() {
               className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
             />
 
-            {error && (
-              <p className="text-sm text-red-400 text-center">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-400 text-center">{error}</p>}
 
             <button
               type="submit"
@@ -246,9 +421,7 @@ export default function ResultsClient() {
             </button>
           </form>
 
-          <p className="text-xs text-zinc-600 text-center mt-4">
-            No spam. Unsubscribe anytime.
-          </p>
+          <p className="text-xs text-zinc-600 text-center mt-4">No spam. Unsubscribe anytime.</p>
         </div>
       </main>
     </div>

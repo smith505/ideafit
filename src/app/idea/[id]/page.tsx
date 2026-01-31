@@ -19,16 +19,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function BulletList({ text }: { text: string }) {
-  const lines = text.split('\n').filter(l => l.trim());
+function ArrayBulletList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-1">
-      {lines.map((line, i) => (
+      {items.map((item, i) => (
         <li key={i} className="text-zinc-200 flex items-start gap-2">
-          {!line.startsWith('•') && !line.startsWith('-') && !line.match(/^\d+\)/) && (
-            <span className="text-violet-400 mt-1">•</span>
-          )}
-          <span>{line.replace(/^[•\-]\s*/, '').replace(/^\d+\)\s*/, '')}</span>
+          <span className="text-violet-400 mt-1">•</span>
+          <span>{item}</span>
         </li>
       ))}
     </ul>
@@ -44,16 +41,6 @@ function CompetitorCard({ competitor, index }: { competitor: Candidate["competit
           <span className="text-sm text-emerald-400 font-medium">{competitor.price}</span>
         )}
       </div>
-      {competitor.url && (
-        <a
-          href={competitor.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-violet-400 hover:text-violet-300 break-all block mb-2"
-        >
-          {competitor.url}
-        </a>
-      )}
       {competitor.gap && (
         <p className="text-sm text-zinc-400">
           <span className="text-amber-400">Gap:</span> {competitor.gap}
@@ -64,6 +51,7 @@ function CompetitorCard({ competitor, index }: { competitor: Candidate["competit
 }
 
 function VoCCard({ quote }: { quote: Candidate["voc_quotes"][number] }) {
+  const source = (quote as { source?: string }).source;
   return (
     <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
       {quote.quote && (
@@ -73,15 +61,10 @@ function VoCCard({ quote }: { quote: Candidate["voc_quotes"][number] }) {
         <span className="px-2 py-0.5 bg-violet-900/50 text-violet-300 rounded text-xs font-medium">
           {quote.pain_tag}
         </span>
-        {quote.url && (
-          <a
-            href={quote.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-zinc-500 hover:text-zinc-400"
-          >
-            source →
-          </a>
+        {source && (
+          <span className="text-xs text-zinc-500">
+            {source}
+          </span>
         )}
       </div>
     </div>
@@ -150,57 +133,57 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
                   <p className="text-zinc-200">{candidate.wedge}</p>
                 </div>
               )}
-              {candidate.assumptions && (
-                <div>
-                  <h3 className="text-sm text-zinc-500 mb-1">Key Assumptions</h3>
-                  <p className="text-zinc-200 whitespace-pre-line">{candidate.assumptions}</p>
-                </div>
-              )}
             </div>
           </Section>
         )}
 
         {/* MVP */}
-        {(candidate.mvp_in || candidate.mvp_out) && (
+        {(candidate.mvp_in.length > 0 || candidate.mvp_out.length > 0) && (
           <Section title="MVP Scope">
             <div className="grid md:grid-cols-2 gap-4">
-              {candidate.mvp_in && (
+              {candidate.mvp_in.length > 0 && (
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
                   <h3 className="text-sm text-zinc-500 mb-3 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     In Scope (MVP)
                   </h3>
-                  <BulletList text={candidate.mvp_in} />
+                  <ArrayBulletList items={candidate.mvp_in} />
                 </div>
               )}
-              {candidate.mvp_out && (
+              {candidate.mvp_out.length > 0 && (
                 <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
                   <h3 className="text-sm text-zinc-500 mb-3 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-red-500"></span>
                     Out of Scope
                   </h3>
-                  <BulletList text={candidate.mvp_out} />
+                  <ArrayBulletList items={candidate.mvp_out} />
                 </div>
               )}
             </div>
           </Section>
         )}
 
-        {/* Pricing */}
-        {(candidate.pricing_model || candidate.pricing_range) && (
-          <Section title="Pricing">
+        {/* Distribution & Support */}
+        {(candidate.distribution_type || candidate.support_level) && (
+          <Section title="Distribution Strategy">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
               <div className="flex items-center gap-6">
-                {candidate.pricing_model && (
+                {candidate.distribution_type && (
                   <div>
-                    <span className="text-sm text-zinc-500">Model</span>
-                    <p className="text-zinc-200 font-medium capitalize">{candidate.pricing_model}</p>
+                    <span className="text-sm text-zinc-500">Distribution Type</span>
+                    <p className="text-zinc-200 font-medium capitalize">{candidate.distribution_type}</p>
                   </div>
                 )}
-                {candidate.pricing_range && (
+                {candidate.support_level && (
                   <div>
-                    <span className="text-sm text-zinc-500">Price</span>
-                    <p className="text-emerald-400 font-semibold text-lg">{candidate.pricing_range}</p>
+                    <span className="text-sm text-zinc-500">Support Level</span>
+                    <p className="text-zinc-200 font-medium capitalize">{candidate.support_level}</p>
+                  </div>
+                )}
+                {candidate.timebox_days && (
+                  <div>
+                    <span className="text-sm text-zinc-500">Timebox</span>
+                    <p className="text-emerald-400 font-semibold">{candidate.timebox_days} days</p>
                   </div>
                 )}
               </div>
@@ -208,46 +191,44 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           </Section>
         )}
 
-        {/* First 10 Users */}
-        {(candidate.first10_channel || candidate.first10_steps) && (
-          <Section title="First 10 Users">
+        {/* Keywords & Tags */}
+        {(candidate.keywords.length > 0 || candidate.interest_tags.length > 0 || candidate.avoid_tags.length > 0) && (
+          <Section title="Tags & Keywords">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-              {candidate.first10_channel && (
+              {candidate.keywords.length > 0 && (
                 <div>
-                  <h3 className="text-sm text-zinc-500 mb-1">Channel</h3>
-                  <p className="text-zinc-200">{candidate.first10_channel}</p>
-                </div>
-              )}
-              {candidate.first10_steps && (
-                <div>
-                  <h3 className="text-sm text-zinc-500 mb-2">Steps</h3>
-                  <BulletList text={candidate.first10_steps} />
-                </div>
-              )}
-            </div>
-          </Section>
-        )}
-
-        {/* Keywords & SERP */}
-        {(candidate.keywords_checked || candidate.serp_notes) && (
-          <Section title="SEO / Keywords">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-              {candidate.keywords_checked && (
-                <div>
-                  <h3 className="text-sm text-zinc-500 mb-2">Keywords Researched</h3>
+                  <h3 className="text-sm text-zinc-500 mb-2">Keywords</h3>
                   <div className="flex flex-wrap gap-2">
-                    {candidate.keywords_checked.split(';').map((kw, i) => (
+                    {candidate.keywords.map((kw, i) => (
                       <span key={i} className="px-2 py-1 bg-zinc-800 text-zinc-300 rounded text-sm">
-                        {kw.trim()}
+                        {kw}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-              {candidate.serp_notes && (
+              {candidate.interest_tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm text-zinc-500 mb-1">SERP Analysis</h3>
-                  <p className="text-zinc-400 text-sm">{candidate.serp_notes}</p>
+                  <h3 className="text-sm text-zinc-500 mb-2">Interest Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {candidate.interest_tags.map((tag, i) => (
+                      <span key={i} className="px-2 py-1 bg-violet-900/40 text-violet-300 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {candidate.avoid_tags.length > 0 && (
+                <div>
+                  <h3 className="text-sm text-zinc-500 mb-2">Avoid Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {candidate.avoid_tags.map((tag, i) => (
+                      <span key={i} className="px-2 py-1 bg-red-900/40 text-red-300 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -276,24 +257,6 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
           </Section>
         )}
 
-        {/* Risks */}
-        {candidate.risks && (
-          <Section title="Risks">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-              <BulletList text={candidate.risks} />
-            </div>
-          </Section>
-        )}
-
-        {/* Notes */}
-        {candidate.notes && (
-          <Section title="Notes">
-            <div className="bg-amber-900/20 border border-amber-800/50 rounded-xl p-6">
-              <p className="text-amber-200 text-sm">{candidate.notes}</p>
-            </div>
-          </Section>
-        )}
-
         {/* Metadata */}
         <Section title="Metadata">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -305,12 +268,10 @@ export default async function IdeaPage({ params }: { params: Promise<{ id: strin
               <span className="text-zinc-500">Status</span>
               <p className="text-zinc-300">{candidate.status}</p>
             </div>
-            {candidate.timebox_minutes && (
-              <div>
-                <span className="text-zinc-500">Timebox</span>
-                <p className="text-zinc-300">{candidate.timebox_minutes} min</p>
-              </div>
-            )}
+            <div>
+              <span className="text-zinc-500">Timebox</span>
+              <p className="text-zinc-300">{candidate.timebox_days} days</p>
+            </div>
             <div>
               <span className="text-zinc-500">Track</span>
               <p className="text-zinc-300">{candidate.track_id || 'None'}</p>

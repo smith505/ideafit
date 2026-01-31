@@ -165,13 +165,27 @@ export default async function ReportPage({ params }: ReportPageProps) {
                     <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
                       MVP In Scope
                     </h4>
-                    <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.mvp_in}</div>
+                    <ul className="text-zinc-300 space-y-1">
+                      {(winnerIdea.mvp_in as string[]).map((item, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="text-emerald-400">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
                       MVP Out of Scope
                     </h4>
-                    <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.mvp_out}</div>
+                    <ul className="text-zinc-300 space-y-1">
+                      {(winnerIdea.mvp_out as string[]).map((item, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="text-red-400">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </>
@@ -236,15 +250,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
                 <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
                   <h4 className="font-semibold text-zinc-100 mb-2">{comp.name}</h4>
                   <div className="text-sm text-violet-400 mb-3">{comp.price}</div>
-                  <p className="text-sm text-zinc-400 mb-3">{comp.gap}</p>
-                  <a
-                    href={comp.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-zinc-500 hover:text-zinc-400"
-                  >
-                    Visit →
-                  </a>
+                  <p className="text-sm text-zinc-400">{comp.gap}</p>
                 </div>
               ))}
             </div>
@@ -272,21 +278,16 @@ export default async function ReportPage({ params }: ReportPageProps) {
                   <blockquote className="text-zinc-300 italic mb-3">
                     &ldquo;{voc.quote}&rdquo;
                   </blockquote>
-                  <a
-                    href={voc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-zinc-500 hover:text-zinc-400"
-                  >
-                    Source →
-                  </a>
+                  <span className="text-xs text-zinc-500">
+                    {(voc as { source?: string }).source || 'User feedback'}
+                  </span>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* 14-Day Ship Plan */}
+        {/* Ship Plan */}
         {winnerIdea && (
           <section className="mb-12">
             <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
@@ -295,57 +296,38 @@ export default async function ReportPage({ params }: ReportPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
               </span>
-              14-Day Ship Plan
+              Ship Plan
             </h2>
 
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-              <div className="mb-6">
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
+                <div className="bg-zinc-800/50 rounded-xl p-4 text-center">
+                  <h4 className="text-sm text-zinc-500 mb-2">Timeline</h4>
+                  <p className="text-2xl font-bold text-emerald-400">
+                    {(winnerIdea as { timebox_days?: number }).timebox_days || 14} days
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-1">to MVP</p>
+                </div>
+                <div className="bg-zinc-800/50 rounded-xl p-4 text-center">
+                  <h4 className="text-sm text-zinc-500 mb-2">Distribution</h4>
+                  <p className="text-lg font-semibold text-violet-400 capitalize">
+                    {(winnerIdea as { distribution_type?: string }).distribution_type || 'Mixed'}
+                  </p>
+                </div>
+                <div className="bg-zinc-800/50 rounded-xl p-4 text-center">
+                  <h4 className="text-sm text-zinc-500 mb-2">Support Level</h4>
+                  <p className="text-lg font-semibold text-blue-400 capitalize">
+                    {(winnerIdea as { support_level?: string }).support_level || 'Medium'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-zinc-800 pt-6">
                 <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                  First 10 Channel
+                  Target Audience
                 </h4>
-                <p className="text-zinc-300">{winnerIdea.first10_channel}</p>
+                <p className="text-zinc-300">{winnerIdea.audience}</p>
               </div>
-
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                  First 10 Steps
-                </h4>
-                <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.first10_steps}</div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6 border-t border-zinc-800 pt-6">
-                <div>
-                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                    Pricing Model
-                  </h4>
-                  <p className="text-zinc-300 capitalize">{winnerIdea.pricing_model}</p>
-                  <p className="text-sm text-zinc-500">{winnerIdea.pricing_range}</p>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                    Target Audience
-                  </h4>
-                  <p className="text-zinc-300">{winnerIdea.audience}</p>
-                </div>
-              </div>
-
-              {winnerIdea.assumptions && (
-                <div className="border-t border-zinc-800 pt-6 mt-6">
-                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
-                    Key Assumptions
-                  </h4>
-                  <p className="text-zinc-300">{winnerIdea.assumptions}</p>
-                </div>
-              )}
-
-              {winnerIdea.risks && (
-                <div className="border-t border-zinc-800 pt-6 mt-6">
-                  <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wide mb-3">
-                    Risks to Watch
-                  </h4>
-                  <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.risks}</div>
-                </div>
-              )}
             </div>
           </section>
         )}
