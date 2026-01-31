@@ -169,7 +169,7 @@ doc.moveDown(2)
 doc
   .fontSize(14)
   .fillColor('#8b5cf6')
-  .text('Unlock your full report at ideafit.co', { align: 'center', link: 'https://ideafit.co' })
+  .text('Return to the site to unlock your full report', { align: 'center' })
 
 // Footer
 doc.moveDown(3)
