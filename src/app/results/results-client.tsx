@@ -439,13 +439,25 @@ export default function ResultsClient() {
 
         {/* Confidence indicator */}
         <div
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl border mb-8 ${confidenceColors[confidence.level]}`}
+          className={`px-4 py-3 rounded-xl border mb-8 ${confidenceColors[confidence.level]}`}
         >
-          {confidenceIcons[confidence.level]}
-          <div>
-            <span className="font-medium capitalize">{confidence.level} Confidence</span>
-            <p className="text-sm opacity-80">{confidence.explanation}</p>
+          <div className="flex items-center gap-3">
+            {confidenceIcons[confidence.level]}
+            <span className="font-medium">
+              {confidence.level === 'low' ? 'Low Confidence — Scores are close' : `${confidence.level.charAt(0).toUpperCase() + confidence.level.slice(1)} Confidence`}
+            </span>
           </div>
+          {confidence.level === 'low' ? (
+            <div className="mt-2 text-sm opacity-80">
+              <p className="mb-2">Your top 2 ideas scored within 5 points. To get a clearer winner:</p>
+              <ul className="list-disc list-inside space-y-1 ml-1">
+                <li>Go back and reconsider 1–2 questions you weren&apos;t sure about</li>
+                <li>Or explore both ideas — they&apos;re both good fits for you</li>
+              </ul>
+            </div>
+          ) : (
+            <p className="text-sm opacity-80 mt-1 ml-7">{confidence.explanation}</p>
+          )}
         </div>
 
         {/* Results cards */}
@@ -524,10 +536,10 @@ export default function ResultsClient() {
         {/* Email gate */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
           <h3 className="text-xl font-semibold text-zinc-100 mb-2 text-center">
-            Enter your email to continue
+            Save your results (free)
           </h3>
           <p className="text-sm text-zinc-500 mb-6 text-center">
-            We&apos;ll save your results and send you a magic link to access your report anytime.
+            Enter your email to save these matches. We&apos;ll send a magic link — no password needed.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">

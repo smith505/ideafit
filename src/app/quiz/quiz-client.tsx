@@ -184,6 +184,12 @@ export default function QuizClient() {
           {currentQuestion.question}
         </h1>
 
+        {currentQuestion.helperText && (
+          <p className="text-sm text-zinc-500 mb-4 leading-relaxed">
+            {currentQuestion.helperText}
+          </p>
+        )}
+
         {currentQuestion.type === 'text' && (
           <p className="text-sm text-zinc-500 mb-6">
             Optional - 1-2 sentences max

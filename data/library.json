@@ -582,7 +582,8 @@
         "Real-time cost ticker",
         "End-of-meeting cost summary",
         "Weekly meeting cost report",
-        "Shareable cost screenshots"
+        "Shareable cost screenshots",
+        "One-click Chrome Web Store install"
       ],
       "mvp_out": [
         "Zoom integration",

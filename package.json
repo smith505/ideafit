@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run quality:check",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
+    "quality:check": "tsx scripts/check-library-quality.ts",
     "ingest": "tsx scripts/ingest-library.ts",
     "ingest:watch": "tsx scripts/watch-library.ts",
     "gpt": "tsx scripts/ask-gpt.ts",

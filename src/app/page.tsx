@@ -35,7 +35,7 @@ export default function LandingPage() {
               href="/access"
               className="text-sm text-zinc-400 hover:text-zinc-300"
             >
-              Access Report
+              I have a report
             </Link>
             <Link
               href="/quiz"
@@ -55,31 +55,30 @@ export default function LandingPage() {
           <span className="text-violet-400">in 7 Minutes</span>
         </h1>
         <p className="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
-          Stop second-guessing. Take the Quick Fit Quiz and get a personalized report
-          with your top idea, validation data, and a 14-day ship plan.
+          Stop second-guessing. Take the Quick Fit Quiz and get matched to validated
+          startup ideas that fit your time, skills, and goals.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/quiz"
             className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-8 py-4 rounded-full text-lg transition-colors"
           >
-            Take the Quick Fit Quiz
-            <span className="text-violet-200">- Free</span>
+            Take the Free Quiz →
           </Link>
           <a
             href="/sample-report-v1.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 font-medium px-4 py-3 transition-colors"
+            className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 font-medium px-4 py-3 transition-colors border border-zinc-700 rounded-full hover:border-zinc-600"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            View Sample Report (PDF)
+            View Sample Report
           </a>
         </div>
         <p className="text-sm text-zinc-500 mt-4">
-          5-7 minutes - No account required
+          Quiz is free • Full report $49 • 7-day quality guarantee
+        </p>
+        <p className="text-xs text-zinc-600 mt-2">
+          ✓ 3+ competitors researched • ✓ 3+ real user quotes • ✓ Clear positioning — or full refund
         </p>
       </section>
 
