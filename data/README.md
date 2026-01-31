@@ -41,7 +41,7 @@ Run `npm run quality:check` to validate the library.
 
 ### Option 1: CSV Import (Recommended for batches of 10-15)
 
-1. Download the CSV template from `/__admin/library` or create your own
+1. Download the CSV template from `/admin/library` or create your own
 2. Fill in candidate data (see schema below)
 3. Run the import script:
    ```bash
@@ -121,8 +121,8 @@ npx tsx scripts/library/add-batch.ts <patch.json>
 ## Admin UI
 
 In development or with ADMIN_TOKEN set:
-- `/__admin/library` - Browse/filter candidates, view quality status
-- `/__admin/metrics` - View funnel analytics
+- `/admin/library` - Browse/filter candidates, view quality status
+- `/admin/metrics` - View funnel analytics
 
 ## File Structure
 

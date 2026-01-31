@@ -7,7 +7,7 @@ const BUILD_TIMESTAMP = new Date().toISOString()
 
 // Routes that should never be cached (pages + API)
 const NO_CACHE_ROUTES = ['/', '/quiz', '/results', '/access', '/login', '/health', '/compare']
-const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth', '/api', '/debug', '/__admin']
+const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth', '/api', '/debug', '/admin']
 
 // Static assets that should NOT have headers modified
 const STATIC_PREFIXES = ['/_next', '/favicon', '/sample-report']
