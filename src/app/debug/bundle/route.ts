@@ -15,67 +15,42 @@ interface SelfCheckResult {
 
 async function selfCheck(baseUrl: string): Promise<SelfCheckResult[]> {
   const results: SelfCheckResult[] = []
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 3000) // 3s timeout
 
-  // Check /health (build in body)
+  const endpoints: Array<{ path: string; source: 'body' | 'header' }> = [
+    { path: '/health', source: 'body' },
+    { path: '/debug/build', source: 'body' },
+    { path: '/', source: 'header' },
+    { path: '/quiz', source: 'header' },
+    { path: '/results', source: 'header' },
+  ]
+
   try {
-    const res = await fetch(`${baseUrl}/health`, {
-      headers: { 'Cache-Control': 'no-cache' },
-    })
-    const data = await res.json()
-    results.push({
-      endpoint: '/health',
-      build: data.build || null,
-      source: 'body',
-    })
-  } catch (error) {
-    results.push({
-      endpoint: '/health',
-      build: null,
-      source: 'body',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    })
-  }
+    for (const { path, source } of endpoints) {
+      try {
+        const res = await fetch(`${baseUrl}${path}`, {
+          headers: { 'Cache-Control': 'no-cache' },
+          signal: controller.signal,
+        })
 
-  // Check /debug/build (build in body)
-  try {
-    const res = await fetch(`${baseUrl}/debug/build`, {
-      headers: { 'Cache-Control': 'no-cache' },
-    })
-    const data = await res.json()
-    results.push({
-      endpoint: '/debug/build',
-      build: data.build || null,
-      source: 'body',
-    })
-  } catch (error) {
-    results.push({
-      endpoint: '/debug/build',
-      build: null,
-      source: 'body',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    })
-  }
-
-  // Check pages via header
-  for (const path of ['/', '/quiz', '/results']) {
-    try {
-      const res = await fetch(`${baseUrl}${path}`, {
-        headers: { 'Cache-Control': 'no-cache' },
-      })
-      const build = res.headers.get('x-ideafit-build')
-      results.push({
-        endpoint: path,
-        build,
-        source: 'header',
-      })
-    } catch (error) {
-      results.push({
-        endpoint: path,
-        build: null,
-        source: 'header',
-        error: error instanceof Error ? error.message : 'Unknown error',
-      })
+        if (source === 'body') {
+          const data = await res.json()
+          results.push({ endpoint: path, build: data.build || null, source })
+        } else {
+          results.push({ endpoint: path, build: res.headers.get('x-ideafit-build'), source })
+        }
+      } catch (error) {
+        const errMsg = error instanceof Error ? error.message : 'Unknown error'
+        // Simplify network errors that are expected on Railway
+        const simplifiedError = errMsg.includes('fetch failed') || errMsg.includes('abort')
+          ? 'network unreachable (expected on Railway)'
+          : errMsg
+        results.push({ endpoint: path, build: null, source, error: simplifiedError })
+      }
     }
+  } finally {
+    clearTimeout(timeout)
   }
 
   return results
@@ -118,7 +93,14 @@ export async function GET(request: Request) {
     lines.push(`  ${result.endpoint} (${result.source}) -> ${result.build || 'N/A'}${mismatch}${error}`)
   }
 
-  if (hasMismatch) {
+  // Check if selfcheck completely failed (Railway can't reach itself)
+  const allFailed = selfCheckResults.every(r => r.error)
+
+  if (allFailed) {
+    lines.push('')
+    lines.push('Note: Selfcheck unavailable (Railway servers cannot reach themselves).')
+    lines.push('Run `npm run build:parity:prod` externally to verify all endpoints.')
+  } else if (hasMismatch) {
     lines.push('')
     lines.push(`⚠️ MISMATCH DETECTED: Found builds: ${uniqueBuilds.join(', ')}`)
   } else if (uniqueBuilds.length === 1) {
