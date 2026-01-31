@@ -6,8 +6,8 @@ const BUILD_SHA = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.VERCEL_GIT_
 const BUILD_TIMESTAMP = new Date().toISOString()
 
 // Routes that should never be cached (pages + API)
-const NO_CACHE_ROUTES = ['/', '/quiz', '/results', '/access', '/login', '/health', '/debug/build']
-const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth', '/api']
+const NO_CACHE_ROUTES = ['/', '/quiz', '/results', '/access', '/login', '/health']
+const NO_CACHE_PREFIXES = ['/preview', '/report', '/auth', '/api', '/debug']
 
 // Static assets that should NOT have headers modified
 const STATIC_PREFIXES = ['/_next', '/favicon', '/sample-report']

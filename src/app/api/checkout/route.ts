@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
 import { getStripe, REPORT_PRICE_CENTS } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { getBuildHeaders } from '@/lib/build-headers'
 import { z } from 'zod'
+
+// Force dynamic to prevent caching
+export const dynamic = 'force-dynamic'
 
 const CheckoutSchema = z.object({
   reportId: z.string(),
@@ -9,6 +13,8 @@ const CheckoutSchema = z.object({
 })
 
 export async function POST(request: Request) {
+  const headers = getBuildHeaders()
+
   try {
     const body = await request.json()
     const { reportId, email } = CheckoutSchema.parse(body)
@@ -20,14 +26,14 @@ export async function POST(request: Request) {
     })
 
     if (!report) {
-      return NextResponse.json({ error: 'Report not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Report not found' }, { status: 404, headers })
     }
 
     // If already unlocked, redirect to report
     if (report.status === 'UNLOCKED') {
       return NextResponse.json({
         url: `${process.env.NEXT_PUBLIC_APP_URL}/report/${reportId}`,
-      })
+      }, { headers })
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -58,20 +64,20 @@ export async function POST(request: Request) {
       cancel_url: `${baseUrl}/preview/${reportId}?canceled=true`,
     })
 
-    return NextResponse.json({ url: session.url })
+    return NextResponse.json({ url: session.url }, { headers })
   } catch (error) {
     console.error('Checkout error:', error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid request data' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
     return NextResponse.json(
       { error: 'Failed to create checkout session' },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }

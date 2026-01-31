@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server'
 import { QUIZ_QUESTIONS } from '@/lib/quiz-questions'
 import { validateLibrary } from '@/lib/validate-library'
+import { BUILD_SHA, getBuildHeaders } from '@/lib/build-headers'
 import library from '../../../data/library.json'
 
 // Force dynamic to prevent any caching
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-
-// Build info captured at startup
-const BUILD_SHA = (process.env.RAILWAY_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'dev').slice(0, 7)
-const BUILD_TIMESTAMP = new Date().toISOString()
 
 interface CandidateWithTags {
   id: string
@@ -20,8 +17,6 @@ interface CandidateWithTags {
 }
 
 export async function GET() {
-  const buildSha = BUILD_SHA
-
   const candidates = library.candidates as CandidateWithTags[]
 
   // Interest and avoid tags coverage
@@ -55,7 +50,7 @@ export async function GET() {
 
   return NextResponse.json(
     {
-      build: buildSha,
+      build: BUILD_SHA,
       quizQuestionCount: QUIZ_QUESTIONS.length,
       candidateCount: candidates.length,
       hasTagsCoverage: {
@@ -75,11 +70,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     },
     {
-      headers: {
-        'Cache-Control': 'no-store, must-revalidate',
-        'x-ideafit-build': BUILD_SHA,
-        'x-ideafit-timestamp': BUILD_TIMESTAMP,
-      },
+      headers: getBuildHeaders(),
     }
   )
 }

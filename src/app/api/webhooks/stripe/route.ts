@@ -2,21 +2,26 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { getStripe, REPORT_PRICE_CENTS } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+import { getBuildHeaders } from '@/lib/build-headers'
 import Stripe from 'stripe'
 
+// Force dynamic to prevent caching
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
+  const responseHeaders = getBuildHeaders()
   const body = await request.text()
   const headersList = await headers()
   const signature = headersList.get('stripe-signature')
 
   if (!signature) {
-    return NextResponse.json({ error: 'Missing signature' }, { status: 400 })
+    return NextResponse.json({ error: 'Missing signature' }, { status: 400, headers: responseHeaders })
   }
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
   if (!webhookSecret) {
     console.error('Missing STRIPE_WEBHOOK_SECRET')
-    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500, headers: responseHeaders })
   }
 
   let event: Stripe.Event
@@ -25,7 +30,7 @@ export async function POST(request: Request) {
     event = getStripe().webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err) {
     console.error('Webhook signature verification failed:', err)
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400, headers: responseHeaders })
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -36,7 +41,7 @@ export async function POST(request: Request) {
 
     if (!reportId || !userId) {
       console.error('Missing metadata in checkout session')
-      return NextResponse.json({ error: 'Missing metadata' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing metadata' }, { status: 400, headers: responseHeaders })
     }
 
     try {
@@ -70,9 +75,9 @@ export async function POST(request: Request) {
       console.log(`Report ${reportId} unlocked for user ${userId}`)
     } catch (error) {
       console.error('Error processing payment:', error)
-      return NextResponse.json({ error: 'Database error' }, { status: 500 })
+      return NextResponse.json({ error: 'Database error' }, { status: 500, headers: responseHeaders })
     }
   }
 
-  return NextResponse.json({ received: true })
+  return NextResponse.json({ received: true }, { headers: responseHeaders })
 }

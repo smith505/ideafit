@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getIdeaById, FitProfile } from '@/lib/fit-algorithm'
+import { getBuildHeaders } from '@/lib/build-headers'
+
+// Force dynamic to prevent caching
+export const dynamic = 'force-dynamic'
 
 interface RouteParams {
   params: Promise<{ id: string }>
 }
 
 export async function GET(request: Request, { params }: RouteParams) {
+  const buildHeaders = getBuildHeaders()
   const { id } = await params
 
   const report = await prisma.report.findUnique({
@@ -15,7 +20,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   })
 
   if (!report || report.status !== 'UNLOCKED') {
-    return NextResponse.json({ error: 'Report not found or not unlocked' }, { status: 404 })
+    return NextResponse.json({ error: 'Report not found or not unlocked' }, { status: 404, headers: buildHeaders })
   }
 
   const rankedIdeas = report.rankedIdeas as Array<{
@@ -182,6 +187,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     headers: {
       'Content-Type': 'text/html',
       'Content-Disposition': `attachment; filename="ideafit-report-${id}.html"`,
+      ...buildHeaders,
     },
   })
 }
