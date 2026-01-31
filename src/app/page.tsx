@@ -23,19 +23,27 @@ function IdeaCard({ candidate }: { candidate: Candidate }) {
       href={`/idea/${candidate.id}`}
       className="block bg-zinc-900 border border-zinc-800 rounded-xl p-5 hover:border-zinc-600 hover:bg-zinc-800/50 transition-all"
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-3 mb-2">
         <h3 className="font-semibold text-lg text-zinc-100">{candidate.name}</h3>
         <StatusBadge status={candidate.status} />
       </div>
 
-      <p className="text-sm text-zinc-500 mb-4 line-clamp-2">
-        {candidate.track_id}
-      </p>
+      {candidate.audience && (
+        <p className="text-xs text-violet-400 mb-2">{candidate.audience}</p>
+      )}
+
+      {candidate.description && (
+        <p className="text-sm text-zinc-400 mb-3 line-clamp-2">{candidate.description}</p>
+      )}
 
       {candidate.wedge && (
-        <p className="text-sm text-zinc-400 mb-4 line-clamp-2">
-          <span className="text-zinc-500">Wedge:</span> {candidate.wedge}
+        <p className="text-sm text-zinc-500 mb-3 line-clamp-2">
+          <span className="text-zinc-600">Wedge:</span> {candidate.wedge}
         </p>
+      )}
+
+      {candidate.pricing_range && (
+        <p className="text-sm text-emerald-400 mb-3">{candidate.pricing_range}</p>
       )}
 
       <div className="flex items-center gap-4 text-xs text-zinc-500">
@@ -49,8 +57,16 @@ function IdeaCard({ candidate }: { candidate: Candidate }) {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
           </svg>
-          {candidate.voc_quotes.length} VoC quotes
+          {candidate.voc_quotes.length} VoC
         </span>
+        {candidate.timebox_minutes && (
+          <span className="flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {candidate.timebox_minutes}m
+          </span>
+        )}
       </div>
     </Link>
   );

@@ -1,36 +1,41 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-01-31T16:19:00.825Z",
+  "generated_at": "2026-01-31T16:22:55.936Z",
   "source_file": "IdeaFit_Idea_Library_Template.xlsx",
   "candidates": [
     {
-      "id": "d440400b5269",
+      "id": "csv-cleaner",
       "name": "CSV Cleaner for Small Businesses",
       "status": "draft",
       "track_id": "Data-to-dashboard microtool",
-      "wedge": "",
-      "mvp_in": "",
-      "mvp_out": "",
+      "description": "A web tool that fixes messy CSVs (dates, currency, duplicates) and outputs clean imports for QuickBooks/Shopify/Sheets. Includes templates per destination.",
+      "audience": "small businesses / ops assistants",
+      "wedge": "Instead of a full ETL product, it’s a one-purpose ‘make this import work’ tool with destination templates and instant preview.",
+      "mvp_in": "• Upload CSV\n• 6 common fixes\n• Preview table\n• Export cleaned CSV\n• 3 destination templates",
+      "mvp_out": "• API connectors\n• Team collaboration\n• Automation schedules",
       "first10_channel": "Google search ads + marketplaces",
       "first10_steps": "1) Create SEO landing pages per destination\n2) Run $10/day on intent keywords\n3) Add freemium limit\n4) Convert via $9 one-time or $5/mo",
-      "keywords_checked": false,
+      "pricing_model": "one-time",
+      "pricing_range": "$9/report or $19 bundle",
+      "keywords_checked": "fix csv import; clean csv quickbooks; shopify csv errors",
+      "serp_notes": "Tools vs Blogs: mixed; Ads: unknown; Some tool intent; lots of help articles",
       "competitors": [
         {
           "name": "CSVed",
           "url": "https://csved.sjfrancke.nl/",
-          "price": "",
+          "price": "free",
           "gap": "Not destination templates; less guided"
         },
         {
           "name": "DataPrep tools",
           "url": "https://www.microsoft.com/",
-          "price": "",
+          "price": "varies",
           "gap": "Too heavy for quick imports"
         },
         {
           "name": "Online CSV cleaners",
           "url": "https://www.google.com/",
-          "price": "",
+          "price": "free",
           "gap": "No trust, no templates"
         }
       ],
@@ -52,41 +57,43 @@
         }
       ],
       "assumptions": "Occasional use fits one-time pricing; templates increase success rate.",
-      "risk_checklist": {
-        "market_risk": false,
-        "tech_risk": false,
-        "regulatory_risk": false,
-        "competition_risk": false
-      }
+      "risks": "• Handling sensitive data\n• Free competitors\n• Trust barrier for uploads",
+      "timebox_minutes": 45,
+      "notes": "Add privacy messaging; consider local-only processing later."
     },
     {
-      "id": "89dd12c50fbe",
+      "id": "desk-quote-widget",
       "name": "Instant Quote Widget for Local Services",
       "status": "draft",
       "track_id": "Local SMB lead/quote tool",
-      "wedge": "",
-      "mvp_in": "",
-      "mvp_out": "",
+      "description": "A drop-in website widget that gives instant ballpark quotes for common services (junk removal, detailing, landscaping) and captures phone/email. Sends the lead to SMS instantly.",
+      "audience": "local service businesses",
+      "wedge": "Most quote tools are complex; this is a 10-minute setup widget with 3 templates and an SMS-first workflow for faster close rates.",
+      "mvp_in": "• 3 vertical templates\n• Embed script\n• Quote rules editor\n• SMS + email lead delivery\n• Simple admin dashboard",
+      "mvp_out": "• Payments\n• Scheduling\n• CRM integrations",
       "first10_channel": "Cold email + local FB groups",
       "first10_steps": "1) Build 1-page demo\n2) Offer 10 free installs\n3) Convert to $49/mo after 14 days\n4) Collect testimonials",
-      "keywords_checked": false,
+      "pricing_model": "subscription",
+      "pricing_range": "$49/mo",
+      "keywords_checked": "instant quote widget; estimate widget; lead capture widget",
+      "serp_notes": "Tools vs Blogs: tools; Ads: unknown; Strong tool intent; many SaaS pages",
       "competitors": [
         {
           "name": "ConvertCalculator",
           "url": "https://convertcalculator.com/",
-          "price": "",
+          "price": "$29+/mo",
           "gap": "Generic; not vertical templates"
         },
         {
           "name": "Outgrow",
           "url": "https://outgrow.co/",
-          "price": "",
+          "price": "$22+/mo",
           "gap": "More marketing quiz; not quote-first"
         },
         {
           "name": "Calconic",
           "url": "https://www.calconic.com/",
-          "price": "",
+          "price": "$19+/mo",
           "gap": "Builder is powerful but setup friction"
         }
       ],
@@ -108,41 +115,43 @@
         }
       ],
       "assumptions": "SMBs pay if it clearly increases leads; SMS delivery is key differentiator.",
-      "risk_checklist": {
-        "market_risk": false,
-        "tech_risk": false,
-        "regulatory_risk": false,
-        "competition_risk": false
-      }
+      "risks": "• Compliance for SMS\n• Many incumbents\n• SMB churn if no ROI",
+      "timebox_minutes": 45,
+      "notes": "Needs real VoC quotes + proof of SMB willingness to pay."
     },
     {
-      "id": "eaa6e7fdf3b9",
+      "id": "ext-tab-sweeper",
       "name": "Tab Sweeper for Work Sessions",
       "status": "draft",
       "track_id": "Chrome extension utility",
-      "wedge": "",
-      "mvp_in": "",
-      "mvp_out": "",
+      "description": "A Chrome extension that auto-groups and hibernates tabs by project with one-click restore. It shows a simple weekly ‘time saved’ dashboard so users feel the payoff.",
+      "audience": "knowledge workers / students",
+      "wedge": "Unlike heavy tab managers, it’s one-button ‘clean my session’ with zero setup and a weekly savings score that makes the habit stick.",
+      "mvp_in": "• One-click sweep\n• Auto-group by domain\n• Hibernation\n• Restore last 3 sessions\n• Weekly time-saved estimate",
+      "mvp_out": "• Team features\n• Cross-device sync\n• AI categorization",
       "first10_channel": "Chrome Web Store + Reddit",
       "first10_steps": "1) Ship free basic version\n2) Post on r/chrome_extensions and productivity subs\n3) Offer 50 beta codes for Pro\n4) Ask for reviews",
-      "keywords_checked": false,
+      "pricing_model": "subscription",
+      "pricing_range": "$3/mo or $20/yr",
+      "keywords_checked": "tab hibernation extension; reduce tabs chrome; tab manager simple",
+      "serp_notes": "Tools vs Blogs: mixed; Ads: unknown; Some tools, many blog posts; extension intent exists",
       "competitors": [
         {
           "name": "The Great Suspender",
           "url": "https://chromewebstore.google.com/",
-          "price": "",
+          "price": "free",
           "gap": "No ‘session sweep’ + no savings feedback loop"
         },
         {
           "name": "OneTab",
           "url": "https://chromewebstore.google.com/",
-          "price": "",
+          "price": "free",
           "gap": "Batch list only; no auto-group + no restore UX"
         },
         {
           "name": "Workona",
           "url": "https://workona.com/",
-          "price": "",
+          "price": "$7+/mo",
           "gap": "Too heavy; setup friction for casual users"
         }
       ],
@@ -164,12 +173,9 @@
         }
       ],
       "assumptions": "Users will pay small fee for ‘set and forget’ + visible time saved.\nChrome store discovery + Reddit can seed first users.",
-      "risk_checklist": {
-        "market_risk": false,
-        "tech_risk": false,
-        "regulatory_risk": false,
-        "competition_risk": false
-      }
+      "risks": "• Chrome policy changes\n• Competing free tools\n• Retention if ‘time saved’ feels fake",
+      "timebox_minutes": 45,
+      "notes": "Replace VoC + competitor links with real sources during research."
     }
   ],
   "tracks": [
@@ -177,21 +183,21 @@
       "id": "87481c2ee86b",
       "name": "Chrome extension utility",
       "candidate_ids": [
-        "eaa6e7fdf3b9"
+        "ext-tab-sweeper"
       ]
     },
     {
       "id": "e93a973faff2",
       "name": "Data-to-dashboard microtool",
       "candidate_ids": [
-        "d440400b5269"
+        "csv-cleaner"
       ]
     },
     {
       "id": "b9f8d661c01f",
       "name": "Local SMB lead/quote tool",
       "candidate_ids": [
-        "89dd12c50fbe"
+        "desk-quote-widget"
       ]
     }
   ]
