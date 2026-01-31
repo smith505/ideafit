@@ -92,16 +92,35 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             {winner.name}
           </h2>
 
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-3 bg-zinc-800 rounded-full overflow-hidden">
+          {/* Enhanced Score Visual */}
+          <div className="bg-zinc-800/50 rounded-xl p-4 mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm text-zinc-400">Fit Score</span>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-violet-400">{winner.score}%</span>
+                {winner.score >= 80 && (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-900/50 text-emerald-400 text-xs font-medium">
+                    Excellent
+                  </span>
+                )}
+                {winner.score >= 60 && winner.score < 80 && (
+                  <span className="px-2 py-0.5 rounded-full bg-amber-900/50 text-amber-400 text-xs font-medium">
+                    Good
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="h-3 bg-zinc-700 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
+                className="h-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 transition-all duration-500"
                 style={{ width: `${winner.score}%` }}
               />
             </div>
-            <span className="text-lg font-semibold text-violet-400">
-              {winner.score}% match
-            </span>
+            <div className="flex justify-between mt-2 text-xs text-zinc-600">
+              <span>0</span>
+              <span>50</span>
+              <span>100</span>
+            </div>
           </div>
 
           <p className="text-zinc-400 mb-6">{winner.reason}</p>
