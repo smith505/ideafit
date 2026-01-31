@@ -10,13 +10,16 @@
     "postinstall": "prisma generate",
     "ingest": "tsx scripts/ingest-library.ts",
     "ingest:watch": "tsx scripts/watch-library.ts",
-    "gpt": "tsx scripts/ask-gpt.ts"
+    "gpt": "tsx scripts/ask-gpt.ts",
+    "smoke-test": "tsx scripts/smoke-test.ts",
+    "generate-sample-pdf": "tsx scripts/generate-sample-pdf.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "next": "16.1.6",
     "openai": "^6.17.0",
+    "pdfkit": "^0.17.2",
     "pg": "^8.18.0",
     "prisma": "^7.3.0",
     "react": "19.2.3",
@@ -28,6 +31,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pdfkit": "^0.17.4",
     "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",

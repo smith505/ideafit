@@ -1,36 +1,19 @@
-'use client'
-
-import { useState } from 'react'
+import { Metadata } from 'next'
 import Link from 'next/link'
 
+export const metadata: Metadata = {
+  title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
+  description:
+    'Stop second-guessing. Take the Quick Fit Quiz and get a personalized report with your top idea, validation data, and a 14-day ship plan.',
+  openGraph: {
+    title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
+    description:
+      'Take the Quick Fit Quiz and get a personalized report with your top idea, validation data, and a 14-day ship plan.',
+    type: 'website',
+  },
+}
+
 export default function LandingPage() {
-  const [showAccessModal, setShowAccessModal] = useState(false)
-  const [email, setEmail] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSent, setIsSent] = useState(false)
-
-  const handleAccessSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const res = await fetch('/api/magic-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      })
-
-      if (res.ok) {
-        setIsSent(true)
-      }
-    } catch {
-      // Silently fail - still show success to prevent email enumeration
-      setIsSent(true)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
@@ -43,12 +26,12 @@ export default function LandingPage() {
             <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
           </div>
           <div className="flex items-center gap-6">
-            <button
-              onClick={() => setShowAccessModal(true)}
+            <Link
+              href="/access"
               className="text-sm text-zinc-400 hover:text-zinc-300"
             >
               Access Report
-            </button>
+            </Link>
             <Link
               href="/quiz"
               className="text-sm text-violet-400 hover:text-violet-300"
@@ -78,16 +61,17 @@ export default function LandingPage() {
             Take the Quick Fit Quiz
             <span className="text-violet-200">— Free</span>
           </Link>
-          <Link
+          <a
             href="/sample-report.pdf"
             target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-zinc-300 font-medium px-4 py-3 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             View Sample Report (PDF)
-          </Link>
+          </a>
         </div>
         <p className="text-sm text-zinc-500 mt-4">
           5-7 minutes · No account required
@@ -213,75 +197,6 @@ export default function LandingPage() {
           © 2026 IdeaFit. Find your fit. Ship your idea.
         </div>
       </footer>
-
-      {/* Access Report Modal */}
-      {showAccessModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 max-w-md w-full relative">
-            <button
-              onClick={() => {
-                setShowAccessModal(false)
-                setIsSent(false)
-                setEmail('')
-              }}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {isSent ? (
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-emerald-900/50 flex items-center justify-center mx-auto mb-6">
-                  <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-zinc-100 mb-2">Check your email</h3>
-                <p className="text-zinc-400 text-sm">
-                  If you have an existing report, we&apos;ve sent a magic link to <span className="text-zinc-100">{email}</span>.
-                </p>
-              </div>
-            ) : (
-              <>
-                <h3 className="text-xl font-bold text-zinc-100 mb-2 text-center">
-                  Access your report
-                </h3>
-                <p className="text-zinc-400 text-sm mb-6 text-center">
-                  Enter the email you used to create your report and we&apos;ll send you a magic link.
-                </p>
-
-                <form onSubmit={handleAccessSubmit} className="space-y-4">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || !email}
-                    className="w-full py-3 rounded-xl font-semibold transition-all bg-violet-600 hover:bg-violet-500 text-white disabled:bg-zinc-800 disabled:text-zinc-600 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Send Magic Link'}
-                  </button>
-                </form>
-
-                <p className="text-xs text-zinc-600 text-center mt-4">
-                  Don&apos;t have a report yet?{' '}
-                  <Link href="/quiz" className="text-violet-400 hover:text-violet-300">
-                    Take the quiz
-                  </Link>
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
