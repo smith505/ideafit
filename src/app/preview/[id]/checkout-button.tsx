@@ -1,0 +1,52 @@
+'use client'
+
+import { useState } from 'react'
+
+interface CheckoutButtonProps {
+  reportId: string
+  email: string
+}
+
+export default function CheckoutButton({ reportId, email }: CheckoutButtonProps) {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleCheckout = async () => {
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId, email }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { url } = await res.json()
+      window.location.href = url
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCheckout}
+      disabled={isLoading}
+      className="w-full py-4 rounded-xl font-semibold text-lg transition-all bg-violet-600 hover:bg-violet-500 text-white disabled:bg-zinc-700 disabled:cursor-not-allowed"
+    >
+      {isLoading ? (
+        <span className="flex items-center justify-center gap-2">
+          <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          Processing...
+        </span>
+      ) : (
+        'Unlock Full Report — $49'
+      )}
+    </button>
+  )
+}

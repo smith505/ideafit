@@ -1,0 +1,369 @@
+import { notFound, redirect } from 'next/navigation'
+import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
+import { getIdeaById, FitProfile } from '@/lib/fit-algorithm'
+import RegenButton from './regen-button'
+import ExportButton from './export-button'
+
+interface ReportPageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function ReportPage({ params }: ReportPageProps) {
+  const { id } = await params
+
+  const report = await prisma.report.findUnique({
+    where: { id },
+    include: { user: true },
+  })
+
+  if (!report) {
+    notFound()
+  }
+
+  // If not unlocked, redirect to preview
+  if (report.status !== 'UNLOCKED') {
+    redirect(`/preview/${id}`)
+  }
+
+  const rankedIdeas = report.rankedIdeas as Array<{
+    id: string
+    name: string
+    score: number
+    reason: string
+    track: string
+  }>
+
+  const fitProfile = report.fitProfile as unknown as FitProfile
+  const winner = rankedIdeas[0]
+  const winnerIdea = getIdeaById(winner.id)
+
+  const regensRemaining = report.regensMax - report.regensUsed
+  const expiresAt = report.regenExpiresAt
+    ? new Date(report.regenExpiresAt).toLocaleDateString()
+    : null
+
+  return (
+    <div className="min-h-screen bg-zinc-950">
+      {/* Header */}
+      <header className="border-b border-zinc-800 sticky top-0 bg-zinc-950/80 backdrop-blur-sm z-50">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
+              IF
+            </div>
+            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <ExportButton reportId={id} />
+            <span className="text-sm text-zinc-500">{report.user.email}</span>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 py-12">
+        {/* Title section */}
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="px-3 py-1 rounded-full bg-emerald-900/50 text-emerald-400 text-sm font-medium">
+              Unlocked
+            </span>
+            <span className="text-sm text-zinc-500">
+              {regensRemaining} regenerations left · Expires {expiresAt}
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-2">
+            Your IdeaFit Report
+          </h1>
+          <p className="text-zinc-400">
+            Personalized startup idea recommendations based on your profile
+          </p>
+        </div>
+
+        {/* Fit Profile */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-violet-900/50 flex items-center justify-center">
+              <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </span>
+            Your Fit Profile
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { label: 'Weekly Hours', value: fitProfile.timeWeekly },
+              { label: 'Tech Level', value: fitProfile.techComfort },
+              { label: 'Support Tolerance', value: fitProfile.supportTolerance },
+              { label: 'Revenue Goal', value: fitProfile.revenueGoal },
+              { label: 'Build Style', value: fitProfile.buildPreference },
+              { label: 'Risk Level', value: fitProfile.riskTolerance },
+              { label: 'Audience Access', value: fitProfile.audienceAccess.join(', ') || 'None' },
+              { label: 'Skills', value: fitProfile.existingSkills.join(', ') || 'None' },
+            ].map((item) => (
+              <div key={item.label} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4">
+                <div className="text-sm text-zinc-500 mb-1">{item.label}</div>
+                <div className="text-zinc-100 font-medium capitalize">{item.value}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Winner Idea */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-emerald-900/50 flex items-center justify-center">
+              <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </span>
+            Your #1 Match
+          </h2>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="px-3 py-1 rounded-full bg-violet-900/50 text-violet-400 text-sm font-medium">
+                Best Match
+              </span>
+              <span className="px-3 py-1 rounded-full bg-zinc-800 text-zinc-400 text-sm">
+                {winner.track}
+              </span>
+            </div>
+
+            <h3 className="text-2xl font-bold text-zinc-100 mb-3">{winner.name}</h3>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex-1 h-3 bg-zinc-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500"
+                  style={{ width: `${winner.score}%` }}
+                />
+              </div>
+              <span className="text-lg font-semibold text-violet-400">{winner.score}% match</span>
+            </div>
+
+            <p className="text-zinc-400 mb-6">{winner.reason}</p>
+
+            {winnerIdea && (
+              <>
+                <div className="border-t border-zinc-800 pt-6 mb-6">
+                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                    The Wedge
+                  </h4>
+                  <p className="text-zinc-300">{winnerIdea.wedge}</p>
+                </div>
+
+                <div className="border-t border-zinc-800 pt-6 mb-6">
+                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                    Description
+                  </h4>
+                  <p className="text-zinc-300">{winnerIdea.description}</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 border-t border-zinc-800 pt-6">
+                  <div>
+                    <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                      MVP In Scope
+                    </h4>
+                    <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.mvp_in}</div>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                      MVP Out of Scope
+                    </h4>
+                    <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.mvp_out}</div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* Other Matches */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+            <span className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
+              <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </span>
+            Other Top Matches
+          </h2>
+
+          <div className="space-y-4">
+            {rankedIdeas.slice(1).map((idea, i) => {
+              const ideaDetails = getIdeaById(idea.id)
+              return (
+                <div key={idea.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 font-bold shrink-0">
+                      #{i + 2}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-500">
+                          {idea.track}
+                        </span>
+                        <span className="text-sm text-violet-400 font-medium">{idea.score}% match</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-zinc-100 mb-2">{idea.name}</h3>
+                      <p className="text-sm text-zinc-400 mb-2">{idea.reason}</p>
+                      {ideaDetails && (
+                        <p className="text-sm text-zinc-500">{ideaDetails.wedge}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* Competitors */}
+        {winnerIdea && winnerIdea.competitors.length > 0 && (
+          <section className="mb-12">
+            <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-amber-900/50 flex items-center justify-center">
+                <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </span>
+              Competitor Analysis
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              {winnerIdea.competitors.map((comp, i) => (
+                <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+                  <h4 className="font-semibold text-zinc-100 mb-2">{comp.name}</h4>
+                  <div className="text-sm text-violet-400 mb-3">{comp.price}</div>
+                  <p className="text-sm text-zinc-400 mb-3">{comp.gap}</p>
+                  <a
+                    href={comp.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-zinc-500 hover:text-zinc-400"
+                  >
+                    Visit →
+                  </a>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* VoC Quotes */}
+        {winnerIdea && winnerIdea.voc_quotes.length > 0 && (
+          <section className="mb-12">
+            <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-blue-900/50 flex items-center justify-center">
+                <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </span>
+              Voice of Customer
+            </h2>
+
+            <div className="space-y-4">
+              {winnerIdea.voc_quotes.map((voc, i) => (
+                <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+                  <span className="inline-block px-2 py-0.5 rounded-full bg-blue-900/30 text-blue-400 text-xs font-medium mb-3">
+                    {voc.pain_tag}
+                  </span>
+                  <blockquote className="text-zinc-300 italic mb-3">
+                    &ldquo;{voc.quote}&rdquo;
+                  </blockquote>
+                  <a
+                    href={voc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-zinc-500 hover:text-zinc-400"
+                  >
+                    Source →
+                  </a>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 14-Day Ship Plan */}
+        {winnerIdea && (
+          <section className="mb-12">
+            <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-emerald-900/50 flex items-center justify-center">
+                <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </span>
+              14-Day Ship Plan
+            </h2>
+
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                  First 10 Channel
+                </h4>
+                <p className="text-zinc-300">{winnerIdea.first10_channel}</p>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                  First 10 Steps
+                </h4>
+                <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.first10_steps}</div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 border-t border-zinc-800 pt-6">
+                <div>
+                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                    Pricing Model
+                  </h4>
+                  <p className="text-zinc-300 capitalize">{winnerIdea.pricing_model}</p>
+                  <p className="text-sm text-zinc-500">{winnerIdea.pricing_range}</p>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                    Target Audience
+                  </h4>
+                  <p className="text-zinc-300">{winnerIdea.audience}</p>
+                </div>
+              </div>
+
+              {winnerIdea.assumptions && (
+                <div className="border-t border-zinc-800 pt-6 mt-6">
+                  <h4 className="text-sm font-semibold text-zinc-400 uppercase tracking-wide mb-3">
+                    Key Assumptions
+                  </h4>
+                  <p className="text-zinc-300">{winnerIdea.assumptions}</p>
+                </div>
+              )}
+
+              {winnerIdea.risks && (
+                <div className="border-t border-zinc-800 pt-6 mt-6">
+                  <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wide mb-3">
+                    Risks to Watch
+                  </h4>
+                  <div className="text-zinc-300 whitespace-pre-line">{winnerIdea.risks}</div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Regenerate Section */}
+        <section className="border-t border-zinc-800 pt-12">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 text-center">
+            <h3 className="text-xl font-bold text-zinc-100 mb-2">
+              Want different results?
+            </h3>
+            <p className="text-zinc-400 mb-6">
+              You have {regensRemaining} regeneration{regensRemaining !== 1 ? 's' : ''} remaining.
+              Retake the quiz and get fresh matches.
+            </p>
+            <RegenButton reportId={id} remaining={regensRemaining} />
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}

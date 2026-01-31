@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reports    Report[]
+  purchases  Purchase[]
+  magicLinks MagicLink[]
+}
+
+model Report {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Quiz answers (JSON blob)
+  quizAnswers Json
+
+  // Computed results
+  fitTrack    String   // e.g., "Chrome extension utility"
+  winnerId    String   // e.g., "ext-tab-sweeper"
+  rankedIdeas Json     // array of { id, name, score, reason }
+  fitProfile  Json     // computed fit profile
+
+  // Status
+  status     ReportStatus @default(PREVIEW)
+  unlockedAt DateTime?
+
+  // Regenerations
+  regensUsed     Int       @default(0)
+  regensMax      Int       @default(5)
+  regenExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchases Purchase[]
+}
+
+enum ReportStatus {
+  PREVIEW
+  UNLOCKED
+  EXPIRED
+}
+
+model Purchase {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  reportId String
+  report   Report @relation(fields: [reportId], references: [id])
+
+  stripeSessionId String  @unique
+  stripePaymentId String?
+  amount          Int // cents
+  credits         Int     @default(1)
+
+  createdAt DateTime @default(now())
+}
+
+model MagicLink {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+}

@@ -42,3 +42,5 @@ next-env.d.ts
 
 # generated data files (kept for deployment)
 # /data/library.json
+
+/src/generated/prisma
