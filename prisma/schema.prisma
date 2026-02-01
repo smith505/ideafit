@@ -31,6 +31,10 @@ model Report {
   rankedIdeas Json     // array of { id, name, score, reason }
   fitProfile  Json     // computed fit profile
 
+  // AI-generated content (populated on unlock)
+  aiIdeas     Json?    // full AI-generated ideas with details
+  aiCost      Float?   // total AI generation cost for tracking
+
   // Status
   status     ReportStatus @default(PREVIEW)
   unlockedAt DateTime?

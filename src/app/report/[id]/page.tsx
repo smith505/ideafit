@@ -1,7 +1,8 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { getIdeaById, FitProfile } from '@/lib/fit-algorithm'
+import { FitProfile } from '@/lib/fit-algorithm'
+import { AIIdea } from '@/lib/ai-ideas'
 import RegenButton from './regen-button'
 import ExportButton from './export-button'
 
@@ -26,6 +27,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
     redirect(`/preview/${id}`)
   }
 
+  // Use AI-generated ideas if available
+  const aiIdeas = (report.aiIdeas as unknown as AIIdea[]) || []
   const rankedIdeas = report.rankedIdeas as Array<{
     id: string
     name: string
@@ -36,7 +39,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 
   const fitProfile = report.fitProfile as unknown as FitProfile
   const winner = rankedIdeas[0]
-  const winnerIdea = getIdeaById(winner.id)
+  const winnerIdea = aiIdeas[0] // AI-generated full idea
 
   const regensRemaining = report.regensMax - report.regensUsed
   const expiresAt = report.regenExpiresAt
@@ -98,8 +101,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
               { label: 'Revenue Goal', value: fitProfile.revenueGoal },
               { label: 'Build Style', value: fitProfile.buildPreference },
               { label: 'Risk Level', value: fitProfile.riskTolerance },
-              { label: 'Audience Access', value: fitProfile.audienceAccess.join(', ') || 'None' },
-              { label: 'Skills', value: fitProfile.existingSkills.join(', ') || 'None' },
+              { label: 'Audience Access', value: fitProfile.audienceAccess?.join(', ') || 'None' },
+              { label: 'Skills', value: fitProfile.existingSkills?.join(', ') || 'None' },
             ].map((item) => (
               <div key={item.label} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
                 <div className="text-sm text-gray-500 mb-1">{item.label}</div>
@@ -146,48 +149,58 @@ export default async function ReportPage({ params }: ReportPageProps) {
 
             {winnerIdea && (
               <>
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                    Why this wins
-                  </h4>
-                  <p className="text-gray-700">{winnerIdea.wedge}</p>
-                </div>
-
-                <div className="border-t border-gray-100 pt-6 mb-6">
-                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                    Description
-                  </h4>
-                  <p className="text-gray-700">{winnerIdea.description}</p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6 border-t border-gray-100 pt-6">
-                  <div>
+                {winnerIdea.wedge && (
+                  <div className="border-t border-gray-100 pt-6 mb-6">
                     <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                      MVP In Scope
+                      Why this wins
                     </h4>
-                    <ul className="text-gray-700 space-y-1">
-                      {(winnerIdea.mvp_in as string[]).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-emerald-500">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="text-gray-700">{winnerIdea.wedge}</p>
                   </div>
-                  <div>
+                )}
+
+                {winnerIdea.desc && (
+                  <div className="border-t border-gray-100 pt-6 mb-6">
                     <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                      MVP Out of Scope
+                      Description
                     </h4>
-                    <ul className="text-gray-700 space-y-1">
-                      {(winnerIdea.mvp_out as string[]).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-red-400">•</span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="text-gray-700">{winnerIdea.desc}</p>
                   </div>
-                </div>
+                )}
+
+                {(winnerIdea.mvp?.length > 0 || winnerIdea.skip?.length > 0) && (
+                  <div className="grid md:grid-cols-2 gap-6 border-t border-gray-100 pt-6">
+                    {winnerIdea.mvp?.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                          MVP In Scope
+                        </h4>
+                        <ul className="text-gray-700 space-y-1">
+                          {winnerIdea.mvp.map((item, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-emerald-500">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {winnerIdea.skip?.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                          Skip for V1
+                        </h4>
+                        <ul className="text-gray-700 space-y-1">
+                          {winnerIdea.skip.map((item, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-red-400">•</span>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -206,7 +219,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 
           <div className="space-y-4">
             {rankedIdeas.slice(1).map((idea, i) => {
-              const ideaDetails = getIdeaById(idea.id)
+              const aiIdea = aiIdeas[i + 1]
               return (
                 <div key={idea.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                   <div className="flex items-start gap-4">
@@ -222,8 +235,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{idea.name}</h3>
                       <p className="text-sm text-gray-600 mb-2">{idea.reason}</p>
-                      {ideaDetails && (
-                        <p className="text-sm text-gray-500">{ideaDetails.wedge}</p>
+                      {aiIdea?.wedge && (
+                        <p className="text-sm text-gray-500">{aiIdea.wedge}</p>
                       )}
                     </div>
                   </div>
@@ -234,7 +247,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
         </section>
 
         {/* Competitors */}
-        {winnerIdea && winnerIdea.competitors.length > 0 && (
+        {winnerIdea?.comps && winnerIdea.comps.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
               <span className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
@@ -246,19 +259,19 @@ export default async function ReportPage({ params }: ReportPageProps) {
             </h2>
 
             <div className="grid md:grid-cols-3 gap-4">
-              {winnerIdea.competitors.map((comp, i) => (
+              {winnerIdea.comps.map((comp, i) => (
                 <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                  <h4 className="font-semibold text-gray-900 mb-2">{comp.name}</h4>
-                  <div className="text-sm text-violet-600 mb-3">{comp.price}</div>
-                  <p className="text-sm text-gray-600">{comp.gap}</p>
+                  <h4 className="font-semibold text-gray-900 mb-2">{comp.n}</h4>
+                  <div className="text-sm text-violet-600 mb-3">{comp.p}</div>
+                  <p className="text-sm text-gray-600">{comp.g}</p>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Real user quotes */}
-        {winnerIdea && winnerIdea.voc_quotes.length > 0 && (
+        {/* Pain Points */}
+        {winnerIdea?.pains && winnerIdea.pains.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
               <span className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -266,20 +279,17 @@ export default async function ReportPage({ params }: ReportPageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </span>
-              Real user quotes
+              Common Pain Points
             </h2>
 
             <div className="space-y-4">
-              {winnerIdea.voc_quotes.map((voc, i) => (
+              {winnerIdea.pains.map((pain, i) => (
                 <div key={i} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                  <span className="inline-block px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium mb-3">
-                    {voc.pain_tag}
-                  </span>
                   <blockquote className="text-gray-700 italic mb-3">
-                    &ldquo;{voc.quote}&rdquo;
+                    &ldquo;{pain.q}&rdquo;
                   </blockquote>
                   <span className="text-xs text-gray-500">
-                    {(voc as { source?: string }).source || 'User feedback'}
+                    Source: {pain.s}
                   </span>
                 </div>
               ))}
@@ -300,34 +310,59 @@ export default async function ReportPage({ params }: ReportPageProps) {
             </h2>
 
             <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
+              {/* Summary stats */}
+              <div className="grid md:grid-cols-3 gap-4 mb-8">
                 <div className="bg-gray-50 rounded-xl p-4 text-center">
                   <h4 className="text-sm text-gray-500 mb-2">Timeline</h4>
                   <p className="text-2xl font-bold text-emerald-600">
-                    {(winnerIdea as { timebox_days?: number }).timebox_days || 14} days
+                    {winnerIdea.days || 14} days
                   </p>
                   <p className="text-xs text-gray-500 mt-1">to MVP</p>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4 text-center">
-                  <h4 className="text-sm text-gray-500 mb-2">How you&apos;d get users</h4>
-                  <p className="text-lg font-semibold text-violet-600 capitalize">
-                    {(winnerIdea as { distribution_type?: string }).distribution_type || 'Mixed'}
+                  <h4 className="text-sm text-gray-500 mb-2">Target Audience</h4>
+                  <p className="text-lg font-semibold text-violet-600">
+                    {winnerIdea.audience || 'General'}
                   </p>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                  <h4 className="text-sm text-gray-500 mb-2">Support Level</h4>
-                  <p className="text-lg font-semibold text-blue-600 capitalize">
-                    {(winnerIdea as { support_level?: string }).support_level || 'Medium'}
-                  </p>
-                </div>
+                {winnerIdea.monetization && (
+                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                    <h4 className="text-sm text-gray-500 mb-2">Monetization</h4>
+                    <p className="text-lg font-semibold text-orange-500">
+                      {winnerIdea.monetization}
+                    </p>
+                  </div>
+                )}
               </div>
 
-              <div className="border-t border-gray-100 pt-6">
-                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  Target Audience
-                </h4>
-                <p className="text-gray-700">{winnerIdea.audience}</p>
-              </div>
+              {/* Day-by-day plan */}
+              {winnerIdea.shipPlan && winnerIdea.shipPlan.length > 0 && (
+                <div className="border-t border-gray-100 pt-6 mb-6">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+                    Day-by-Day Plan
+                  </h4>
+                  <div className="space-y-3">
+                    {winnerIdea.shipPlan.map((step, i) => (
+                      <div key={i} className="flex items-start gap-4">
+                        <div className="w-20 shrink-0">
+                          <span className="text-sm font-semibold text-violet-600">{step.day}</span>
+                        </div>
+                        <div className="flex-1 text-gray-700">{step.task}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* First users */}
+              {winnerIdea.firstUsers && (
+                <div className="border-t border-gray-100 pt-6">
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                    Where to Find Your First 10 Users
+                  </h4>
+                  <p className="text-gray-700">{winnerIdea.firstUsers}</p>
+                </div>
+              )}
             </div>
           </section>
         )}

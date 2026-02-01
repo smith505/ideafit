@@ -53,73 +53,106 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-6 py-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-          Find Your Best Startup Idea
+          Go From &ldquo;Too Many Ideas&rdquo;
           <br />
-          <span className="bg-gradient-to-r from-violet-600 to-orange-500 bg-clip-text text-transparent">in 7 Minutes</span>
+          <span className="bg-gradient-to-r from-violet-600 to-orange-500 bg-clip-text text-transparent">to Building in 7 Minutes</span>
         </h1>
         <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-          Stop second-guessing. Take the Quick Fit Quiz and get matched to validated
-          startup ideas that fit your time, skills, and goals.
+          Take a quick quiz about your time, skills, and goals. Get a personalized report
+          with exactly what to build, how to build it, and where to find your first customers.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/quiz"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-orange-500 hover:from-violet-700 hover:to-orange-600 text-white font-semibold px-8 py-4 rounded-full text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
           >
-            Take the Free Quiz →
+            Find My Path →
           </Link>
           <SampleReportTracker
             href="/sample-report-v1.pdf"
             className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium px-4 py-3 transition-colors border border-gray-300 rounded-full hover:border-gray-400 hover:bg-gray-50"
           >
-            View Sample Report
+            See a Sample Report
           </SampleReportTracker>
         </div>
         <p className="text-sm text-gray-500 mt-4">
-          Quiz is free • Full report $49 • 7-day quality guarantee
-        </p>
-        <p className="text-xs text-gray-500 mt-2">
-          ✓ 3+ competitors researched • ✓ 3+ real user quotes • ✓ Clear positioning — or full refund
+          Quiz is free • Full report $9 • 5 regenerations included
         </p>
       </section>
 
       {/* What You Get */}
       <section className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
-          What You&apos;ll Get
+        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+          What&apos;s In Your Report
         </h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
+          Everything you need to go from &ldquo;I want to build something&rdquo; to actually shipping it.
+        </p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center mb-4">
               <svg className="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Fit Profile</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">5 Personalized Ideas</h3>
             <p className="text-gray-600 text-sm">
-              Understand your ideal idea type based on time, skills, and goals.
-            </p>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-4">
-              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Winner Idea + Validation</h3>
-            <p className="text-gray-600 text-sm">
-              Your top-matched idea with competitors, real user quotes, and market signals.
+              AI-generated ideas matched to your exact time, skills, and goals. Not random suggestions.
             </p>
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center mb-4">
               <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">14-Day Ship Plan</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Competitor Breakdown</h3>
             <p className="text-gray-600 text-sm">
-              Day-by-day tasks with acceptance criteria. Plus Claude prompts for your stack.
+              Who&apos;s already doing this, what they charge, and exactly where they&apos;re weak.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">MVP Scope</h3>
+            <p className="text-gray-600 text-sm">
+              5-7 features to build first. Plus what to explicitly skip so you don&apos;t over-engineer.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Day-by-Day Ship Plan</h3>
+            <p className="text-gray-600 text-sm">
+              Exactly what to do each day to go from idea to launched. No guessing.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Monetization Strategy</h3>
+            <p className="text-gray-600 text-sm">
+              How to price it and a specific plan for finding your first 10 paying customers.
+            </p>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">5 Regenerations</h3>
+            <p className="text-gray-600 text-sm">
+              Don&apos;t love your ideas? Regenerate for completely fresh AI-generated matches.
             </p>
           </div>
         </div>
@@ -133,8 +166,8 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-4 gap-8">
           {[
             { step: '1', title: 'Take Quiz', desc: '~7 min quiz about your time, skills, and goals' },
-            { step: '2', title: 'Get Matched', desc: 'AI matches you to ideas from our validated library' },
-            { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $49' },
+            { step: '2', title: 'Get Matched', desc: 'AI generates personalized ideas based on your profile' },
+            { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $9' },
             { step: '4', title: 'Start Building', desc: 'Follow the 14-day plan with Claude prompts' },
           ].map((item) => (
             <div key={item.step} className="text-center">
@@ -152,7 +185,7 @@ export default function LandingPage() {
       <section className="max-w-5xl mx-auto px-6 py-16 border-t border-gray-200">
         <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 text-center shadow-sm">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Full report unlock starts at $49 after your free quiz
+            Full report unlock starts at $9 after your free quiz
           </h2>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
             Take the quiz free, preview your top match, then decide if you want the full report.
@@ -164,7 +197,7 @@ export default function LandingPage() {
               'Complete Fit Profile analysis',
               'Top 5 matched ideas with scores',
               'Competitor & pricing research',
-              'Real user quotes',
+              'Common pain points',
               'Full MVP specification',
               '14-day ship plan + Claude prompts',
               '5 regenerations included',
@@ -186,12 +219,12 @@ export default function LandingPage() {
             Take Free Quiz (see preview)
           </Link>
 
-          {/* Quality guarantee */}
+          {/* AI-powered badge */}
           <p className="text-sm text-gray-500 mt-6">
-            <svg className="w-4 h-4 inline-block mr-1 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <svg className="w-4 h-4 inline-block mr-1 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            Quality guarantee: 3 competitors + 3 real user quotes + clear positioning, or we fix it / refund (7 days).
+            AI-powered: Every report is uniquely generated for your profile.
           </p>
         </div>
       </section>
@@ -223,12 +256,11 @@ export default function LandingPage() {
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h3 className="font-semibold text-gray-900 mb-2">
-              What if the report isn&apos;t useful?
+              How is each report unique?
             </h3>
             <p className="text-gray-600 text-sm">
-              Every report includes at least 3 competitor analyses, 3 real user quotes, and clear positioning
-              (why this idea wins). If your report doesn&apos;t meet these standards, email us within 7 days
-              and we&apos;ll either fix it or give you a full refund.
+              Every report is AI-generated specifically for your profile. No two reports are the same.
+              Plus, you get 5 regenerations to explore completely different ideas and directions if you want variety.
             </p>
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
@@ -236,8 +268,8 @@ export default function LandingPage() {
               What are regenerations?
             </h3>
             <p className="text-gray-600 text-sm">
-              If you don&apos;t love your matched idea, you can regenerate your report up to 5 times to explore
-              different matches from our library. Same quiz answers, different top picks.
+              If you don&apos;t love your matched ideas, you can regenerate your report up to 5 times to get
+              fresh AI-generated ideas. Same quiz answers, completely new recommendations.
             </p>
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
@@ -245,9 +277,9 @@ export default function LandingPage() {
               Can I see a sample before I pay?
             </h3>
             <p className="text-gray-600 text-sm">
-              Yes! The quiz is completely free. After completing it, you&apos;ll see a preview with your #1 match,
-              why it wins, one competitor, and one real user quote. You only pay $49 if you want the full report with
-              all 5 matches, complete validation data, and the 14-day ship plan.
+              Yes! The quiz is completely free. After completing it, you&apos;ll see a preview with your #1 match
+              and why it fits you. You only pay $9 if you want the full report with all 5 ideas, competitor analysis,
+              MVP scope, and your personalized ship plan.
             </p>
           </div>
         </div>

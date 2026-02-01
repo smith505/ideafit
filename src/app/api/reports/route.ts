@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { rankIdeas } from '@/lib/fit-algorithm'
+import { buildFitProfile } from '@/lib/fit-algorithm'
+import { generateIdeaMatches } from '@/lib/ai-ideas'
 import { getBuildHeaders } from '@/lib/build-headers'
 import { z } from 'zod'
 
@@ -30,21 +31,40 @@ export async function POST(request: Request) {
       })
     }
 
-    // Compute fit results
-    const { profile, rankedIdeas, fitTrack, winnerId } = rankIdeas(answers)
+    // Build fit profile from answers
+    const profile = buildFitProfile(answers)
 
-    // Create report
+    // Generate AI-matched ideas (cheap: ~$0.001)
+    const { ideas, cost } = await generateIdeaMatches(profile)
+
+    // Convert to ranked format for compatibility
+    const rankedIdeas = ideas.map(idea => ({
+      id: idea.id,
+      name: idea.name,
+      score: idea.score,
+      reason: idea.reason,
+      track: idea.track,
+    }))
+
+    const winnerId = ideas[0]?.id || 'unknown'
+    const fitTrack = ideas[0]?.track || 'AI Generated'
+
+    // Create report with AI ideas stored
     const report = await prisma.report.create({
       data: {
         userId: user.id,
         quizAnswers: answers as object,
         fitProfile: profile as object,
         rankedIdeas: rankedIdeas as object[],
+        aiIdeas: ideas as object[],  // Store full AI ideas
+        aiCost: cost,
         fitTrack,
         winnerId,
         status: 'PREVIEW',
       },
     })
+
+    console.log(`[AI] Generated ${ideas.length} ideas for $${cost.toFixed(6)}`)
 
     return NextResponse.json({ reportId: report.id }, { headers })
   } catch (error) {

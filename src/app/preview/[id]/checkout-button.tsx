@@ -45,7 +45,7 @@ export default function CheckoutButton({ reportId, email }: CheckoutButtonProps)
           Processing...
         </span>
       ) : (
-        'Unlock Full Report — $49'
+        'Unlock Full Report — $9'
       )}
     </button>
   )

@@ -199,14 +199,14 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
           </div>
         )}
 
-        {/* First real user quote - visible teaser */}
+        {/* First pain point - visible teaser */}
         {firstVocQuote && (
           <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                Real user quote
+                Common pain point
               </h3>
-              <span className="text-xs text-gray-500">1 of {winnerIdea?.voc_quotes?.length || 3}+</span>
+              <span className="text-xs text-gray-500">1 of 3+</span>
             </div>
             <blockquote className="border-l-2 border-violet-500 pl-4">
               <p className="text-gray-700 italic mb-2">&ldquo;{firstVocQuote.quote}&rdquo;</p>
@@ -221,48 +221,87 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
         <div className="space-y-6 relative">
           {/* Blur overlay with purchase CTA */}
           <div className="absolute inset-0 z-10 flex items-center justify-center">
-            <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 max-w-md mx-4 text-center shadow-xl">
-              <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+            <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 max-w-lg mx-4 shadow-xl">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-baseline gap-1 mb-2">
+                  <span className="text-4xl font-bold text-gray-900">$9</span>
+                  <span className="text-gray-500">one-time</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">
+                  Stop researching. Start building.
+                </h3>
               </div>
 
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Unlock Your Full Report
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Get complete validation data, MVP spec, all competitors,
-                and your personalized 14-day ship plan.
-              </p>
-
-              <div className="mb-6">
-                <div className="inline-flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-gray-900">$49</span>
-                  <span className="text-gray-500">one-time</span>
+              {/* Value list */}
+              <div className="space-y-3 mb-6 text-left">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-gray-900">5 personalized ideas</span>
+                    <span className="text-gray-500 text-sm"> — matched to your time, skills, and goals</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-gray-900">Competitor breakdown</span>
+                    <span className="text-gray-500 text-sm"> — who&apos;s out there, what they charge, and their weakness</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-gray-900">MVP scope</span>
+                    <span className="text-gray-500 text-sm"> — exactly what to build (and what to skip) for v1</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-gray-900">Day-by-day ship plan</span>
+                    <span className="text-gray-500 text-sm"> — go from idea to launched in {winner.track?.includes('Extension') ? '7' : '14'} days</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-gray-900">Monetization + first users</span>
+                    <span className="text-gray-500 text-sm"> — how to price it and where to find customers</span>
+                  </div>
                 </div>
               </div>
 
               <CheckoutButton reportId={id} email={report.user.email} />
 
-              <div className="mt-4 space-y-2">
-                <div className="text-sm text-gray-500">
-                  What you get:
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center text-xs">
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">Full competitor analysis</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">Real user quotes</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">MVP spec</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">14-day ship plan</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">PDF export</span>
-                  <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">5 regenerations</span>
-                </div>
-              </div>
-
-              <div className="mt-4 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
-                <p className="text-xs text-emerald-700">
-                  <strong>Quality guarantee:</strong> 3+ competitors, 3+ real user quotes, clear positioning — or we fix it / full refund within 7 days
-                </p>
+              <div className="mt-4 flex items-center justify-center gap-4 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  5 regenerations
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  PDF export
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  AI-powered
+                </span>
               </div>
             </div>
           </div>

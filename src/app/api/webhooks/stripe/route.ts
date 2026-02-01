@@ -3,6 +3,8 @@ import { headers } from 'next/headers'
 import { getStripe, getStripeMode, getStripeWebhookSecret, REPORT_PRICE_CENTS } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { getBuildHeaders } from '@/lib/build-headers'
+import { generateFullReport, AIIdea } from '@/lib/ai-ideas'
+import { FitProfile } from '@/lib/fit-algorithm'
 import Stripe from 'stripe'
 
 // Force dynamic to prevent caching
@@ -67,7 +69,41 @@ export async function POST(request: Request) {
     }
 
     try {
-      // Single transaction: record event + create purchase + unlock report
+      // Fetch the report to get profile and initial AI ideas
+      const report = await prisma.report.findUnique({
+        where: { id: reportId },
+      })
+
+      if (!report) {
+        console.error(`[Webhook] Report ${reportId} not found`)
+        return NextResponse.json({ error: 'Report not found' }, { status: 404, headers: responseHeaders })
+      }
+
+      // Generate full details for top 3 ideas (paid content)
+      const profile = report.fitProfile as unknown as FitProfile
+      const aiIdeas = (report.aiIdeas as unknown as AIIdea[]) || []
+      let additionalCost = 0
+
+      // Expand top 3 ideas with detailed info
+      const expandedIdeas = await Promise.all(
+        aiIdeas.slice(0, 5).map(async (idea, idx) => {
+          if (idx < 3) {
+            // Full expansion for top 3
+            const { data, cost } = await generateFullReport(profile, {
+              name: idea.name,
+              desc: idea.desc,
+            })
+            additionalCost += cost
+            return { ...idea, ...data }
+          }
+          return idea
+        })
+      )
+
+      const totalCost = (report.aiCost || 0) + additionalCost
+      console.log(`[Webhook] Generated full report for $${additionalCost.toFixed(6)} (total: $${totalCost.toFixed(6)})`)
+
+      // Single transaction: record event + create purchase + unlock report + update AI content
       await prisma.$transaction(async (tx) => {
         // Record processed event for idempotency
         await tx.processedStripeEvent.create({
@@ -90,7 +126,7 @@ export async function POST(request: Request) {
           },
         })
 
-        // Unlock report
+        // Unlock report and update with expanded AI content
         const now = new Date()
         const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
 
@@ -102,6 +138,8 @@ export async function POST(request: Request) {
             regensMax: 5,
             regensUsed: 0,
             regenExpiresAt: thirtyDaysFromNow,
+            aiIdeas: expandedIdeas as object[],
+            aiCost: totalCost,
           },
         })
       })
