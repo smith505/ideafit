@@ -76,7 +76,7 @@ export default function LandingPage() {
           </SampleReportTracker>
         </div>
         <p className="text-sm text-gray-500 mt-4">
-          Quiz is free • Full report $9 • 5 regenerations included
+          Quiz is free • Full report $5
         </p>
       </section>
 
@@ -147,12 +147,12 @@ export default function LandingPage() {
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
               <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">5 Regenerations</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Export & Keep Forever</h3>
             <p className="text-gray-600 text-sm">
-              Don&apos;t love your ideas? Regenerate for completely fresh AI-generated matches.
+              Download as PDF. Access your report anytime. It&apos;s yours permanently.
             </p>
           </div>
         </div>
@@ -167,7 +167,7 @@ export default function LandingPage() {
           {[
             { step: '1', title: 'Take Quiz', desc: '~7 min quiz about your time, skills, and goals' },
             { step: '2', title: 'Get Matched', desc: 'AI generates personalized ideas based on your profile' },
-            { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $9' },
+            { step: '3', title: 'Preview & Unlock', desc: 'See your top match free, then unlock full report for $5' },
             { step: '4', title: 'Start Building', desc: 'Follow the 14-day plan with Claude prompts' },
           ].map((item) => (
             <div key={item.step} className="text-center">
@@ -185,7 +185,7 @@ export default function LandingPage() {
       <section className="max-w-5xl mx-auto px-6 py-16 border-t border-gray-200">
         <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 text-center shadow-sm">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Full report unlock starts at $9 after your free quiz
+            Full report unlock is just $5 after your free quiz
           </h2>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
             Take the quiz free, preview your top match, then decide if you want the full report.
@@ -200,8 +200,8 @@ export default function LandingPage() {
               'Common pain points',
               'Full MVP specification',
               '14-day ship plan + Claude prompts',
-              '5 regenerations included',
-              'PDF export & 30-day access',
+              'PDF export included',
+              'Permanent access to your report',
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-2 text-sm text-gray-700">
                 <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -260,16 +260,16 @@ export default function LandingPage() {
             </h3>
             <p className="text-gray-600 text-sm">
               Every report is AI-generated specifically for your profile. No two reports are the same.
-              Plus, you get 5 regenerations to explore completely different ideas and directions if you want variety.
+              Your answers directly shape which ideas you see and why they fit your situation.
             </p>
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h3 className="font-semibold text-gray-900 mb-2">
-              What are regenerations?
+              What if I want different ideas?
             </h3>
             <p className="text-gray-600 text-sm">
-              If you don&apos;t love your matched ideas, you can regenerate your report up to 5 times to get
-              fresh AI-generated ideas. Same quiz answers, completely new recommendations.
+              Take the quiz again with different answers to get completely fresh ideas.
+              Each report is a new AI generation tailored to your updated profile.
             </p>
           </div>
           <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
@@ -278,7 +278,7 @@ export default function LandingPage() {
             </h3>
             <p className="text-gray-600 text-sm">
               Yes! The quiz is completely free. After completing it, you&apos;ll see a preview with your #1 match
-              and why it fits you. You only pay $9 if you want the full report with all 5 ideas, competitor analysis,
+              and why it fits you. You only pay $5 if you want the full report with all 5 ideas, competitor analysis,
               MVP scope, and your personalized ship plan.
             </p>
           </div>

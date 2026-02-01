@@ -224,7 +224,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl p-8 max-w-lg mx-4 shadow-xl">
               <div className="text-center mb-6">
                 <div className="inline-flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-bold text-gray-900">$9</span>
+                  <span className="text-4xl font-bold text-gray-900">$5</span>
                   <span className="text-gray-500">one-time</span>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">
@@ -286,9 +286,9 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
               <div className="mt-4 flex items-center justify-center gap-4 text-xs text-gray-500">
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  5 regenerations
+                  Instant access
                 </span>
                 <span className="flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

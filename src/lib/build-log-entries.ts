@@ -45,7 +45,7 @@ export const BUILD_LOG_ENTRIES: BuildLogEntry[] = [
       'Launched 14-question quiz with localStorage persistence',
       'Built fit algorithm matching users to ideas',
       'Created preview and full report pages',
-      'Integrated Stripe Checkout for $9 unlock',
+      'Integrated Stripe Checkout for $5 unlock',
     ],
   },
 ]

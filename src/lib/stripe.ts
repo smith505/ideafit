@@ -5,7 +5,7 @@
 
 import Stripe from 'stripe'
 
-export const REPORT_PRICE_CENTS = 900 // $9.00
+export const REPORT_PRICE_CENTS = 500 // $5.00
 
 // Stripe mode type
 export type StripeMode = 'test' | 'live'

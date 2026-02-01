@@ -87,8 +87,8 @@ export default function AboutPage() {
             </p>
             <div className="space-y-2 text-sm text-gray-600">
               <p><strong className="text-gray-700">Quiz:</strong> Free, ~7 minutes</p>
-              <p><strong className="text-gray-700">Report:</strong> $9 one-time, includes 5 regenerations</p>
-              <p><strong className="text-gray-700">Included:</strong> 5 AI-matched ideas, competitor analysis, MVP scope, ship plan + 5 regenerations</p>
+              <p><strong className="text-gray-700">Report:</strong> $5 one-time</p>
+              <p><strong className="text-gray-700">Included:</strong> 5 AI-matched ideas, competitor analysis, MVP scope, ship plan, PDF export</p>
             </div>
           </div>
         </section>

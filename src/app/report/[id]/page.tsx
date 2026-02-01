@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { FitProfile } from '@/lib/fit-algorithm'
 import { AIIdea } from '@/lib/ai-ideas'
-import RegenButton from './regen-button'
 import ExportButton from './export-button'
 
 interface ReportPageProps {
@@ -41,10 +40,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
   const winner = rankedIdeas[0]
   const winnerIdea = aiIdeas[0] // AI-generated full idea
 
-  const regensRemaining = report.regensMax - report.regensUsed
-  const expiresAt = report.regenExpiresAt
-    ? new Date(report.regenExpiresAt).toLocaleDateString()
-    : null
+  const createdDate = new Date(report.createdAt).toLocaleDateString()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -72,7 +68,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
               Unlocked
             </span>
             <span className="text-sm text-gray-500">
-              {regensRemaining} regenerations left · Expires {expiresAt}
+              Generated {createdDate}
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
@@ -367,17 +363,21 @@ export default async function ReportPage({ params }: ReportPageProps) {
           </section>
         )}
 
-        {/* Regenerate Section */}
+        {/* Take Quiz Again Section */}
         <section className="border-t border-gray-200 pt-12">
           <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center shadow-sm">
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Want different results?
+              Want different ideas?
             </h3>
             <p className="text-gray-600 mb-6">
-              You have {regensRemaining} regeneration{regensRemaining !== 1 ? 's' : ''} remaining.
-              Retake the quiz and get fresh matches.
+              Take the quiz again with different answers to get fresh AI-generated matches.
             </p>
-            <RegenButton reportId={id} remaining={regensRemaining} />
+            <Link
+              href="/quiz"
+              className="inline-flex px-6 py-3 rounded-xl font-semibold transition-all bg-gray-100 hover:bg-gray-200 text-gray-700"
+            >
+              Take Quiz Again
+            </Link>
           </div>
         </section>
       </main>

@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { getBuildHeaders } from '@/lib/build-headers'
 import { generateFullReport, AIIdea } from '@/lib/ai-ideas'
 import { FitProfile } from '@/lib/fit-algorithm'
+import { sendReportReadyEmail } from '@/lib/resend'
 import Stripe from 'stripe'
 
 // Force dynamic to prevent caching
@@ -127,17 +128,11 @@ export async function POST(request: Request) {
         })
 
         // Unlock report and update with expanded AI content
-        const now = new Date()
-        const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
-
         await tx.report.update({
           where: { id: reportId },
           data: {
             status: 'UNLOCKED',
-            unlockedAt: now,
-            regensMax: 5,
-            regensUsed: 0,
-            regenExpiresAt: thirtyDaysFromNow,
+            unlockedAt: new Date(),
             aiIdeas: expandedIdeas as object[],
             aiCost: totalCost,
           },
@@ -145,6 +140,20 @@ export async function POST(request: Request) {
       })
 
       console.log(`[Webhook] Report ${reportId} unlocked via ${stripeMode} mode payment`)
+
+      // Send confirmation email with report link (non-blocking)
+      const topIdea = expandedIdeas[0]
+      if (topIdea && session.customer_email) {
+        sendReportReadyEmail({
+          email: session.customer_email,
+          reportId,
+          topIdeaName: topIdea.name,
+          topIdeaScore: topIdea.score,
+          topIdeaReason: topIdea.reason,
+        }).catch(err => {
+          console.error('[Webhook] Failed to send confirmation email:', err)
+        })
+      }
     } catch (error) {
       // Check if it's a duplicate key error (race condition)
       if (error instanceof Error && error.message.includes('Unique constraint')) {
