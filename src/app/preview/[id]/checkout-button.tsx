@@ -37,7 +37,7 @@ export default function CheckoutButton({ reportId, email }: CheckoutButtonProps)
     <button
       onClick={handleCheckout}
       disabled={isLoading}
-      className="w-full py-4 rounded-xl font-semibold text-lg transition-all bg-violet-600 hover:bg-violet-500 text-white disabled:bg-zinc-700 disabled:cursor-not-allowed"
+      className="w-full py-4 rounded-xl font-semibold text-lg transition-all bg-gradient-to-r from-violet-600 to-orange-500 hover:from-violet-700 hover:to-orange-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:bg-gray-200 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:scale-100"
     >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">

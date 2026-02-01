@@ -14,34 +14,34 @@ export function CreatorFooter() {
   }
 
   return (
-    <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-600">
+    <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
       <span>Built by</span>
       <a
         href={CREATOR_SITE}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => handleClick('site')}
-        className="text-zinc-400 hover:text-zinc-200 transition-colors"
+        className="text-gray-600 hover:text-gray-900 transition-colors"
       >
         {CREATOR_NAME}
       </a>
-      <span className="text-zinc-700">·</span>
+      <span className="text-gray-300">·</span>
       <a
         href={CREATOR_X}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => handleClick('x')}
-        className="text-zinc-500 hover:text-zinc-200 transition-colors"
+        className="text-gray-500 hover:text-gray-900 transition-colors"
       >
         X
       </a>
-      <span className="text-zinc-700">·</span>
+      <span className="text-gray-300">·</span>
       <a
         href={CREATOR_NEWSLETTER}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => handleClick('newsletter')}
-        className="text-zinc-500 hover:text-zinc-200 transition-colors"
+        className="text-gray-500 hover:text-gray-900 transition-colors"
       >
         Newsletter
       </a>

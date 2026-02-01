@@ -5,7 +5,7 @@ export function BuildVersion() {
   const shortSha = sha.slice(0, 7)
 
   return (
-    <span className="text-zinc-700 text-xs">
+    <span className="text-gray-500 text-xs">
       Build: {shortSha}
     </span>
   )

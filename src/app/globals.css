@@ -1,8 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Vibrant Energy Light Mode Theme */
+  --background: #FFFFFF;
+  --background-secondary: #F9FAFB;
+  --foreground: #111827;
+  --foreground-secondary: #4B5563;
+
+  /* Primary: Electric Violet */
+  --primary: #8B5CF6;
+  --primary-hover: #7C3AED;
+
+  /* Accent: Warm Orange */
+  --accent: #F97316;
+  --accent-hover: #EA580C;
+
+  /* Success */
+  --success: #10B981;
 }
 
 @theme inline {
@@ -10,13 +24,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

@@ -8,24 +8,24 @@ export const revalidate = 0
 
 function QuizSkeleton() {
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Header */}
-      <header className="border-b border-zinc-800">
+      <header className="border-b border-gray-200 bg-white">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
               IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
+            <span className="text-xl font-semibold text-gray-900">IdeaMatch</span>
           </Link>
-          <span className="text-sm text-zinc-500">1 of 13</span>
+          <span className="text-sm text-gray-500">1 of 13</span>
         </div>
       </header>
 
       {/* Progress bar skeleton */}
       <div className="max-w-2xl mx-auto px-6 pt-6">
-        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-          <div className="h-full w-[10%] bg-gradient-to-r from-violet-500 to-fuchsia-500" />
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-full w-[10%] bg-gradient-to-r from-violet-500 to-orange-500" />
         </div>
       </div>
 
@@ -33,7 +33,7 @@ function QuizSkeleton() {
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="flex flex-col items-center justify-center py-16">
           <div className="w-10 h-10 border-2 border-violet-500 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-zinc-400 text-lg">Loading quiz…</p>
+          <p className="text-gray-600 text-lg">Loading quiz…</p>
         </div>
 
         {/* Skeleton question placeholders for SEO */}
@@ -55,18 +55,18 @@ function QuizSkeleton() {
 
       {/* noscript fallback */}
       <noscript>
-        <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
           <div className="max-w-md mx-auto px-6 text-center">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-6">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-orange-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-6 shadow-md">
               IM
             </div>
-            <h1 className="text-2xl font-bold text-zinc-100 mb-4">JavaScript Required</h1>
-            <p className="text-zinc-400 mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">JavaScript Required</h1>
+            <p className="text-gray-600 mb-6">
               Please enable JavaScript to take the IdeaMatch quiz. The quiz uses interactive features that require JavaScript to work properly.
             </p>
             <a
               href="/"
-              className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300"
+              className="inline-flex items-center gap-2 text-violet-600 hover:text-violet-700"
             >
               ← Return to homepage
             </a>

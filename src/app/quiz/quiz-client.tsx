@@ -163,24 +163,24 @@ export default function QuizClient() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Header */}
-      <header className="border-b border-zinc-800">
+      <header className="border-b border-gray-200 bg-white">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
               IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
+            <span className="text-xl font-semibold text-gray-900">IdeaMatch</span>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-zinc-500">
+            <span className="text-sm text-gray-500">
               {currentIndex + 1} of {totalQuestions}
             </span>
             {currentIndex === 0 ? (
-              <span className="text-xs text-zinc-500">~7 min total</span>
+              <span className="text-xs text-gray-500">~7 min total</span>
             ) : getTimeRemaining() ? (
-              <span className="text-xs text-violet-400">{getTimeRemaining()}</span>
+              <span className="text-xs text-orange-500 font-medium">{getTimeRemaining()}</span>
             ) : null}
           </div>
         </div>
@@ -188,38 +188,38 @@ export default function QuizClient() {
 
       {/* Progress bar */}
       <div className="max-w-2xl mx-auto px-6 pt-6">
-        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+        <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-violet-600 to-orange-500 transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
         <div className="flex justify-between items-center mt-2">
-          <span className="text-xs text-zinc-600">Saved automatically</span>
-          <span className="text-xs text-zinc-600">{Math.round(progress)}%</span>
+          <span className="text-xs text-gray-500">Saved automatically</span>
+          <span className="text-xs text-gray-500">{Math.round(progress)}%</span>
         </div>
       </div>
 
       {/* Question */}
       <main className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="text-2xl md:text-3xl font-bold text-zinc-100 mb-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
           {currentQuestion.question}
         </h1>
 
         {currentQuestion.helperText && (
-          <p className="text-sm text-zinc-500 mb-4 leading-relaxed">
+          <p className="text-sm text-gray-500 mb-4 leading-relaxed">
             {currentQuestion.helperText}
           </p>
         )}
 
         {currentQuestion.type === 'text' && (
-          <p className="text-sm text-zinc-500 mb-6">
+          <p className="text-sm text-gray-500 mb-6">
             Optional - 1-2 sentences max
           </p>
         )}
 
         {currentQuestion.type === 'multi' && (
-          <p className="text-sm text-zinc-500 mb-6">
+          <p className="text-sm text-gray-500 mb-6">
             Select up to {maxSelections} ({getMultiSelectCount()}/{maxSelections} selected)
           </p>
         )}
@@ -234,11 +234,11 @@ export default function QuizClient() {
               onChange={(e) => handleTextChange(e.target.value)}
               placeholder={currentQuestion.placeholder}
               maxLength={currentQuestion.maxLength || 200}
-              className="w-full px-5 py-4 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-100 placeholder:text-zinc-600 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 resize-none"
+              className="w-full px-5 py-4 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 resize-none shadow-sm"
               rows={3}
             />
             <div className="flex justify-end">
-              <span className="text-xs text-zinc-600">
+              <span className="text-xs text-gray-400">
                 {textValue.length}/{currentQuestion.maxLength || 200}
               </span>
             </div>
@@ -257,12 +257,12 @@ export default function QuizClient() {
                   key={option.value}
                   onClick={() => handleSelect(option.value)}
                   disabled={atLimit}
-                  className={`w-full text-left px-5 py-4 rounded-xl border transition-all ${
+                  className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-all ${
                     selected
-                      ? 'border-violet-500 bg-violet-500/10 text-zinc-100'
+                      ? 'border-violet-500 bg-violet-50 text-gray-900 shadow-sm'
                       : atLimit
-                        ? 'border-zinc-800 bg-zinc-900/50 text-zinc-600 cursor-not-allowed'
-                        : 'border-zinc-800 bg-zinc-900 text-zinc-300 hover:border-zinc-700'
+                        ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                        : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 shadow-sm'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -270,7 +270,7 @@ export default function QuizClient() {
                       className={`w-5 h-5 rounded-${currentQuestion.type === 'single' ? 'full' : 'md'} border-2 flex items-center justify-center ${
                         selected
                           ? 'border-violet-500 bg-violet-500'
-                          : 'border-zinc-600'
+                          : 'border-gray-300'
                       }`}
                     >
                       {selected && (
@@ -289,7 +289,7 @@ export default function QuizClient() {
                         </svg>
                       )}
                     </div>
-                    <span>{option.label}</span>
+                    <span className="font-medium">{option.label}</span>
                   </div>
                 </button>
               )
@@ -304,8 +304,8 @@ export default function QuizClient() {
             disabled={currentIndex === 0}
             className={`px-6 py-3 rounded-full font-medium transition-colors ${
               currentIndex === 0
-                ? 'text-zinc-600 cursor-not-allowed'
-                : 'text-zinc-300 hover:text-zinc-100'
+                ? 'text-gray-300 cursor-not-allowed'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             }`}
           >
             Back
@@ -315,7 +315,7 @@ export default function QuizClient() {
             {currentQuestion.skippable && (
               <button
                 onClick={handleSkip}
-                className="px-6 py-3 rounded-full font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="px-6 py-3 rounded-full font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
               >
                 Skip
               </button>
@@ -326,8 +326,8 @@ export default function QuizClient() {
               disabled={!canProceed() && !currentQuestion.skippable}
               className={`px-8 py-3 rounded-full font-semibold transition-all ${
                 canProceed() || currentQuestion.skippable
-                  ? 'bg-violet-600 hover:bg-violet-500 text-white'
-                  : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-violet-600 to-orange-500 hover:from-violet-700 hover:to-orange-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.02]'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
             >
               {currentIndex === totalQuestions - 1 ? 'See Results' : 'Next'}

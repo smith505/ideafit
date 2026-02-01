@@ -31,8 +31,8 @@ export default function RegenButton({ reportId, remaining }: RegenButtonProps) {
       disabled={remaining <= 0}
       className={`px-6 py-3 rounded-xl font-semibold transition-all ${
         remaining > 0
-          ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
-          : 'bg-zinc-900 text-zinc-600 cursor-not-allowed'
+          ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
       }`}
     >
       Retake Quiz ({remaining} left)
