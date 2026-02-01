@@ -50,9 +50,9 @@ export default async function ReportPage({ params }: ReportPageProps) {
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <div className="flex items-center gap-4">
             <ExportButton reportId={id} />
@@ -73,7 +73,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-2">
-            Your IdeaFit Report
+            Your IdeaMatch Report
           </h1>
           <p className="text-zinc-400">
             Personalized startup idea recommendations based on your profile

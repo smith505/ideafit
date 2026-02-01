@@ -147,9 +147,9 @@ export default function CompareClient() {
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <Link href="/results" className="text-sm text-zinc-400 hover:text-zinc-300">
             ← Back to Results

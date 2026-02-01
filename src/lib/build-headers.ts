@@ -20,8 +20,8 @@ export const NODE_ENV = process.env.NODE_ENV || 'unknown'
 export function getBuildHeaders(): Record<string, string> {
   return {
     'Cache-Control': 'no-store, must-revalidate',
-    'x-ideafit-build': BUILD_SHA,
-    'x-ideafit-timestamp': new Date().toISOString(),
+    'x-ideamatch-build': BUILD_SHA,
+    'x-ideamatch-timestamp': new Date().toISOString(),
   }
 }
 

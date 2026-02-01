@@ -15,7 +15,7 @@ import {
 } from '@/lib/fit-algorithm'
 import library from '../../../data/library.json'
 
-const STORAGE_KEY = 'ideafit-quiz-answers'
+const STORAGE_KEY = 'ideamatch-quiz-answers'
 
 // Profile presets
 const PROFILE_A: QuizAnswers = {
@@ -249,7 +249,7 @@ export default function QAPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `ideafit-debug-${Date.now()}.json`
+    a.download = `ideamatch-debug-${Date.now()}.json`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

@@ -5,7 +5,7 @@ import { CreatorFooter } from '@/components/creator-footer'
 import { BuildVersion } from '@/components/build-version'
 
 export const metadata: Metadata = {
-  title: 'Build Log | IdeaFit',
+  title: 'Build Log | IdeaMatch',
   description: 'What I shipped and when. Building in public.',
 }
 
@@ -20,9 +20,9 @@ export default function BuildLogPage() {
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/about" className="text-zinc-400 hover:text-zinc-300">

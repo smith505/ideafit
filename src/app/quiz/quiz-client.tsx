@@ -8,7 +8,7 @@ import { BuildVersion } from '@/components/build-version'
 import { CreatorFooter } from '@/components/creator-footer'
 import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
 
-const STORAGE_KEY = 'ideafit-quiz-answers'
+const STORAGE_KEY = 'ideamatch-quiz-answers'
 
 export default function QuizClient() {
   const router = useRouter()
@@ -169,9 +169,9 @@ export default function QuizClient() {
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-zinc-500">

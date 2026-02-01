@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   try {
     const csv = await exportEventsAsCsv(since)
 
-    const filename = `ideafit-events-${range}-${new Date().toISOString().split('T')[0]}.csv`
+    const filename = `ideamatch-events-${range}-${new Date().toISOString().split('T')[0]}.csv`
 
     return new NextResponse(csv, {
       status: 200,

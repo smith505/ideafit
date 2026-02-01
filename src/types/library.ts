@@ -1,5 +1,5 @@
 /**
- * Type definitions for the IdeaFit Idea Library
+ * Type definitions for the IdeaMatch Idea Library
  * These types match the output of scripts/ingest-library.ts
  */
 

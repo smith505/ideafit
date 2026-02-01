@@ -2,8 +2,8 @@
 
 import type { EventName } from './analytics'
 
-const SESSION_KEY = 'ideafit-session-id'
-const UTM_KEY = 'ideafit-utm'
+const SESSION_KEY = 'ideamatch-session-id'
+const UTM_KEY = 'ideamatch-utm'
 
 interface UtmParams {
   utmSource?: string

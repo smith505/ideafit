@@ -17,10 +17,10 @@ export default function RegenButton({ reportId, remaining }: RegenButtonProps) {
     }
 
     // Clear any existing quiz state and start fresh
-    localStorage.removeItem('ideafit-quiz-answers')
+    localStorage.removeItem('ideamatch-quiz-answers')
 
     // Store report ID for regeneration
-    sessionStorage.setItem('ideafit-regen-report', reportId)
+    sessionStorage.setItem('ideamatch-regen-report', reportId)
 
     router.push('/quiz')
   }

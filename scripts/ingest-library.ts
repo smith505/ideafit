@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * IdeaFit Idea Library Ingestion Script
+ * IdeaMatch Idea Library Ingestion Script
  * Reads xlsx from parent folder and outputs library.json
  */
 
@@ -219,7 +219,7 @@ function formatErrors(errors: ValidationError[]): string {
 }
 
 export function ingestLibrary(inputPath: string, outputPath: string): void {
-  console.log('\n🚀 IdeaFit Library Ingestion Starting...\n');
+  console.log('\n🚀 IdeaMatch Library Ingestion Starting...\n');
 
   if (!fs.existsSync(inputPath)) {
     console.error(`❌ ERROR: Input file not found: ${inputPath}`);
@@ -286,7 +286,7 @@ export function ingestLibrary(inputPath: string, outputPath: string): void {
 
 // CLI
 const PROJECT_ROOT = path.join(process.cwd(), '..');
-const INPUT_FILE = path.join(PROJECT_ROOT, 'IdeaFit_Idea_Library_Template.xlsx');
+const INPUT_FILE = path.join(PROJECT_ROOT, 'IdeaMatch_Idea_Library_Template.xlsx');
 const OUTPUT_FILE = path.join(process.cwd(), 'data', 'library.json');
 
 if (require.main === module || process.argv[1]?.includes('ingest-library')) {

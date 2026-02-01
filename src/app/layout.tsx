@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IdeaFit - Startup Idea Validation",
+  title: "IdeaMatch - Startup Idea Validation",
   description: "Validate and track your startup ideas with structured research",
 };
 

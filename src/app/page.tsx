@@ -9,11 +9,11 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
+  title: 'IdeaMatch | Find Your Best Startup Idea in 7 Minutes',
   description:
     'Stop second-guessing. Take the Quick Fit Quiz and get a personalized report with your top idea, validation data, and a 14-day ship plan.',
   openGraph: {
-    title: 'IdeaFit | Find Your Best Startup Idea in 7 Minutes',
+    title: 'IdeaMatch | Find Your Best Startup Idea in 7 Minutes',
     description:
       'Take the Quick Fit Quiz and get a personalized report with your top idea, validation data, and a 14-day ship plan.',
     type: 'website',
@@ -29,9 +29,9 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </div>
           <div className="flex items-center gap-6">
             <Link
@@ -263,7 +263,7 @@ export default function LandingPage() {
           </div>
           <CreatorFooter />
           <span className="text-sm text-zinc-600">
-            © 2026 IdeaFit. Find your fit. Ship your idea.
+            © 2026 IdeaMatch. Find your fit. Ship your idea.
           </span>
           <BuildVersion />
         </div>

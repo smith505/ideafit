@@ -14,9 +14,9 @@ function QuizSkeleton() {
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <span className="text-sm text-zinc-500">1 of 13</span>
         </div>
@@ -58,11 +58,11 @@ function QuizSkeleton() {
         <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center z-50">
           <div className="max-w-md mx-auto px-6 text-center">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-xl mx-auto mb-6">
-              IF
+              IM
             </div>
             <h1 className="text-2xl font-bold text-zinc-100 mb-4">JavaScript Required</h1>
             <p className="text-zinc-400 mb-6">
-              Please enable JavaScript to take the IdeaFit quiz. The quiz uses interactive features that require JavaScript to work properly.
+              Please enable JavaScript to take the IdeaMatch quiz. The quiz uses interactive features that require JavaScript to work properly.
             </p>
             <a
               href="/"

@@ -2,7 +2,7 @@
 /**
  * Multi-endpoint build parity checker
  * Verifies all endpoints return the same build version
- * Run: BASE_URL=https://ideafit-production.up.railway.app npx tsx scripts/check-build-parity.ts
+ * Run: BASE_URL=https://ideamatch.co npx tsx scripts/check-build-parity.ts
  */
 
 const TARGET_URL = process.env.BASE_URL || 'http://localhost:3000'
@@ -26,7 +26,7 @@ async function checkEndpoint(path: string, extractBuild: 'header' | 'body'): Pro
       },
     })
 
-    const buildHeader = response.headers.get('x-ideafit-build')
+    const buildHeader = response.headers.get('x-ideamatch-build')
     const cacheControl = response.headers.get('cache-control')
 
     let build: string | null = null

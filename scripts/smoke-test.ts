@@ -1,5 +1,5 @@
 /**
- * Smoke test script for IdeaFit production deployment
+ * Smoke test script for IdeaMatch production deployment
  * Usage: npx tsx scripts/smoke-test.ts https://your-domain.com
  */
 
@@ -20,7 +20,7 @@ async function testEndpoint(path: string, expectedContentType?: string): Promise
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        'User-Agent': 'IdeaFit-SmokeTest/1.0',
+        'User-Agent': 'IdeaMatch-SmokeTest/1.0',
       },
     })
 

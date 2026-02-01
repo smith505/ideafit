@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Creates a sample IdeaFit Idea Library Template xlsx file
+ * Creates a sample IdeaMatch Idea Library Template xlsx file
  */
 
 import * as XLSX from 'xlsx';
@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
-const OUTPUT_FILE = path.join(DATA_DIR, 'IdeaFit_Idea_Library_Template.xlsx');
+const OUTPUT_FILE = path.join(DATA_DIR, 'IdeaMatch_Idea_Library_Template.xlsx');
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {

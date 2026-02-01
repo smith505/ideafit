@@ -22,8 +22,8 @@ async function main() {
   // System prompt for design collaboration
   messages.push({
     role: 'system',
-    content: `You are a senior product designer and developer reviewing a SaaS product called IdeaFit.
-IdeaFit helps aspiring founders find their best startup idea through a quiz that matches them to validated ideas from a curated library.
+    content: `You are a senior product designer and developer reviewing a SaaS product called IdeaMatch.
+IdeaMatch helps aspiring founders find their best startup idea through a quiz that matches them to validated ideas from a curated library.
 
 The flow is: Landing → Quiz (8 questions) → Email gate → Preview (shows top match) → Paywall ($49) → Full Report
 

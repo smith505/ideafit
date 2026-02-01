@@ -1,8 +1,8 @@
-# IdeaFit v1 - System Design Document
+# IdeaMatch v1 - System Design Document
 
 ## Overview
 
-IdeaFit is a SaaS product that helps solo founders find their best startup idea through a quiz-based fit assessment, delivering a paid report with validation data, MVP specs, and a 14-day ship plan.
+IdeaMatch is a SaaS product that helps solo founders find their best startup idea through a quiz-based fit assessment, delivering a paid report with validation data, MVP specs, and a 14-day ship plan.
 
 **Core Flow:** Landing → Quiz → Email Gate → Paywall → Stripe → Report
 
@@ -316,7 +316,7 @@ Enter your email to:
 **Paywall CTA:**
 ```
 ┌─────────────────────────────────────┐
-│  Unlock Your IdeaFit Report         │
+│  Unlock Your IdeaMatch Report       │
 │                                     │
 │  $49 one-time                       │
 │  • Full report access               │
@@ -555,7 +555,7 @@ STRIPE_PRICE_ID="price_..."  # $49 product
 RESEND_API_KEY="re_..."
 
 # App
-NEXT_PUBLIC_APP_URL="https://ideafit.app"
+NEXT_PUBLIC_APP_URL="https://ideamatch.co"
 MAGIC_LINK_SECRET="..." # for signing tokens
 ```
 
@@ -683,6 +683,6 @@ src/
 
 ## Ready to Implement
 
-This design document provides everything needed to build IdeaFit v1. The implementation order in Section 7 gives a clear path from zero to working product in 2-3 days.
+This design document provides everything needed to build IdeaMatch v1. The implementation order in Section 7 gives a clear path from zero to working product in 2-3 days.
 
 Next step: Run `/sc:implement` with this design to start building.

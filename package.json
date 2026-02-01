@@ -1,5 +1,5 @@
 {
-  "name": "ideafit",
+  "name": "ideamatch",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,10 +17,12 @@
     "generate-sample-pdf": "tsx scripts/generate-sample-pdf.ts",
     "verify-pdf": "tsx scripts/verify-pdf.ts",
     "test:e2e": "tsx scripts/test-e2e.ts",
-    "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideafit-production.up.railway.app",
+    "test:e2e:prod": "tsx scripts/test-e2e.ts https://ideamatch.co",
     "build:parity": "tsx scripts/check-build-parity.ts",
-    "build:parity:prod": "BASE_URL=https://ideafit-production.up.railway.app tsx scripts/check-build-parity.ts",
+    "build:parity:prod": "BASE_URL=https://ideamatch.co tsx scripts/check-build-parity.ts",
     "verify": "tsx scripts/verify-deploy.ts",
+    "verify:launch": "tsx scripts/verify-launch.ts",
+    "verify:launch:prod": "BASE_URL=https://ideamatch.co ADMIN_TOKEN=$ADMIN_TOKEN tsx scripts/verify-launch.ts",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push"
   },

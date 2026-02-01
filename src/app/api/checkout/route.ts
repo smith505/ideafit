@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
-import { getStripe, REPORT_PRICE_CENTS } from '@/lib/stripe'
+import { getStripe, getStripeMode, REPORT_PRICE_CENTS } from '@/lib/stripe'
+import { getPublicAppUrl } from '@/lib/app-url'
 import { prisma } from '@/lib/prisma'
-import { getBuildHeaders } from '@/lib/build-headers'
+import { getBuildHeaders, BUILD_SHA } from '@/lib/build-headers'
 import { z } from 'zod'
 
 // Force dynamic to prevent caching
@@ -29,14 +30,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Report not found' }, { status: 404, headers })
     }
 
+    const baseUrl = getPublicAppUrl()
+
     // If already unlocked, redirect to report
     if (report.status === 'UNLOCKED') {
       return NextResponse.json({
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/report/${reportId}`,
+        url: `${baseUrl}/report/${reportId}`,
       }, { headers })
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const stripeMode = getStripeMode()
 
     // Create Stripe checkout session
     const session = await getStripe().checkout.sessions.create({
@@ -47,7 +50,7 @@ export async function POST(request: Request) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'IdeaFit Report',
+              name: 'IdeaMatch Report',
               description:
                 'Full validation report with competitor analysis, MVP spec, and 14-day ship plan',
             },
@@ -59,6 +62,8 @@ export async function POST(request: Request) {
       metadata: {
         reportId,
         userId: report.userId,
+        build: BUILD_SHA,
+        stripeMode,
       },
       success_url: `${baseUrl}/report/${reportId}?success=true`,
       cancel_url: `${baseUrl}/preview/${reportId}?canceled=true`,

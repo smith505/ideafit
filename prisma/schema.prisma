@@ -112,3 +112,13 @@ model AnalyticsEvent {
   @@index([utmCampaign])
   @@index([build])
 }
+
+// Stripe webhook idempotency - prevents duplicate processing
+model ProcessedStripeEvent {
+  id        String   @id // Stripe event ID (evt_xxx)
+  mode      String   // 'test' or 'live'
+  eventType String   // e.g., 'checkout.session.completed'
+  createdAt DateTime @default(now())
+
+  @@index([mode])
+}

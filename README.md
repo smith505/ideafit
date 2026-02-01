@@ -1,6 +1,6 @@
-# IdeaFit
+# IdeaMatch
 
-IdeaFit is a Next.js application for managing and validating startup idea candidates.
+IdeaMatch is a Next.js application for managing and validating startup idea candidates.
 
 ## Getting Started
 
@@ -36,7 +36,7 @@ npm run ingest:watch
 
 ### Editing the Spreadsheet
 
-1. **Open the spreadsheet**: `data/IdeaFit_Idea_Library_Template.xlsx`
+1. **Open the spreadsheet**: `data/IdeaMatch_Idea_Library_Template.xlsx`
 2. **Add or edit rows** following the column structure below
 3. **Set status to `ready_v1`** when an idea is fully validated
 4. **Run ingestion**: `npm run ingest`
@@ -148,7 +148,7 @@ The generated `data/library.json` contains:
 {
   "version": "1.0.0",
   "generated_at": "2026-01-31T01:10:20.190Z",
-  "source_file": "IdeaFit_Idea_Library_Template.xlsx",
+  "source_file": "IdeaMatch_Idea_Library_Template.xlsx",
   "candidates": [...],
   "tracks": [...]
 }
@@ -170,9 +170,9 @@ The generated `data/library.json` contains:
 ## Project Structure
 
 ```
-ideafit/
+ideamatch/
 ├── data/
-│   ├── IdeaFit_Idea_Library_Template.xlsx  # Source spreadsheet
+│   ├── IdeaMatch_Idea_Library_Template.xlsx  # Source spreadsheet
 │   └── library.json                         # Generated output
 ├── scripts/
 │   ├── ingest-library.ts                   # Main ingestion script

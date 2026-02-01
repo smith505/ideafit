@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * Watch mode for IdeaFit Library Ingestion
+ * Watch mode for IdeaMatch Library Ingestion
  * 
  * Watches for changes to the xlsx file and re-runs ingestion automatically.
  */
@@ -10,7 +10,7 @@ import * as path from 'path';
 import { ingestLibrary } from './ingest-library';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
-const INPUT_FILE = path.join(DATA_DIR, 'IdeaFit_Idea_Library_Template.xlsx');
+const INPUT_FILE = path.join(DATA_DIR, 'IdeaMatch_Idea_Library_Template.xlsx');
 const OUTPUT_FILE = path.join(DATA_DIR, 'library.json');
 
 console.log('\n👀 Watch mode started');

@@ -59,9 +59,9 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <span className="text-sm text-zinc-500">Report Preview</span>
         </div>
@@ -71,7 +71,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
         {/* Header section */}
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">
-            Your IdeaFit Report
+            Your IdeaMatch Report
           </h1>
           <p className="text-zinc-400">
             Preview your personalized startup idea match below

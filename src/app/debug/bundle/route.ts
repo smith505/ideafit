@@ -38,7 +38,7 @@ async function selfCheck(baseUrl: string): Promise<SelfCheckResult[]> {
           const data = await res.json()
           results.push({ endpoint: path, build: data.build || null, source })
         } else {
-          results.push({ endpoint: path, build: res.headers.get('x-ideafit-build'), source })
+          results.push({ endpoint: path, build: res.headers.get('x-ideamatch-build'), source })
         }
       } catch (error) {
         const errMsg = error instanceof Error ? error.message : 'Unknown error'

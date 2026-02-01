@@ -41,7 +41,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>IdeaFit Report - ${winner.name}</title>
+  <title>IdeaMatch Report - ${winner.name}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #18181b; line-height: 1.6; padding: 40px; }
@@ -73,7 +73,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 </head>
 <body>
   <div class="header">
-    <div class="logo">IdeaFit Report</div>
+    <div class="logo">IdeaMatch Report</div>
     <div class="date">Generated ${new Date().toLocaleDateString()}</div>
   </div>
 
@@ -174,7 +174,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   </div>
 
   <div class="footer">
-    <p>© ${new Date().getFullYear()} IdeaFit. Find your fit. Ship your idea.</p>
+    <p>© ${new Date().getFullYear()} IdeaMatch. Find your fit. Ship your idea.</p>
     <p>This report was generated for ${report.user.email}</p>
   </div>
 </body>
@@ -186,7 +186,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   return new NextResponse(html, {
     headers: {
       'Content-Type': 'text/html',
-      'Content-Disposition': `attachment; filename="ideafit-report-${id}.html"`,
+      'Content-Disposition': `attachment; filename="ideamatch-report-${id}.html"`,
       ...buildHeaders,
     },
   })

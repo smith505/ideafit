@@ -67,7 +67,7 @@ async function verifyPdf(): Promise<VerificationResult> {
 
   // Check for expected content
   const requiredContent = [
-    'IdeaFit Report',
+    'IdeaMatch Report',
     'Your Fit Profile',
     'Tab Sweeper',
     'Competitor Analysis',
@@ -83,7 +83,7 @@ async function verifyPdf(): Promise<VerificationResult> {
   }
 
   // Check for forbidden content (hardcoded domains)
-  const forbiddenContent = ['ideafit.co', 'ideafit.com', 'https://ideafit', 'http://ideafit']
+  const forbiddenContent = ['ideafit.co', 'ideafit.com', 'https://ideafit', 'http://ideafit', 'example.com']
 
   for (const content of forbiddenContent) {
     if (result.extractedText.toLowerCase().includes(content.toLowerCase())) {

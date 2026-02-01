@@ -4,8 +4,8 @@ import { CREATOR_NAME, CREATOR_SITE, CREATOR_X, CREATOR_NEWSLETTER } from '@/lib
 import { CreatorFooter } from '@/components/creator-footer'
 
 export const metadata: Metadata = {
-  title: 'About | IdeaFit',
-  description: 'Learn about IdeaFit and the person behind it.',
+  title: 'About | IdeaMatch',
+  description: 'Learn about IdeaMatch and the person behind it.',
 }
 
 export default function AboutPage() {
@@ -16,9 +16,9 @@ export default function AboutPage() {
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-sm">
-              IF
+              IM
             </div>
-            <span className="text-xl font-semibold text-zinc-100">IdeaFit</span>
+            <span className="text-xl font-semibold text-zinc-100">IdeaMatch</span>
           </Link>
           <div className="flex items-center gap-4 text-sm">
             <Link href="/build-log" className="text-zinc-400 hover:text-zinc-300">
@@ -42,7 +42,7 @@ export default function AboutPage() {
               I&apos;m {CREATOR_NAME}. I build small software products and share the process publicly.
             </p>
             <p className="text-zinc-400 mb-4">
-              IdeaFit is my attempt to solve a problem I&apos;ve had for years: too many ideas,
+              IdeaMatch is my attempt to solve a problem I&apos;ve had for years: too many ideas,
               not enough clarity on which one fits my current constraints. I built this to
               help myself — and hopefully you — stop second-guessing and start shipping.
             </p>
@@ -75,12 +75,12 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* About IdeaFit */}
+        {/* About IdeaMatch */}
         <section className="mb-12">
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-4">What IdeaFit Is</h2>
+            <h2 className="text-xl font-semibold text-zinc-100 mb-4">What IdeaMatch Is</h2>
             <p className="text-zinc-400 mb-4">
-              IdeaFit is a quiz-to-report tool that matches you to validated startup ideas
+              IdeaMatch is a quiz-to-report tool that matches you to validated startup ideas
               based on your time, skills, and goals. No more endless browsing through
               &ldquo;startup idea&rdquo; threads. Take a 7-minute quiz and get a personalized report
               with your top matches, competitor analysis, real user quotes, and a 14-day ship plan.

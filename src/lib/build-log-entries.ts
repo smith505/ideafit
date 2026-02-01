@@ -32,7 +32,7 @@ export const BUILD_LOG_ENTRIES: BuildLogEntry[] = [
     date: '2026-01-29',
     title: 'Build verification tooling',
     bullets: [
-      'Added x-ideafit-build header to all responses',
+      'Added x-ideamatch-build header to all responses',
       'Created /debug/build and /health endpoints',
       'Implemented E2E test suite for production',
       'Added build parity checking script',

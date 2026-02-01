@@ -19,7 +19,7 @@ doc.pipe(writeStream)
 doc
   .fontSize(28)
   .fillColor('#8b5cf6')
-  .text('IdeaFit Report', { align: 'center' })
+  .text('IdeaMatch Report', { align: 'center' })
   .moveDown(0.5)
 
 doc
@@ -182,7 +182,7 @@ doc
 
 // Footer
 doc.moveDown(3)
-doc.fontSize(10).fillColor('#a1a1aa').text('(c) 2026 IdeaFit. Find your fit. Ship your idea.', { align: 'center' })
+doc.fontSize(10).fillColor('#a1a1aa').text('(c) 2026 IdeaMatch. Find your fit. Ship your idea.', { align: 'center' })
 
 doc.end()
 

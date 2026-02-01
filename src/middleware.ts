@@ -30,8 +30,8 @@ export function middleware(request: NextRequest) {
 
     // Set cache control to prevent edge caching
     response.headers.set('Cache-Control', 'no-store, must-revalidate')
-    response.headers.set('x-ideafit-build', BUILD_SHA)
-    response.headers.set('x-ideafit-timestamp', BUILD_TIMESTAMP)
+    response.headers.set('x-ideamatch-build', BUILD_SHA)
+    response.headers.set('x-ideamatch-timestamp', BUILD_TIMESTAMP)
 
     return response
   }

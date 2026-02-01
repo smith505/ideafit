@@ -1,6 +1,6 @@
-# IdeaFit Library Data
+# IdeaMatch Library Data
 
-This directory contains the candidate library that powers IdeaFit's idea matching.
+This directory contains the candidate library that powers IdeaMatch's idea matching.
 
 ## What is a Candidate?
 

@@ -21,7 +21,7 @@ export default function ExportButton({ reportId }: ExportButtonProps) {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `ideafit-report-${reportId}.pdf`
+      a.download = `ideamatch-report-${reportId}.pdf`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)

@@ -1,5 +1,5 @@
 /**
- * Minimal E2E test script for IdeaFit funnel
+ * Minimal E2E test script for IdeaMatch funnel
  * Run with: npx tsx scripts/test-e2e.ts [baseUrl]
  *
  * Tests:
@@ -109,7 +109,7 @@ async function fetchWithTimeout(url: string, timeoutMs = 10000): Promise<Respons
 }
 
 async function main() {
-  console.log(`\nIdeaFit E2E Tests`)
+  console.log(`\nIdeaMatch E2E Tests`)
   console.log(`Base URL: ${BASE_URL}`)
   console.log(`Quiz questions: ${QUIZ_QUESTIONS.length}`)
   console.log(`---\n`)
@@ -130,7 +130,7 @@ async function main() {
     const res = await fetchWithTimeout(`${BASE_URL}/`)
     if (!res.ok) throw new Error(`Status ${res.status}`)
     const text = await res.text()
-    if (!text.includes('IdeaFit')) throw new Error('Missing IdeaFit in response')
+    if (!text.includes('IdeaMatch')) throw new Error('Missing IdeaMatch in response')
   })
 
   // Test 3: Quiz page loads
@@ -190,10 +190,10 @@ async function main() {
   })
 
   // Test 8: Build header present
-  await test('Homepage has x-ideafit-build header', async () => {
+  await test('Homepage has x-ideamatch-build header', async () => {
     const res = await fetchWithTimeout(`${BASE_URL}/`)
-    const buildHeader = res.headers.get('x-ideafit-build')
-    console.log(`    x-ideafit-build: ${buildHeader || 'not present'}`)
+    const buildHeader = res.headers.get('x-ideamatch-build')
+    console.log(`    x-ideamatch-build: ${buildHeader || 'not present'}`)
     // This may not be present in dev mode, so just log it
   })
 

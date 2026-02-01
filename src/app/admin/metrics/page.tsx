@@ -135,7 +135,7 @@ export default async function MetricsAdminPage({
             <div className="text-4xl mb-4">📊</div>
             <h2 className="text-xl font-semibold mb-2">No events yet</h2>
             <p className="text-zinc-400 mb-4 max-w-md mx-auto">
-              Analytics events will appear here once users start interacting with IdeaFit.
+              Analytics events will appear here once users start interacting with IdeaMatch.
               Events are captured on page views, quiz interactions, and email submissions.
             </p>
             <div className="text-sm text-zinc-500">

@@ -39,7 +39,7 @@ const execOpts: ExecSyncOptionsWithStringEncoding = {
 }
 
 async function main() {
-  console.log('\n🔍 IdeaFit Deployment Verification\n')
+  console.log('\n🔍 IdeaMatch Deployment Verification\n')
   console.log('='.repeat(50))
 
   // 1. Check TypeScript compiles
