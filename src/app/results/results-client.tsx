@@ -334,11 +334,17 @@ export default function ResultsClient() {
     // Track click
     trackEvent('click_save_results')
 
+    // Check if this is a regeneration
+    const regenReportId = sessionStorage.getItem('ideamatch-regen-report')
+    if (regenReportId) {
+      sessionStorage.removeItem('ideamatch-regen-report')
+    }
+
     try {
       const res = await fetch('/api/reports', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, answers }),
+        body: JSON.stringify({ email, answers, regenReportId }),
       })
 
       if (!res.ok) {
@@ -349,13 +355,13 @@ export default function ResultsClient() {
       const { reportId } = await res.json()
 
       // Track email submitted
-      trackEvent('email_submitted', { reportId })
+      trackEvent('email_submitted', { reportId, isRegen: !!regenReportId })
 
       // Clear quiz answers from localStorage
       localStorage.removeItem(STORAGE_KEY)
 
-      // Redirect to preview page
-      router.push(`/preview/${reportId}`)
+      // Redirect to report (if regen) or preview (if new)
+      router.push(regenReportId ? `/report/${reportId}` : `/preview/${reportId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
