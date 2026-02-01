@@ -301,9 +301,10 @@ export default function ResultsClient() {
       const parsed = JSON.parse(saved)
       const quizAnswers = parsed.answers || {}
 
-      // Check if quiz is complete
-      const answeredCount = Object.keys(quizAnswers).length
-      if (answeredCount < QUIZ_QUESTIONS.length) {
+      // Check if quiz is complete - only require non-skippable questions
+      const requiredQuestions = QUIZ_QUESTIONS.filter(q => !q.skippable)
+      const answeredRequired = requiredQuestions.filter(q => quizAnswers[q.id] !== undefined).length
+      if (answeredRequired < requiredQuestions.length) {
         router.push('/quiz')
         return
       }
