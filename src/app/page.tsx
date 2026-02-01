@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { BuildVersion } from '@/components/build-version'
 import { AnalyticsTracker, SampleReportTracker } from '@/components/analytics-tracker'
+import { CreatorFooter } from '@/components/creator-footer'
 
 // Force dynamic rendering to prevent edge caching
 export const dynamic = 'force-dynamic'
@@ -254,9 +255,15 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-8">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col items-center gap-2">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col items-center gap-4">
+          <div className="flex items-center gap-4 text-sm text-zinc-500">
+            <Link href="/about" className="hover:text-zinc-300 transition-colors">About</Link>
+            <span className="text-zinc-700">·</span>
+            <Link href="/build-log" className="hover:text-zinc-300 transition-colors">Build Log</Link>
+          </div>
+          <CreatorFooter />
           <span className="text-sm text-zinc-600">
-            (c) 2026 IdeaFit. Find your fit. Ship your idea.
+            © 2026 IdeaFit. Find your fit. Ship your idea.
           </span>
           <BuildVersion />
         </div>

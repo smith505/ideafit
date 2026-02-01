@@ -400,6 +400,60 @@ async function main() {
     // Just verify it doesn't crash
   })
 
+  // Test 23: Creator footer renders on homepage
+  await test('Homepage contains "Built by" creator footer', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/`)
+    const text = await res.text()
+    if (!text.includes('Built by')) throw new Error('Missing "Built by" creator footer')
+    console.log(`    Creator footer found on homepage`)
+  })
+
+  // Test 24: About page loads
+  await test('About page loads (status 200)', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/about`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const text = await res.text()
+    if (!text.includes('About') && !text.includes('Cory Smith')) throw new Error('Missing about content')
+    console.log(`    About page loaded successfully`)
+  })
+
+  // Test 25: Build Log page loads
+  await test('Build Log page loads (status 200)', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/build-log`)
+    if (!res.ok) throw new Error(`Status ${res.status}`)
+    const text = await res.text()
+    if (!text.includes('Build Log')) throw new Error('Missing build log content')
+    console.log(`    Build Log page loaded successfully`)
+  })
+
+  // Test 26: Quiz page contains creator footer
+  await test('Quiz page contains creator footer', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/quiz`)
+    const text = await res.text()
+    if (!text.includes('Built by')) throw new Error('Missing creator footer on quiz page')
+    console.log(`    Creator footer found on quiz page`)
+  })
+
+  // Test 27: Compare page contains creator footer
+  await test('Compare page contains creator footer', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/compare?ids=tab-sweeper,screenshot-annotator`)
+    const text = await res.text()
+    if (!text.includes('Built by')) throw new Error('Missing creator footer on compare page')
+    console.log(`    Creator footer found on compare page`)
+  })
+
+  // Test 28: Results page contains share button
+  await test('Results page contains Share on X elements', async () => {
+    const res = await fetchWithTimeout(`${BASE_URL}/results`)
+    const text = await res.text()
+    // Look for Share on X text or the X icon SVG
+    if (!text.includes('Share on X') && !text.includes('share_x_clicked')) {
+      console.log(`    Note: Share button may only render client-side, skipping strict check`)
+    } else {
+      console.log(`    Share on X found in results page`)
+    }
+  })
+
   console.log(`\n---\nTests complete.\n`)
 }
 

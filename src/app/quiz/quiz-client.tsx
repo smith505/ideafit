@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { QUIZ_QUESTIONS, QuizAnswers } from '@/lib/quiz-questions'
 import { BuildVersion } from '@/components/build-version'
+import { CreatorFooter } from '@/components/creator-footer'
 import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
@@ -176,9 +177,11 @@ export default function QuizClient() {
             <span className="text-sm text-zinc-500">
               {currentIndex + 1} of {totalQuestions}
             </span>
-            {getTimeRemaining() && (
+            {currentIndex === 0 ? (
+              <span className="text-xs text-zinc-500">~7 min total</span>
+            ) : getTimeRemaining() ? (
               <span className="text-xs text-violet-400">{getTimeRemaining()}</span>
-            )}
+            ) : null}
           </div>
         </div>
       </header>
@@ -334,7 +337,8 @@ export default function QuizClient() {
       </main>
 
       {/* Footer */}
-      <footer className="max-w-2xl mx-auto px-6 pb-6 text-center">
+      <footer className="max-w-2xl mx-auto px-6 pb-6 text-center space-y-3">
+        <CreatorFooter />
         <BuildVersion />
       </footer>
     </div>

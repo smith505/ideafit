@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getIdeaById, getTrackById, generateMatchChips, FitProfile } from '@/lib/fit-algorithm'
 import CheckoutButton from './checkout-button'
 import { AnalyticsTracker } from '@/components/analytics-tracker'
+import { CreatorFooter } from '@/components/creator-footer'
 
 // Force dynamic rendering to prevent edge caching
 export const dynamic = 'force-dynamic'
@@ -244,13 +245,25 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
 
               <CheckoutButton reportId={id} email={report.user.email} />
 
-              <div className="mt-4 text-sm text-zinc-500">
-                5 regenerations · 30-day access · PDF export
+              <div className="mt-4 space-y-2">
+                <div className="text-sm text-zinc-400">
+                  What you get:
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center text-xs">
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">Full competitor analysis</span>
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">Real user quotes</span>
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">MVP spec</span>
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">14-day ship plan</span>
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">PDF export</span>
+                  <span className="px-2 py-1 bg-zinc-800 rounded-full text-zinc-300">5 regenerations</span>
+                </div>
               </div>
 
-              <p className="mt-4 text-xs text-zinc-600">
-                Quality guarantee: 3+ competitors, 3+ real user quotes, clear positioning - or we fix it / refund (7 days)
-              </p>
+              <div className="mt-4 px-3 py-2 bg-emerald-900/20 border border-emerald-800/30 rounded-lg">
+                <p className="text-xs text-emerald-400">
+                  <strong>Quality guarantee:</strong> 3+ competitors, 3+ real user quotes, clear positioning — or we fix it / full refund within 7 days
+                </p>
+              </div>
             </div>
           </div>
 
@@ -319,6 +332,11 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-12 pb-8 text-center">
+          <CreatorFooter />
+        </footer>
       </main>
     </div>
   )

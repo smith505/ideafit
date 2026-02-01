@@ -14,6 +14,10 @@ const EVENT_LABELS: Record<EventName, string> = {
   preview_viewed: 'Previews',
   sample_report_clicked: 'Sample Clicks',
   compare_viewed: 'Compares',
+  share_x_clicked: 'X Shares',
+  click_creator_site: 'Creator Site Clicks',
+  click_creator_x: 'Creator X Clicks',
+  click_creator_newsletter: 'Newsletter Clicks',
 }
 
 export default async function MetricsAdminPage({

@@ -49,6 +49,10 @@ export type EventName =
   | 'preview_viewed'
   | 'sample_report_clicked'
   | 'compare_viewed'
+  | 'share_x_clicked'
+  | 'click_creator_site'
+  | 'click_creator_x'
+  | 'click_creator_newsletter'
 
 // Rate limiting: max events per session per minute
 const RATE_LIMIT_PER_SESSION = 30

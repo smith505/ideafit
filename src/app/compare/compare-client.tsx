@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { getIdeaById, distributionTypeLabels, supportLevelLabels } from '@/lib/fit-algorithm'
 import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
+import { CreatorFooter } from '@/components/creator-footer'
 
 interface CandidateData {
   id: string
@@ -200,6 +201,11 @@ export default function CompareClient() {
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <footer className="mt-12 pb-8 text-center">
+          <CreatorFooter />
+        </footer>
       </main>
     </div>
   )

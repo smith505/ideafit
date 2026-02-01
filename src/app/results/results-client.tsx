@@ -17,6 +17,7 @@ import {
   getIdeaById,
 } from '@/lib/fit-algorithm'
 import { trackEvent, getOrCreateSessionId } from '@/lib/analytics-client'
+import { CreatorFooter } from '@/components/creator-footer'
 
 const STORAGE_KEY = 'ideafit-quiz-answers'
 
@@ -464,10 +465,11 @@ export default function ResultsClient() {
           </div>
           {confidence.level === 'low' ? (
             <div className="mt-2 text-sm opacity-80">
-              <p className="mb-2">Your top 2 ideas scored within 5 points. To get a clearer winner:</p>
+              <p className="mb-2">Your top 2 ideas scored within 5 points. Here&apos;s what to do:</p>
               <ul className="list-disc list-inside space-y-1 ml-1">
-                <li>Go back and reconsider 1–2 questions you weren&apos;t sure about</li>
-                <li>Or explore both ideas — they&apos;re both good fits for you</li>
+                <li><strong>Compare them</strong> — use the &ldquo;Compare top 2&rdquo; button below</li>
+                <li><strong>Revisit 1–2 answers</strong> you were uncertain about</li>
+                <li><strong>Build either one</strong> — both are genuinely good fits for your profile</li>
               </ul>
             </div>
           ) : (
@@ -499,13 +501,21 @@ export default function ResultsClient() {
 
           {/* Wildcard */}
           {wildcard && (
-            <ResultCard
-              idea={wildcard}
-              rank={wildcardRank}
-              badge="Wildcard"
-              badgeColor="bg-amber-900/50 text-amber-400"
-              chips={wildcardChips}
-            />
+            <div className="relative group">
+              <ResultCard
+                idea={wildcard}
+                rank={wildcardRank}
+                badge="Wildcard ✨"
+                badgeColor="bg-amber-900/50 text-amber-400"
+                chips={wildcardChips}
+              />
+              <div className="mt-2 text-xs text-amber-400/70 flex items-center gap-1">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Slightly off-profile but worth exploring — sometimes constraints breed creativity</span>
+              </div>
+            </div>
           )}
         </div>
 
@@ -595,6 +605,37 @@ export default function ResultsClient() {
 
           <p className="text-xs text-zinc-600 text-center mt-4">No spam. Unsubscribe anytime.</p>
         </div>
+
+        {/* Share on X */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => {
+              trackEvent('share_x_clicked', { idea: topMatch.name })
+              const shareText = encodeURIComponent(
+                `I just got my top startup idea match from IdeaFit. My top pick: ${topMatch.name}. Here's the breakdown + 14-day plan:`
+              )
+              const shareUrl = encodeURIComponent(
+                `${window.location.origin}?utm_source=x&utm_medium=social&utm_campaign=share_results`
+              )
+              window.open(
+                `https://x.com/intent/tweet?text=${shareText}&url=${shareUrl}`,
+                '_blank',
+                'noopener,noreferrer'
+              )
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm text-zinc-300 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            Share on X
+          </button>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-12 pb-8 text-center">
+          <CreatorFooter />
+        </footer>
       </main>
     </div>
   )

@@ -135,3 +135,37 @@ If `/health` and `/debug/build` show different builds:
 - `/admin/library?token=ADMIN_TOKEN` - Candidate library management
 - `/debug/db` - Database health (no auth required)
 - `/debug/build` - Build info (no auth required)
+
+## Creator Identity Verification
+
+After deploy, verify the personal brand integration:
+
+### Check Creator Footer
+```bash
+# Homepage
+curl -s $BASE | grep -o "Built by" && echo "✓ Creator footer on homepage"
+
+# Quiz page
+curl -s $BASE/quiz | grep -o "Built by" && echo "✓ Creator footer on quiz"
+
+# About page
+curl -s $BASE/about | grep -o "Cory Smith" && echo "✓ About page loaded"
+
+# Build Log page
+curl -s $BASE/build-log | grep -o "Build Log" && echo "✓ Build Log page loaded"
+```
+
+### Share Button (Results Page)
+The Share on X button is client-side rendered. Manual verification:
+1. Complete quiz at `/quiz`
+2. Submit email on results page
+3. Verify "Share on X" button appears
+4. Click to verify prefilled tweet with UTM params
+
+### Quick Manual Test Path
+1. `/` - Homepage loads, creator footer visible at bottom
+2. `/about` - About page with bio, links to X/Newsletter
+3. `/build-log` - Build log with recent entries, current build SHA
+4. `/quiz` - Take quiz, verify footer
+5. `/results` - Submit email, verify Share on X button + footer
+6. `/compare?ids=...` - Compare page has footer
